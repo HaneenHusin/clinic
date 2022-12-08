@@ -1,19 +1,20 @@
-import {useRouter} from "next/router";
+
 import {useRecoilState} from "recoil";
-import {myDirectionState} from "../../../Atoms/directionAtoms";
 import {Card, CardBody, CardHeader} from "@chakra-ui/card";
 import {Box, Center, Flex, Heading, HStack, Stack, Text, VStack, Image} from "@chakra-ui/react";
-import {Galleria} from "primereact/galleria";
-import {galleriaService} from "../services/Photos";
+import {galleriaService} from "./services/Photos";
 import {FormattedMessage} from "react-intl";
-import CardWithDivider_part from "./components/card-with-divider_part";
-import Certificates from "./components/certificate_part";
-import CommentPart from "./components/comment_part";
-import CustomCarousel from "./components/carousel";
-import Router from "next/router";
-import CustomGalleria from "./components/galleria";
-import TestCard from "./components/test_card_part";
-import VideoPart from "./components/video_part";
+import CardWithDivider_part from "../components/card-with-divider_part";
+import Certificates from "../components/certificate_part";
+import CommentPart from "../components/comment_part";
+import CustomCarousel from "../components/carousel";
+import CustomGalleria from "../components/galleria";
+import TestCard from "../components/test_card_part";
+import VideoPart from "../components/video_part";
+import {useState} from "react";
+import {myLayoutState} from "../Atoms/layout";
+import {getCookie} from "./services/lang_cookies";
+import {myAbbBarLocalState, myDirectionState, myLocalState} from "../Atoms/localAtoms";
 
 export default function Welcome() {
 
@@ -32,7 +33,19 @@ export default function Welcome() {
             numVisible: 1
         }
     ];
-    const [dirState, setDirState] = useRecoilState(myDirectionState);
+    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
+    const [localState,setLocalState] = useRecoilState(myLocalState);
+    const [dirState,setDirState] = useRecoilState(myDirectionState);
+
+    useState(() => {
+        debugger
+        setHeaderFooterState({...headerFooterState, footer: "block", appBar: "block"})
+        setLocalState(getCookie("language"))
+        setDirState(   localState == "ar"?"rtl":"ltr")
+        console.log("dirrrrrr2 "+dirState)
+        console.log("localState "+localState)
+    });
+
     return (
         <div dir={dirState}>
            <CustomGalleria />
@@ -57,7 +70,7 @@ export default function Welcome() {
                          onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
                          alt={"no Image"} style={{width: '100%', display: 'block'}}/>
 
-                    <Flex w={['100%', '60%', '70%', '50%', '40%']} bg={'brand.white'} mt={'5px'} boxShadow={'2xl'}
+                    <Flex w={{ base: '40%', md: '60%', lg: '40%' }} bg={'brand.white'} mt={'5px'} boxShadow={'2xl'}
                           rounded={'full'}
                           align="center"
                           justify="center">
@@ -68,22 +81,23 @@ export default function Welcome() {
 
                     </Flex>
                    <TestCard />
-                    <Box pt={'20%'} w={['100%', '60%', '70%', '50%', '40%']}>
+                    <Box pt={'10%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
                         <CardWithDivider_part/>
                     </Box>
+                    <Box pt={'10%'} w={{ base: '50%', md: '60%', lg: '50%' }} >
                     <VideoPart />
-
+                    </Box>
                     <Flex pt={'10%'} align="center" justify="center" w={'80%'}>
                         <Certificates certificateCount={galleriaService}/>
                     </Flex>
-                    <Flex pt={'10%'} align="center" justify="center" w={'100%'}>
+                    <Flex pt={'5%'} align="center" justify="center" w={'100%'}>
                         <CommentPart/>
                     </Flex>
-                    <Flex pt={'10%'} pb={'5%'} w={'70%'} align="center" justify="center">
+                    <Flex pt={'3%'} pb={'5%'} w={'70%'} align="center" justify="center">
                         <VStack>
                             <Text align="center" fontSize={['lg', 'xl', '2xl']} fontWeight={'semibold'}
                                   color={'brand.blue'}
-                                  p={'3%'}>
+                                  p={'0.5%'}>
                                 <FormattedMessage id={'related_news'}/>
                             </Text>
                             <CustomCarousel template="relatedNews" />

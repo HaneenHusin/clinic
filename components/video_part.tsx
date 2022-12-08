@@ -1,16 +1,20 @@
 import {Box, HStack, Text, VStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
+import {useRecoilState} from "recoil";
+import {myDirectionState} from "../Atoms/localAtoms";
 
 export  default  function VideoPart(){
+    const [dirState] = useRecoilState(myDirectionState);
+
     return(
-        <HStack w={'full'} align="center" justify="center" pt={'4%'}>
+        <HStack w={'full'} align="center" justify="center" pt={'4%'} dir={dirState}>
             <Box
                 as='iframe'
                 rounded={'lg'}
                 border={'2px'}
                 borderColor={'brand.white'}
                 src='https://www.youtube.com/embed/wI2vqXsjsIo'
-                width='25%'
+                width='50%'
                 sx={{
                     aspectRatio: '16/9'
                 }}

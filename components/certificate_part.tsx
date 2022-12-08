@@ -3,7 +3,7 @@ import {Card} from "@chakra-ui/card";
 
 export default function Certificates({certificateCount}: any) {
     return (
-        <SimpleGrid spacing={12} columns={[2, 3]} templateColumns='repeat(2, 1fr)' w='40%'>
+        <SimpleGrid spacing={12} columns={[2, 3]} templateColumns='repeat(2, 1fr)' w='35%'>
             {certificateCount.map(() =>
                 <Card key={certificateCount.id} border={'4px'} borderStyle={'double'} borderColor={'brand.brounz'}>
                     <CardBody w={'100%'}>

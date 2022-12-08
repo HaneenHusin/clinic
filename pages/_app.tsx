@@ -9,19 +9,21 @@ import {useRouter} from "next/router";
 import ar from "../lang/ar";
 import en from "../lang/en";
 import {RecoilRoot} from "recoil";
-import AppBar from "./src/views/components/appbar";
+import AppBar from "../components/appbar";
 import {ChakraProvider} from '@chakra-ui/react';
 import theme from "../theme";
-import FooterBar from "./src/views/components/footer";
-import CopyRightDiv from "./src/views/components/copy_right_part";
+import FooterBar from "../components/footer";
+import CopyRightDiv from "../components/copy_right_part";
 import '../styles/globals.css'
 import Fonts from "../font";
+import {getCookie} from "./services/lang_cookies";
+import {useEffect, useState} from "react";
 
 const messages = {
   ar,
   en,
 };
-function getDirection(locale) {
+function getDirection(locale:string) {
     if (locale === "ar") {
         return "rtl";
     }
@@ -29,12 +31,19 @@ function getDirection(locale) {
     return "ltr";
 }
 function MyApp({ Component, pageProps }: AppProps) {
-  const {locale} = useRouter();
+  const [session, setSession] = useState();
+    useEffect(() => {
+        setSession( getCookie("language"))
+        console.log("session "+session)
+    }, []);
+
   return (
+
       <RecoilRoot>
           <ChakraProvider theme={theme}>
               <Fonts />
-          <IntlProvider locale={locale} messages={messages[locale]}>
+
+          <IntlProvider locale={session} messages={messages[session]} defaultLocale={'ar'} >
             <Head>
               <link rel="icon" href="/favicon.ico" />
               <title>React App</title>
@@ -44,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <meta name="theme-color" content="#000000" />
             </Head>
             <AppBar/>
-            <Component {...pageProps} dir={getDirection(locale)} />
+            <Component {...pageProps} dir={getDirection(session)} />
               <FooterBar />
               <CopyRightDiv />
           </IntlProvider>

@@ -1,10 +1,10 @@
-import {Card, CardBody, CardHeader} from "@chakra-ui/card";
-import {Avatar, Box, Divider, Heading, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
+import {Card} from "@chakra-ui/card";
+import {Avatar, Box, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
 import {Galleria} from "primereact/galleria";
-import {galleriaService} from "../../services/Photos";
+import {galleriaService} from "../pages/services/Photos";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myDirectionState} from "../../../../Atoms/directionAtoms";
+import { myDirectionState } from "../Atoms/localAtoms";
 
 export default function CommentPart() {
     const responsiveOptions = [
@@ -21,9 +21,9 @@ export default function CommentPart() {
             numVisible: 1
         }
     ];
-    const [dirState, setDirState] = useRecoilState(myDirectionState);
+    const [dirState] = useRecoilState(myDirectionState);
     return (
-        <Card bg={'brand.white'} w={['50%','60%','70%','70%','45%']} rounded={'full'}  dir={dirState}>
+        <Card bg={'brand.white'} w= {{ base: '55%', md: '60%', lg: '65%' }} rounded={'full'}  dir={dirState}>
             <Galleria value={galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
                       style={{maxWidth: '100%'}}
                       showThumbnails={false} showIndicators changeItemOnIndicatorHover

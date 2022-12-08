@@ -13,10 +13,9 @@ import {
 import {useState} from "react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myLayoutState} from "../../../Atoms/layout";
-import {myLocalState} from "../../../Atoms/localAtoms";
-import SocialButton from "./components/social_button";
-import {myDirectionState} from "../../../Atoms/directionAtoms";
+import {myLayoutState} from "../Atoms/layout";
+import {myDirectionState, myLocalState} from "../Atoms/localAtoms";
+import SocialButton from "../components/social_button";
 
 export default function SignIn() {
     const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
@@ -26,9 +25,9 @@ export default function SignIn() {
         console.log("bottom " + headerFooterState.footer);
 
     });
-    const [localState, setLocalState] = useRecoilState(myLocalState);
+    const [localState] = useRecoilState(myLocalState);
     const localValue = `${localState} `
-    const [dirState, setDirState] = useRecoilState(myDirectionState);;
+    const [dirState] = useRecoilState(myDirectionState);;
     return (
         <Box
             w={'full'}

@@ -1,5 +1,5 @@
 import {Card, CardBody} from "@chakra-ui/card";
-import {Box, CardHeader, Heading, Stack, Text, StackDivider, Divider, HStack} from "@chakra-ui/react";
+import {Box, CardHeader, Heading, Text, StackDivider, HStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 
 export default function CardWithDivider_part() {

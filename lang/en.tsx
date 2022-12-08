@@ -32,4 +32,9 @@ export default {
     sometimes:"Sometimes",
     most_of_the_time:"Most of time",
     all_the_time:"All the time",
+    test_caption:"What is appropriate for your child's age must be taken into account when answering each statement in the following. During the answer, please think about the child's behavior since the last scale that was filled in to assess his behavior, noting that all phrases must be answered by choosing only one answer",
+    lets_go:"Lets go",
+    question_end:"The questionnaire has ended",
+    enter_your_phone:"Enter your phone number to view the result",
+    confirm:"Confirm",
 }

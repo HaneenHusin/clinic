@@ -1,10 +1,10 @@
 import {Box, Flex, Text} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myLayoutState} from "../../../../Atoms/layout";
+import {myLayoutState} from "../Atoms/layout";
 
 export default function CopyRightDiv() {
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
+    const [headerFooterState] = useRecoilState(myLayoutState);
     const displayFooterBar=`${headerFooterState.footer} `;
     return(
        <Box display={displayFooterBar} bg={'brand.textGray'} boxShadow={'xl'}>

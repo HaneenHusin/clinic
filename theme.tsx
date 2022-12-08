@@ -13,6 +13,7 @@ const theme = extendTheme({
         brand: {
             gray: "#EEEEEE",
             textGray: "#565E60",
+            textBlue: "#215EE9",
             darkGray: "#1E5B6333",
             dark:"#AAAAAA",
             blue:"#34B4EA",

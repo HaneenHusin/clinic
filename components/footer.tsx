@@ -14,14 +14,14 @@ import {
 import {ReactNode} from 'react';
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myDirectionState} from "../../../../Atoms/directionAtoms";
-import { myLayoutState } from '../../../../Atoms/layout';
+import { myLayoutState } from '../Atoms/layout';
 import SocialButton from "./social_button";
+import {myDirectionState} from "../Atoms/localAtoms";
 
 
 
 export default function FooterBar() {
-    const [dirState, setDirState] = useRecoilState(myDirectionState);
+    const [dirState] = useRecoilState(myDirectionState);
     const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
     const displayFooterBar=`${headerFooterState.footer} `;
     return (
@@ -32,16 +32,17 @@ export default function FooterBar() {
             borderTopRadius={'3xl'}
             color={'brand.white'}>
             <Container as={Stack} maxW={'8xl'} py={10} dir={dirState}>
-                <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}>
+                <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}>
                     <FormattedMessage id={'footer_caption'}/>
                 </Text>
                 <SimpleGrid
                     pt={'20px'}
+                    dir={dirState}
                     templateColumns={{sm: '1fr 1fr', md: '2fr 1fr 1fr 2fr'}}
                     spacing={8}>
                     <Stack  spacing={6}>
 
-                        <Text fontSize={'sm'}>
+                        <Text fontSize={'md'}>
                             <FormattedMessage id={'social_media'}/>
                         </Text>
                         <Stack direction={'row'} spacing={6}>

@@ -2,8 +2,7 @@
 import {Galleria} from "primereact/galleria";
 import {Card, CardBody, CardHeader} from "@chakra-ui/card";
 import {Heading, Image} from "@chakra-ui/react";
-import {galleriaService} from "../../services/Photos";
-import {parseToHsla} from "color2k";
+import {galleriaService} from "../pages/services/Photos";
 
 export default function CustomGalleria(){
     const responsiveOptions = [
@@ -28,9 +27,11 @@ export default function CustomGalleria(){
     );
 }
 const itemGalleryTemplate = (item) => {
+
+
     return (
 
-        <Card bg={'brand.white'} w={'full'} align="center" justify="center" m={'18px'} boxShadow={'l'} rounded={'xl'}>
+        <Card  bg={'brand.white'} w={'full'} align="center" justify="center" m={'18px'} boxShadow={'l'} rounded={'xl'}>
             <CardHeader>
                 <Heading align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.title}</Heading>
             </CardHeader>
