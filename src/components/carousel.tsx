@@ -1,10 +1,10 @@
 import {Carousel} from "primereact/carousel";
-import {galleriaService} from "../pages/services/Photos";
+import {galleriaService} from "../services/Photos";
 import {Card} from "@chakra-ui/card";
 import {CardBody, Stack, Image, Text, Button, IconButton, HStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import { myDirectionState } from "../Atoms/localAtoms";
+import { myDirectionState } from "../../Atoms/localAtoms";
 
 
 const responsiveOptions = [

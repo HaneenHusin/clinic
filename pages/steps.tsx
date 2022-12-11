@@ -4,7 +4,7 @@ import {useRecoilState} from "recoil";
 import {myLayoutState} from "../Atoms/layout";
 import {Box, Button, CardBody, Flex, HStack, Stack, Text} from "@chakra-ui/react";
 import {Carousel} from "primereact/carousel";
-import {galleriaService} from "./services/Photos";
+import {galleriaService} from "../src/services/Photos";
 import {myProgressState} from "../Atoms/progressAtom";
 import {Card} from "@chakra-ui/card";
 import {FormattedMessage} from "react-intl";

@@ -1,10 +1,10 @@
 import {Card} from "@chakra-ui/card";
 import {Avatar, Box, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
 import {Galleria} from "primereact/galleria";
-import {galleriaService} from "../pages/services/Photos";
+import {galleriaService} from "../services/Photos";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import { myDirectionState } from "../Atoms/localAtoms";
+import { myDirectionState } from "../../Atoms/localAtoms";
 
 export default function CommentPart() {
     const responsiveOptions = [

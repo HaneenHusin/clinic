@@ -1,7 +1,7 @@
 import {Box, HStack, Text, VStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myDirectionState} from "../Atoms/localAtoms";
+import {myDirectionState} from "../../Atoms/localAtoms";
 
 export  default  function VideoPart(){
     const [dirState] = useRecoilState(myDirectionState);
@@ -19,11 +19,11 @@ export  default  function VideoPart(){
                     aspectRatio: '16/9'
                 }}
             />
-            <VStack>
+            <VStack dir={dirState}>
                 <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                       color={'brand.blue'}><FormattedMessage id={'know_more'}/>
                 </Text>
-                <HStack>
+                <HStack dir={dirState}>
                     <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                           color={'brand.textGray'}><FormattedMessage id={'doctor'}/>
                     </Text>

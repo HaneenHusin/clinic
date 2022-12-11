@@ -9,15 +9,17 @@ import {useRouter} from "next/router";
 import ar from "../lang/ar";
 import en from "../lang/en";
 import {RecoilRoot} from "recoil";
-import AppBar from "../components/appbar";
+import AppBar from "../src/components/appbar";
 import {ChakraProvider} from '@chakra-ui/react';
 import theme from "../theme";
-import FooterBar from "../components/footer";
-import CopyRightDiv from "../components/copy_right_part";
+import FooterBar from "../src/components/footer";
+import CopyRightDiv from "../src/components/copy_right_part";
 import '../styles/globals.css'
 import Fonts from "../font";
-import {getCookie} from "./services/lang_cookies";
+import {getCookie} from "../src/services/lang_cookies";
 import {useEffect, useState} from "react";
+import Layout from "./layout";
+import { LoadingProgressProvider } from '../src/components/LoadingProgressContext ';
 
 const messages = {
   ar,
@@ -52,10 +54,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               <meta name="description" content="Web site created using create-next-app" />
               <meta name="theme-color" content="#000000" />
             </Head>
-            <AppBar/>
+          <LoadingProgressProvider>
+              <Layout>
             <Component {...pageProps} dir={getDirection(session)} />
-              <FooterBar />
-              <CopyRightDiv />
+              </Layout>
+          </LoadingProgressProvider>
           </IntlProvider>
           </ChakraProvider>
       </RecoilRoot>

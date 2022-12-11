@@ -15,7 +15,7 @@ import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import {myLayoutState} from "../Atoms/layout";
 import {myDirectionState, myLocalState} from "../Atoms/localAtoms";
-import SocialButton from "../components/social_button";
+import SocialButton from "../src/components/social_button";
 
 export default function SignIn() {
     const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);

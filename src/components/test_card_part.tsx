@@ -11,7 +11,8 @@ import {
 } from '@chakra-ui/react'
 import {useRouter} from "next/router";
 import {useRecoilState} from "recoil";
-import {myDirectionState} from "../Atoms/localAtoms";
+import {myDirectionState} from "../../Atoms/localAtoms";
+import React from "react";
 
 export default function TestCard( ){
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,8 +27,10 @@ export default function TestCard( ){
               onClick={onOpen}
               cursor={'pointer'}
               dir={dirState}
+
         >
-            <VStack dir={dirState}>
+
+            <VStack dir={dirState}  >
                 <img src={"assets/images/TEST_LOGO.svg"} width={'40%'}/>
                 <HStack p={'8px'}>
                     <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}

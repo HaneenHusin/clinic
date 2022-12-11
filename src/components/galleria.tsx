@@ -2,7 +2,7 @@
 import {Galleria} from "primereact/galleria";
 import {Card, CardBody, CardHeader} from "@chakra-ui/card";
 import {Heading, Image} from "@chakra-ui/react";
-import {galleriaService} from "../pages/services/Photos";
+import {galleriaService} from "../services/Photos";
 
 export default function CustomGalleria(){
     const responsiveOptions = [

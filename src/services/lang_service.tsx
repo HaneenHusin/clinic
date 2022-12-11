@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import {Lang} from "../../types/lang";
+import {Lang} from "../types/lang";
 import {useRouter} from "next/router";
 
 class LangService {
