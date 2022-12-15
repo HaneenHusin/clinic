@@ -31,7 +31,7 @@ const itemGalleryTemplate = (item) => {
 
     return (
 
-        <Card  bg={'brand.white'} w={'full'} align="center" justify="center" m={'18px'} boxShadow={'l'} rounded={'xl'}>
+        <Card  bg={'brand.white'} w={'full'}  align="center" justify="center" m={'3px'} boxShadow={'l'} rounded={'xl'} >
             <CardHeader>
                 <Heading align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.title}</Heading>
             </CardHeader>

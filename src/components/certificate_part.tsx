@@ -5,8 +5,8 @@ export default function Certificates({certificateCount}: any) {
     return (
         <SimpleGrid spacing={12} columns={[2, 3]} templateColumns='repeat(2, 1fr)' w='35%'>
             {certificateCount.map(() =>
-                <Card key={certificateCount.id} border={'4px'} borderStyle={'double'} borderColor={'brand.brounz'}   _hover={{border:"none"}}>
-                    <CardBody w={'100%'}   _hover={{display:"none"}}>
+                <Card key={certificateCount.id} border={'4px'} borderStyle={'double'} borderColor={'brand.brounz'}  >
+                    <CardBody w={'100%'} >
                         <Center>
 
                             <Image

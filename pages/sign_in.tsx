@@ -1,113 +1,247 @@
 import {
-    Box, Button, Checkbox,
-    HStack,
-    Image,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Stack,
-    Text, useColorModeValue,
-    VStack
-} from "@chakra-ui/react";
-import {useState} from "react";
-import {FormattedMessage} from "react-intl";
-import {useRecoilState} from "recoil";
-import {myLayoutState} from "../Atoms/layout";
-import {myDirectionState, myLocalState} from "../Atoms/localAtoms";
-import SocialButton from "../src/components/social_button";
+	Box,
+	Button,
+	Checkbox,
+	Flex,
+	FormControl,
+	FormErrorMessage,
+	FormHelperText,
+	FormLabel,
+	HStack,
+	Image,
+	Input,
+	Stack,
+	Text,
+	VStack,
+} from '@chakra-ui/react';
+import { Formik } from 'formik';
+import { useRouter } from 'next/router';
+import { useMemo, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useRecoilState } from 'recoil';
+import { myLayoutState } from '../Atoms/layout';
+import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
+import { formSignInState } from '../Atoms/signInAtom';
+import { SIGN_IN_API_URL } from '../src/http-endpoint';
+import { RequestA, RequestForm } from '../src/services/request';
 
 export default function SignIn() {
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
-
+	const [headerFooterState, setHeaderFooterState] =useRecoilState(myLayoutState);
+	const [localState] = useRecoilState(myLocalState);
+	const localValue = `${localState} `;
+	const [dirState] = useRecoilState(myDirectionState);
+	const [form, setForm] = useRecoilState(formSignInState);
+	const router = useRouter();
+   
     useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none"})
-        console.log("bottom " + headerFooterState.footer);
+		setHeaderFooterState({
+			...headerFooterState,
+			footer: 'none',
+			appBar: 'none',
+		});
+		console.log('bottom ' + headerFooterState.footer);
 
-    });
-    const [localState] = useRecoilState(myLocalState);
-    const localValue = `${localState} `
-    const [dirState] = useRecoilState(myDirectionState);;
-    return (
-        <Box
-            w={'full'}
-            h={'100vh'}
-            bg={'brand.white'}
-            backgroundSize={'cover'}
-            p={'8%'}
-            dir={dirState}
-        >
-            <HStack spacing={"72"}  dir={dirState}>
-                <VStack>
-                    <Image src={'assets/images/Clinic.svg'}/>
-                    <Text fontSize={['sm', 'md', 'lg', 'xl']} pt={'15px'} color={'brand.blue'} fontWeight={'semibold'}>
-                        ADHD Center Online Clinic
-                    </Text>
-                </VStack>
-                <VStack align={'start'}  dir={dirState}>
-                    <Text fontSize={['sm', 'md', 'lg', 'xl']} pt={'15px'} color={'brand.blue'} fontWeight={'semibold'}>
-                        <FormattedMessage id={'welcome_our_clinic'}/>
-                    </Text>
-                    <Stack spacing={4}>
-                        <InputGroup>
-                            {localValue === "EN" ? <InputLeftElement
-                                pointerEvents='none'
-                                color={'brand.blue'}
-                                children={<i className="pi pi-envelope"></i>}
-                            /> : <InputRightElement
-                                pointerEvents='none'
-                                color={'brand.blue'}
-                                children={<i className="pi pi-envelope"></i>}
-                            />}
+      
+	});
+	async function goSignUpPage() {
+		console.log('localValue...' + localValue);
+		const { pathname, asPath, query } = router;
+		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() });
+	}
+	
 
-                            <Input type='email' placeholder='Email' borderColor={'brand.blue'}/>
-                        </InputGroup>
+		
+		// const stringifiedData = useMemo(() => {
+		// 	return JSON.stringify(data || {});
+		// }, [data]);
 
-                        <InputGroup>
-                            {localValue === "EN" ? <InputLeftElement
-                                pointerEvents='none'
-                                color={'brand.blue'}
-                                children={<i className="pi pi-lock"></i>}
-                            /> : <InputRightElement
-                                pointerEvents='none'
-                                color={'brand.blue'}
-                                children={<i className="pi pi-lock"></i>}
-                            />}
-                            <Input placeholder='Password' type='password' borderColor={'brand.blue'}/>
-                        </InputGroup>
-                    </Stack>
-                    <Text fontSize={['sm']} color={'brand.textGray'} textDecoration={'underline'}
-                          fontWeight={'semibold'}>
-                        <FormattedMessage id={'forget_pass'}/>
-                    </Text>
-                    <HStack pt={'20%'} spacing={20}>
-                        <Button w={'100px'} variant='primary'><FormattedMessage
-                            id={'login'}/>
-                        </Button>
-                        <Checkbox colorScheme='blue' defaultChecked>
-                            <Text fontSize={['sm']} color={'brand.textGray'}>
-                                <FormattedMessage id={'remember_me'}/>
-                            </Text>
+	return (
+		//             </HStack>
+		//             {/* <Text pt={'50px'} fontSize={['sm', 'md']} color={'brand.textGray'} fontWeight={'semibold'}>
+		//                 <FormattedMessage id={'login_by'} defaultMessage='Login by' />
+		//             </Text>
+		//             <HStack>
+		//                 <SocialButton label={'Facebook'} href={'#'}
+		//                               bgColor={useColorModeValue('blackAlpha.50', 'whiteAlpha.100')}>
+		//                     <i style={{'fontSize': '1.5em'}} className="pi pi-facebook"></i>
+		//                 </SocialButton>
+		//                 <SocialButton label={'Facebook'} href={'#'}
+		//                               bgColor={useColorModeValue('blackAlpha.50', 'whiteAlpha.100')}>
+		//                     <i style={{'fontSize': '1.5em'}} className="pi pi-google"></i>
+		//                 </SocialButton>
+		//             </HStack> */}
 
-                        </Checkbox>
-                    </HStack>
-                    <Text pt={'50px'} fontSize={['sm', 'md']} color={'brand.textGray'} fontWeight={'semibold'}>
-                        <FormattedMessage id={'login_by'}/>
-                    </Text>
-                    <HStack>
-                        <SocialButton label={'Facebook'} href={'#'}
-                                      bgColor={useColorModeValue('blackAlpha.50', 'whiteAlpha.100')}>
-                            <i style={{'fontSize': '1.5em'}} className="pi pi-facebook"></i>
-                        </SocialButton>
-                        <SocialButton label={'Facebook'} href={'#'}
-                                      bgColor={useColorModeValue('blackAlpha.50', 'whiteAlpha.100')}>
-                            <i style={{'fontSize': '1.5em'}} className="pi pi-google"></i>
-                        </SocialButton>
-                    </HStack>
+		<Stack
+			dir={dirState}
+			minH={'100vh'}
+			direction={{ base: 'column', md: 'row' }}
+			bg={'brand.white'}
+			backgroundSize={'cover'}
+		>
+			<Flex p={8} flex={1} align={'center'} justify={'center'}>
+				<Stack spacing={6} w={'full'} maxW={'lg'}>
+					<Text
+						fontSize={['md', 'lg', 'xl', '3xl']}
+						pt={'15px'}
+						color={'brand.blue'}
+						fontWeight={'semibold'}
+					>
+						<FormattedMessage
+							id={'welcome_our_clinic'}
+							defaultMessage='welcome our clinic'
+						/>
+					</Text>
 
-                </VStack>
-            </HStack>
-        </Box>
+					{/* <FormControl isInvalid={isError} isRequired >
+                    <FormLabel>
+						<FormattedMessage id={'email'} defaultMessage='email' />
+					</FormLabel>
+					<Input
+						type='email'
+						borderColor={'brand.blue'}
+						onChange={onEmailTextChanged}
+					/>
+                      {!isError ? <></> : (
+                          <FormErrorMessage>Email is Invalid</FormErrorMessage>
+                        )}
+                     </FormControl> */}
 
-    );
+					<Formik
+						initialValues={{  password: '',username:'' }}
+						validate={(values) => {
+							const errors = {};
+							if (!values.username) {
+								errors.username = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
+							}
+                            if (!values.password) {
+                                errors.password =<FormattedMessage  id={'required'} defaultMessage='required' />;
+                            }
+							return errors;
+						}}
+						onSubmit={(values, { setSubmitting }) => {
+							setTimeout(() => {
+								alert(JSON.stringify(values, null, 2));
+                                // setForm({
+                                //     ...form,
+                                //     email:values.email,
+                                // });
+                                // setForm({
+                                //     ...form,
+                                //     password:values.password,
+                                // });
+                                var bodyFormData = new FormData();
+	                        bodyFormData.append('username', values.username);
+	                        bodyFormData.append('password', values.password);
+                            RequestForm(SIGN_IN_API_URL,bodyFormData,"Post");
+								// setSubmitting(false);
+							}, 400);
+						}}
+					>
+						{({
+							values,
+							errors,
+							touched,
+							handleChange,
+							handleBlur,
+							handleSubmit,
+							isSubmitting,
+						}) => (
+							<form onSubmit={handleSubmit}>
+								<FormLabel>
+									<FormattedMessage id={'username'} defaultMessage='username' />
+								</FormLabel>
+								<Input
+									type='text'
+									name='username'
+									onChange={handleChange}
+									onBlur={handleBlur}
+									borderColor={'brand.blue'}
+									value={values.username}
+								/>
+							   <Text color={"red"}>{errors.username && touched.username && errors.username}</Text>	
+								<FormLabel pt={'5%'}>
+									<FormattedMessage id={'password'} defaultMessage='password' />
+								</FormLabel>
+								<Input
+									type='password'
+									name='password'
+									onChange={handleChange}
+									onBlur={handleBlur}
+									borderColor={'brand.blue'}
+									value={values.password}
+								/>
+								 <Text color={"red"}>{errors.password && touched.password && errors.password}</Text>	
+
+								{/* <label>
+						<FormattedMessage id={'password'} defaultMessage='password' />
+					</label>
+					<Input
+						type='password'
+						borderColor={'brand.blue'}
+						onChange={onPassTextChanged}
+					/> */}
+								<HStack pt={'4%'} justify={'space-between'}>
+									<Text
+										fontSize={['md']}
+										color={'brand.textGray'}
+										textDecoration={'underline'}
+										cursor={'pointer'}
+										onClick={() => goSignUpPage()}
+										fontWeight={'semibold'}
+									>
+										<FormattedMessage
+											id={'dont_have_account'}
+											defaultMessage='Dont have account'
+										/>
+									</Text>
+									<Checkbox colorScheme='blue' defaultChecked>
+										<Text fontSize={['lg']} color={'brand.textGray'}>
+											<FormattedMessage
+												id={'remember_me'}
+												defaultMessage='Remember me'
+											/>
+										</Text>
+									</Checkbox>
+								</HStack>
+
+								<Stack
+									direction={{ base: 'column', md: 'row' }}
+									spacing={8}
+									pt={'10%'}
+								>
+									<Button
+										w={'400px'}
+										variant='primary'
+										type='submit'
+										disabled={isSubmitting}
+									>
+										<FormattedMessage id={'login'} defaultMessage='login' />
+									</Button>
+								</Stack>
+							</form>
+						)}
+					</Formik>
+				</Stack>
+			</Flex>
+			<VStack flex={1}>
+				<Image
+					alt={'Login Image'}
+					objectFit={'cover'}
+					rounded={'xl'}
+					align={'center'}
+					w={'60%'}
+					h={'60%'}
+					src={'/assets/images/Clinic.svg'}
+				/>
+				<Text
+					fontSize={['sm', 'md', 'lg', 'xl']}
+					pt={'15px'}
+					color={'brand.blue'}
+					fontWeight={'semibold'}
+				>
+					ADHD Center Online Clinic
+				</Text>
+			</VStack>
+		</Stack>
+	);
 }

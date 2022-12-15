@@ -10,7 +10,6 @@ export function setCookie(name: string, val: string) {
 }
 
 export function getCookie(name: string) {
-    debugger
     if (typeof window !== "undefined") {
     const value = "; " + document.cookie;
     const parts = value.split("; " + name + "=");

@@ -8,3 +8,9 @@ export const myLayoutState = atom({
         footer: 'block',
     },
 });
+export const myAdminAppBarState = atom({
+    key: 'myAdminAppBarState',
+    default: false
+
+
+});

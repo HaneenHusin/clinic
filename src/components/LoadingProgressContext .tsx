@@ -2,6 +2,7 @@ import {Progress, VStack, CircularProgress, Skeleton} from '@chakra-ui/react'
 import { createContext, ReactElement, useContext, useState, useEffect, useRef } from 'react'
 import {myLoaderState} from "../../Atoms/loadingAtom";
 import {useRecoilState} from "recoil";
+import AppBar from "./appbar";
 
 type Props = {
     children: ReactElement | ReactElement[]
@@ -89,10 +90,9 @@ export const LoadingProgressProvider = ({ children }: Props): ReactElement => {
                 value,
                 start,
                 done
-            }}
-        >
+            }}>
             {isOn ? <LoadingProgress /> : <></>}
-            <Skeleton   isLoaded={!isOn}>
+            <Skeleton startColor='brand.blueLight' endColor='brand.textBlue'  isLoaded={!isOn}>
             {children}
             </Skeleton>
         </LoadingProgressContext.Provider>

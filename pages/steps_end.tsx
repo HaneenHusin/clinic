@@ -21,7 +21,7 @@ export default function StepsEnd() {
     const [dirState] = useRecoilState(myDirectionState);
 
     useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none"})
+        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none",admin_appBar: "none"})
         console.log("bottom " + headerFooterState.footer);
 
     });

@@ -4,7 +4,7 @@ import {FormattedMessage} from "react-intl";
 
 export default function CardWithDivider_part() {
     return(
-        <Card bg={'brand.white'} rounded={'3xl'} align="center" justify="center" >
+        <Card bg={'brand.white'} rounded={'3xl'} align="center" justify="center"border={"1px"} borderColor={"brand.darkGray"} >
             <CardBody>
                 <HStack divider={<StackDivider fontWeight={'bold'} /> } spacing={['4', '6', '8', '12']} >
                     <Box align="center" justify="center">

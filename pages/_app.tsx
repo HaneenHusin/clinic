@@ -33,11 +33,13 @@ function getDirection(locale:string) {
     return "ltr";
 }
 function MyApp({ Component, pageProps }: AppProps) {
-  const [session, setSession] = useState();
+  const [session, setSession] = useState("ar");
     useEffect(() => {
-        setSession( getCookie("language"))
-        console.log("session "+session)
-    }, []);
+      debugger
+      let temp=getCookie("language")
+       setSession(temp);
+        console.log("session... "+session)
+    }, [session]);
 
   return (
 
@@ -45,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ChakraProvider theme={theme}>
               <Fonts />
 
-          <IntlProvider locale={session} messages={messages[session]} defaultLocale={'ar'} >
+          <IntlProvider  locale={session} messages={messages[session]}  >
             <Head>
               <link rel="icon" href="/favicon.ico" />
               <title>React App</title>
@@ -54,11 +56,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               <meta name="description" content="Web site created using create-next-app" />
               <meta name="theme-color" content="#000000" />
             </Head>
-          <LoadingProgressProvider>
+              <LoadingProgressProvider>
               <Layout>
             <Component {...pageProps} dir={getDirection(session)} />
               </Layout>
-          </LoadingProgressProvider>
+              </LoadingProgressProvider>
           </IntlProvider>
           </ChakraProvider>
       </RecoilRoot>

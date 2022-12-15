@@ -18,84 +18,104 @@ import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import {myAbbBarLocalState, myDirectionState, myLocalState} from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
-import {myLayoutState} from "../../Atoms/layout";
-import {setCookie} from "../services/lang_cookies";
-import {useAxios} from "../services/request";
-import {SERVICE_API_URL} from "../http-endpoint";
-import {myLoaderState} from "../../Atoms/loadingAtom";
+import {myAdminAppBarState, myLayoutState} from "../../Atoms/layout";
+import {getCookie, setCookie} from "../services/lang_cookies";
+import {DrawerAdmin} from "./drawer_admin";
+import { useState } from 'react';
 
 export default function AppBar() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const router = useRouter()
     const [headerFooterState] = useRecoilState(myLayoutState);
     const displayAppBar = `${headerFooterState.appBar} `;
-    const [localState] = useRecoilState(myLocalState);
-    const [dirState] = useRecoilState(myDirectionState);
+    const [dirState,setDirState] = useRecoilState(myDirectionState);
     const [appBarState, setAppBarState] = useRecoilState(myAbbBarLocalState);
+    const [adminAppBarState, setAdminAppBarState] = useRecoilState(myAdminAppBarState);
+    const [localState,setLocalState] = useRecoilState(myLocalState);
+    const localValue = `${localState} `;
 
     async function setDirection(lang: string) {
-        // debugger
-        // let newLang: Lang;
-        // newLang = {local: lang, dir: lang  === "ar"?"rtl":"ltr"};
-        // myLangService.addLang(newLang);
-        // dirLang=myLangService.getLang();
         setCookie("language", lang);
-
         setAppBarState(localState == "ar" ? "AR" : "EN")
         console.log('langButton      ' + appBarState)
-        // setDirState(lang  === "ar"?"rtl":"ltr")
-        // setLocalState(lang  === "ar"?"AR":"EN")
-        // console.log('dirLang  '+dirLang.dir)
+        setDirState(lang  === "ar"?"rtl":"ltr")
         const {pathname, asPath, query} = router
         router.reload();
-        await router.push({pathname, query}, asPath, {locale: lang})
+        await router.push({pathname, query}, asPath, {locale: localState})
 
     }
+    useState(async () => {
+        setLocalState( getCookie("language"));
+        setDirState(localState == "ar" ? "rtl" : "ltr");
+        setAppBarState(localState == "ar" ? "AR" : "EN");
+        console.log("dirrrrrr2 " + dirState)
+        console.log("localState " + localState)
+
+    })
 
     async function goLoginPage() {
-        await router.replace('/sign_in');
+        debugger
+        const {pathname, asPath, query} = router
+        await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim() } );
+        
+    }
+    async function goSignUpPage() {
+        const {pathname, asPath, query} = router
+        await router.push('/sign_up', '/sign_up',  { locale: localValue.trim()} );
 
     }
+    async function goSite() {
+        const {pathname, asPath, query} = router
+        await router.push( '/sign_in','/sign_in',  { locale: localValue.trim() } );
 
+    }
     return (
         <>
 
             <Box display={displayAppBar} bg={'brand.white'} boxShadow={'xl'} dir={dirState}>
                 <Flex h={20} px={8} w={'full'} alignItems={'center'} boxShadow={'l'}>
-                    <IconButton
-                        size={'md'}
-                        icon={isOpen ? <CloseIcon/> : <HamburgerIcon/>}
-                        aria-label={'Open Menu'}
-                        display={{md: 'none'}}
-                        onClick={isOpen ? onClose : onOpen}
-                    />
-                    <HStack display={{base: 'none', md: 'flex'}}>
-                        <Image src={'assets/images/LOGO.svg'}/>
-                        <Text color='brand.blue'>ADHD Center</Text>
-                    </HStack>
+
+                        <HStack display={'flex'} >
+                            <Image src={'assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>
+                            <Text color='brand.blue'>ADHD Center</Text>
+                        </HStack>
+
 
                     <Spacer w='calc(5vh)'/>
 
-                    <Text pl={'2'} pr={'2'} fontSize={'l'} textColor={'brand.blue'} fontWeight={600}
+                    {adminAppBarState==false? <Text pl={'2'} pr={'2'} fontSize={'l'} textColor={'brand.blue'} fontWeight={600}
                           display={{base: 'none', md: 'flex'}}><FormattedMessage
-                        id={'we_are_available_string'}/>
-                    </Text>
+                        id={'we_are_available_string'} defaultMessage="We are available to help you 7/24"/>
+                    </Text>:<></>}
                     <Spacer w='calc(5vh)'/>
-                    <HStack>
+                    {adminAppBarState==false?  <HStack>
                         <Button variant='outline' colorScheme='brand'
                                 display={{base: 'none', md: 'flex'}}
                                 onClick={() => goLoginPage()}
                                 leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
                                                  h={'30px'}></Image>}><FormattedMessage
-                            id={'login'}/></Button>
+                            id={'login'} defaultMessage="Login"/></Button>
 
                         <Button variant='primary'
                                 display={{base: 'none', md: 'flex'}}
                                 leftIcon={<Image src={'assets/images/SIGN_UP.svg'}
                                                  h={'30px'}></Image>}><FormattedMessage
-                            id={'join_us'}/></Button>
-                    </HStack>
+                            id={'join_us'} defaultMessage="Join us"/></Button>
+                    </HStack>:  <Button variant='outline' colorScheme='brand'
+                                        display={{base: 'none', md: 'flex'}}
+                                        onClick={() => goSite()}
+                                        leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
+                                                         h={'20px'}></Image>}><FormattedMessage  id={'to_site'} defaultMessage="to site"/></Button>
+                    }
                     <Box p={'5px'}>
+                        {adminAppBarState==false?<IconButton
+                            size={'md'}
+                            m={"5px"}
+                            icon={isOpen ? <CloseIcon/> : <HamburgerIcon/>}
+                            aria-label={'Open Menu'}
+                            display={{md: 'none'}}
+                            onClick={isOpen ? onClose : onOpen}
+                        /> :<></>}
                         <Menu>
                             <MenuButton as={Button} color={'brand.textGray'} rightIcon={<ChevronDownIcon/>}>
                                 {appBarState}
@@ -117,7 +137,7 @@ export default function AppBar() {
                                 </MenuItem>
                             </MenuList>
                         </Menu>
-
+                        {adminAppBarState==true? <DrawerAdmin/>:<></>}
                     </Box>
 
                 </Flex>
@@ -129,12 +149,13 @@ export default function AppBar() {
                                     onClick={() => goLoginPage()}
                                     leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
                                                      h={'30px'}></Image>}><FormattedMessage
-                                id={'login'}/></Button>
+                                id={'login'} defaultMessage="Login"/></Button>
 
                             <Button variant='primary' m={"10px"}
                                     leftIcon={<Image src={'assets/images/SIGN_UP.svg'}
+                                    onClick={() => goSignUpPage()}
                                                      h={'30px'}></Image>}><FormattedMessage
-                                id={'join_us'}/></Button>
+                                id={'join_us'} defaultMessage="Join us"/></Button>
                         </Stack>
 
                     </Box>

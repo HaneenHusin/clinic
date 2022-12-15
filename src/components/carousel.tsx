@@ -5,7 +5,8 @@ import {CardBody, Stack, Image, Text, Button, IconButton, HStack} from "@chakra-
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import { myDirectionState } from "../../Atoms/localAtoms";
-
+import Article from "../../pages/article";
+import {useRouter} from "next/router";
 
 const responsiveOptions = [
     {
@@ -14,12 +15,12 @@ const responsiveOptions = [
         numScroll: 3
     },
     {
-        breakpoint: '600px',
+        breakpoint: '768px',
         numVisible: 2,
         numScroll: 2
     },
     {
-        breakpoint: '480px',
+        breakpoint: '560px',
         numVisible: 1,
         numScroll: 1
     }
@@ -27,13 +28,22 @@ const responsiveOptions = [
 
 export default function CustomCarousel() {
         return (
-            <Carousel value={galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1}
-                      showIndicators={false} responsiveOptions={responsiveOptions}></Carousel>
+            <div className="card">
+                <Carousel value={galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions}
+                          showIndicators={false} ></Carousel>
+            </div>
+
         );
 }
 
+
 export function RelatedNewsClinic() {
     const [dirState] = useRecoilState(myDirectionState);
+    const router = useRouter()
+    async function goArticlePage() {
+        await router.push('/article');
+
+    }
      return (
         <Card w={'80%'} bg={'brand.blue'} rounded={'xl'} dir={dirState}>
             <CardBody  dir={dirState}>
@@ -48,16 +58,16 @@ export function RelatedNewsClinic() {
                         spaces, earthy toned spaces and for people who love a chic design with a
                         sprinkle of vintage design.
                     </Text>
-                    <HStack>
+                    <HStack onClick={() => goArticlePage()} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                               color={'brand.white'}>
                             <FormattedMessage id={'read_article'}/>
                         </Text>
                         {dirState=="rtl" ?
-                            <IconButton colorScheme='brand.blue' aria-label={"more"}>
+                            <IconButton colorScheme='brand.blue' aria-label={"more"}  >
                             <i className="pi pi-arrow-right" style={{'fontSize': '1em'}}></i>
                         </IconButton>
-                            : <IconButton colorScheme='brand.blue' aria-label={"more"}>
+                            : <IconButton colorScheme='brand.blue' aria-label={"more"} >
                             <i className="pi pi-arrow-left" style={{'fontSize': '1em'}}></i>
                         </IconButton>}
 
@@ -65,8 +75,6 @@ export function RelatedNewsClinic() {
 
                 </Stack>
             </CardBody>
-
-
         </Card>
 
     )
