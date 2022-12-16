@@ -6,8 +6,6 @@ import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import {useRouter} from "next/router";
-import ar from "../lang/ar";
-import en from "../lang/en";
 import {RecoilRoot} from "recoil";
 import AppBar from "../src/components/appbar";
 import {ChakraProvider} from '@chakra-ui/react';
@@ -16,10 +14,21 @@ import FooterBar from "../src/components/footer";
 import CopyRightDiv from "../src/components/copy_right_part";
 import '../styles/globals.css'
 import Fonts from "../font";
-import {getCookie} from "../src/services/lang_cookies";
+import {getCookie} from "../src/services/cookies_file";
 import {useEffect, useState} from "react";
-import Layout from "./layout";
 import { LoadingProgressProvider } from '../src/components/LoadingProgressContext ';
+import ar from '../public/lang/ar';
+import en from '../public/lang/en';
+import type { ReactElement, ReactNode } from 'react'
+import type { NextPage } from 'next'
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
 
 const messages = {
   ar,
@@ -32,7 +41,8 @@ function getDirection(locale:string) {
 
     return "ltr";
 }
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page)
   const [session, setSession] = useState("ar");
     useEffect(() => {
       debugger
@@ -56,11 +66,12 @@ function MyApp({ Component, pageProps }: AppProps) {
               <meta name="description" content="Web site created using create-next-app" />
               <meta name="theme-color" content="#000000" />
             </Head>
-              <LoadingProgressProvider>
-              <Layout>
-            <Component {...pageProps} dir={getDirection(session)} />
-              </Layout>
-              </LoadingProgressProvider>
+              {/* <LoadingProgressProvider>
+              <Layout> */}
+              getLayout( <Component {...pageProps} dir={getDirection(session)} />)
+           
+              {/* </Layout>
+              </LoadingProgressProvider> */}
           </IntlProvider>
           </ChakraProvider>
       </RecoilRoot>

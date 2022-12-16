@@ -12,19 +12,17 @@ import {
 	VStack,
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
 import { myLayoutState } from '../Atoms/layout';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
-import { formSignInState } from '../Atoms/signInAtom';
-import SocialButton from '../src/components/social_button';
-import { SIGN_IN_API_URL, SIGN_UP_API_URL } from '../src/http-endpoint';
-import { RequestA, RequestForm, useAxios } from '../src/services/request';
+import { SignRequest } from './api';
 
 export default function SignUp() {
 	const [headerFooterState, setHeaderFooterState] =useRecoilState(myLayoutState);
-
+	const router = useRouter();
 	useState(() => {
 		setHeaderFooterState({
 			...headerFooterState,
@@ -36,11 +34,11 @@ export default function SignUp() {
 	const [localState] = useRecoilState(myLocalState);
 	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
-	const [form, setForm] = useRecoilState(formSignInState);
 	console.log('localValue    ' + localValue);
 
-	function Register() {
-		console.log('');
+	async function Register(response:any) {
+		const { pathname, asPath, query } = router;
+	await router.push('/sign_in', '/sign_in', { locale: localValue.trim() });
 	}
 
 	return (
@@ -115,14 +113,15 @@ export default function SignUp() {
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
-                                var bodyFormData = new FormData();
-                                bodyFormData.append('username', values.username);
-                                bodyFormData.append('email', values.email);
-                                bodyFormData.append('first_name', values.firstname);
-                                bodyFormData.append('last_name', values.lastname);
-                                bodyFormData.append('password1', values.password);
-                                bodyFormData.append('password2', values.confirm_password);
-                                RequestForm(SIGN_UP_API_URL,bodyFormData,"Post");
+								const dataToRequestAPI = {
+									username: values.username,
+									password: values.password,
+									first_name:values.firstname,
+									last_name:values.lastname,
+									password1:values.password,
+									password2:values.confirm_password,
+										  }
+										  SignRequest('/signup/',dataToRequestAPI,Register)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -211,7 +210,7 @@ export default function SignUp() {
 
 
 					<Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={"8%"}>
-						<Button w={'400px'} variant='primary' 	type='submit'	disabled={isSubmitting} onClick={() => Register()}>
+						<Button w={'400px'} variant='primary' 	type='submit'	disabled={isSubmitting}>
 							<FormattedMessage id={'register'} defaultMessage='Register' />
 						</Button>
 					</Stack>

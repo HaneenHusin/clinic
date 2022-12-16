@@ -1,5 +1,4 @@
 import { useRecoilState } from 'recoil';
-import { Card, CardBody, CardHeader } from '@chakra-ui/card';
 import {
 	Box,
 	Center,
@@ -24,16 +23,16 @@ import CustomCarousel from '../src/components/carousel';
 import CustomGalleria from '../src/components/galleria';
 import TestCard from '../src/components/test_card_part';
 import VideoPart from '../src/components/video_part';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { myAdminAppBarState, myLayoutState } from '../Atoms/layout';
-import { getCookie } from '../src/services/lang_cookies';
+import { getCookie } from '../src/services/cookies_file';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
-import { useAxios } from '../src/services/request';
-import { LoginRequest, LoginResponse } from '../src/types/login_Model';
-import { storeResponse } from '../src/types/test_responsr';
-import { myLoaderState } from '../Atoms/loadingAtom';
+import Layout from '../src/components/layout';
+import { NextPageWithLayout } from './_app';
+import { LoadingProgressProvider } from '../src/components/LoadingProgressContext ';
 
-export default function Welcome() {
+
+const Welcome: NextPageWithLayout = () => {
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -54,13 +53,7 @@ export default function Welcome() {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [adminAppBarState, setAdminAppBarState] =
 		useRecoilState(myAdminAppBarState);
-	// const { data, error, loaded } = useAxios(
-	//     SERVICE_API_URL,
-	//     "Get",
-
-	//     ""
-
-	// );
+		
 
 	useState(async () => {
 		setHeaderFooterState({
@@ -73,10 +66,10 @@ export default function Welcome() {
 		setDirState(localState == 'ar' ? 'rtl' : 'ltr');
 		console.log("welcome dirr " + dirState)
 		console.log("welcome localState " + localState)
+		
 	});
 
 	return (
-		// <Skeleton  fadeDuration={3} isLoaded={loaded}>
 		<div dir={dirState}>
 			<CustomGalleria />
 			<Center>
@@ -181,6 +174,16 @@ export default function Welcome() {
 				</VStack>
 			</Center>
 		</div>
-		// </Skeleton>
 	);
 }
+Welcome.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <Layout>
+			 <LoadingProgressProvider>
+            {page}
+			 </LoadingProgressProvider>
+        </Layout>
+    )
+}
+
+export default  Welcome;

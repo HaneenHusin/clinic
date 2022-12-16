@@ -19,18 +19,23 @@ import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
+import { myErrorState } from '../Atoms/errorAtom';
 import { myLayoutState } from '../Atoms/layout';
+import { myLoaderState } from '../Atoms/loadingAtom';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
-import { formSignInState } from '../Atoms/signInAtom';
-import { SIGN_IN_API_URL } from '../src/http-endpoint';
-import { RequestA, RequestForm } from '../src/services/request';
+import { myDataState } from '../Atoms/responseAtom';
+import { setCookie } from '../src/services/cookies_file';
+import { SignRequest } from './api';
 
 export default function SignIn() {
 	const [headerFooterState, setHeaderFooterState] =useRecoilState(myLayoutState);
 	const [localState] = useRecoilState(myLocalState);
 	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
-	const [form, setForm] = useRecoilState(formSignInState);
+	const [error, setError] = useRecoilState(myErrorState);
+	const [loaded,setLoaded] = useRecoilState(myLoaderState);
+	const [data, setData] = useRecoilState(myDataState); 
+	
 	const router = useRouter();
    
     useState(() => {
@@ -49,11 +54,13 @@ export default function SignIn() {
 		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() });
 	}
 	
-
-		
-		// const stringifiedData = useMemo(() => {
-		// 	return JSON.stringify(data || {});
-		// }, [data]);
+	
+async function loginResult(response:any) {
+	debugger
+	await setCookie('cookies',response.access);
+	const { pathname, asPath, query } = router;
+	await router.push('/welcome', '/welcome', { locale: localValue.trim() });
+   }
 
 	return (
 		//             </HStack>
@@ -121,19 +128,14 @@ export default function SignIn() {
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
-                                // setForm({
-                                //     ...form,
-                                //     email:values.email,
-                                // });
-                                // setForm({
-                                //     ...form,
-                                //     password:values.password,
-                                // });
-                                var bodyFormData = new FormData();
-	                        bodyFormData.append('username', values.username);
-	                        bodyFormData.append('password', values.password);
-                            RequestForm(SIGN_IN_API_URL,bodyFormData,"Post");
-								// setSubmitting(false);
+                              
+                            
+                            const dataToRequestAPI = {
+	                        username: values.username,
+	                        password: values.password,
+                                  }
+								  SignRequest('/signin/',dataToRequestAPI,loginResult)
+								setSubmitting(false);
 							}, 400);
 						}}
 					>

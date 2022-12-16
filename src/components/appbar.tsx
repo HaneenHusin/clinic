@@ -19,7 +19,7 @@ import {useRecoilState} from "recoil";
 import {myAbbBarLocalState, myDirectionState, myLocalState} from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
 import {myAdminAppBarState, myLayoutState} from "../../Atoms/layout";
-import {getCookie, setCookie} from "../services/lang_cookies";
+import {getCookie, setCookie} from "../services/cookies_file";
 import {DrawerAdmin} from "./drawer_admin";
 import { useState } from 'react';
 
@@ -152,10 +152,8 @@ export default function AppBar() {
                                 id={'login'} defaultMessage="Login"/></Button>
 
                             <Button variant='primary' m={"10px"}
-                                    leftIcon={<Image src={'assets/images/SIGN_UP.svg'}
-                                    onClick={() => goSignUpPage()}
-                                                     h={'30px'}></Image>}><FormattedMessage
-                                id={'join_us'} defaultMessage="Join us"/></Button>
+                                    leftIcon={<Image src={'assets/images/SIGN_UP.svg'}  onClick={() => goSignUpPage()}     h={'30px'}></Image>}>
+                                        <FormattedMessage id={'join_us'} defaultMessage="Join us"/></Button>
                         </Stack>
 
                     </Box>

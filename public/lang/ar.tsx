@@ -64,5 +64,7 @@ export default {
     username:"اسم المستخدم",
     firstname:"الاسم الأول",
     lastname:"الاسم الأخير",
+    try_agin:"الرجاء إعادة المحاولة ",
+    wrong:"Something went wrong"
 
 }

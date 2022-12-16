@@ -1,15 +1,15 @@
 import {ReactElement, useEffect, useState} from 'react'
 import { Flex, Skeleton, Spinner} from '@chakra-ui/react'
-import AppBar from "../src/components/appbar";
-import FooterBar from "../src/components/footer";
-import { useLoadingProgress} from '../src/components/LoadingProgressContext ';
+import AppBar from "./appbar";
+import FooterBar from "./footer";
+import { useLoadingProgress} from './LoadingProgressContext ';
 import {Router} from "next/router";
 
 type Props = {
     children: ReactElement | ReactElement[]
 }
 
-const Layout = ({children, ...props}: Props) => {
+function Layout ({children, ...props}: Props)  {
     const {start, done} = useLoadingProgress()
     const [isOn, setOn] = useState(true)
     // const [loaded] = useRecoilState(myLoaderState);
@@ -39,10 +39,10 @@ const Layout = ({children, ...props}: Props) => {
     }, [])
     return (
 
-        <Flex direction="column" maxW={{xl: '1700px'}} pt={0}  backgroundImage="url(assets/images/Path_1.svg)"   {...props}>
+        <Flex direction="column" maxW={{xl: '1700px'}} pt={0} pr={"3px"} pl={"3px"}  backgroundImage="url(assets/images/Path_1.svg)"   {...props}>
             <Skeleton startColor='brand.blueLight' endColor='brand.textBlue' isLoaded={!isOn}>
                 <AppBar/>
-                {children}
+               <main>{children}</main> 
                 <FooterBar/>
             </Skeleton>
 

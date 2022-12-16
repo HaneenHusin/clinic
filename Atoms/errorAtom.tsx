@@ -1,8 +1,9 @@
-import {atom} from "recoil";
+import { atom } from 'recoil';
 
 export const myErrorState = atom({
-    key: 'myErrorState',
-    default: false
-
-
+	key: 'myErrorState',
+	default: {
+		isError: false,
+		message: '',
+	},
 });

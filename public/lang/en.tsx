@@ -63,4 +63,7 @@ export default {
     username:"User Name",
     firstname:"First name",
     lastname:"Last name",
+    try_agin:"Please try agin",
+    wrong:"Something went wrong"
+    
 }
