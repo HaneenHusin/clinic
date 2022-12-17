@@ -1,38 +1,25 @@
 import {
     Box,
-    chakra,
     Container,
     Link,
     SimpleGrid,
     Stack,
     Text,
-    VisuallyHidden,
-    Input,
-    IconButton,
     useColorModeValue,
-    SkeletonText, Skeleton,
 } from '@chakra-ui/react';
-import {ReactNode} from 'react';
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import { myLayoutState } from '../../Atoms/layout';
 import SocialButton from "./social_button";
 import {myDirectionState} from "../../Atoms/localAtoms";
-import {myLoaderState} from "../../Atoms/loadingAtom";
 import CopyRightDiv from "./copy_right_part";
 
 
 
 export default function FooterBar() {
     const [dirState] = useRecoilState(myDirectionState);
-    const [headerFooterState] = useRecoilState(myLayoutState);
-    const displayFooterBar=`${headerFooterState.footer} `;
-    const [loaded] = useRecoilState(myLoaderState);
     return (
-        // <Skeleton   isLoaded={loaded}>
         <Box
             dir={dirState}
-            display={displayFooterBar}
             bg={'brand.blue'}
             borderTopRadius={'3xl'}
             color={'brand.white'}>
@@ -78,6 +65,5 @@ export default function FooterBar() {
             </Container>
             <CopyRightDiv />
         </Box>
-            // </Skeleton>
             );
 }

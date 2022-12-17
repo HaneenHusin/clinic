@@ -50,6 +50,8 @@ export default {
     close:"Close",
     add_article:"Add Article",
     edit_article:"Edit Article",
+    add_certificate:"Add certificate",
+    edit_certificate:"Edit certificate",
     images:"Images",
     edit:"Edit",
     mange_your_clini:"Mange your clini",
@@ -64,6 +66,8 @@ export default {
     firstname:"First name",
     lastname:"Last name",
     try_agin:"Please try agin",
-    wrong:"Something went wrong"
+    wrong:"Something went wrong",
+    Key_words:"key words"
+
     
 }

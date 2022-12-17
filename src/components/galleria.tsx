@@ -3,8 +3,9 @@ import {Galleria} from "primereact/galleria";
 import {Card, CardBody, CardHeader} from "@chakra-ui/card";
 import {Heading, Image} from "@chakra-ui/react";
 import {galleriaService} from "../services/Photos";
+import { sliders } from "../services/api";
 
-export default function CustomGalleria(){
+export default function CustomGalleria(galleriaService:any){
     const responsiveOptions = [
         {
             breakpoint: '1024px',
@@ -19,8 +20,9 @@ export default function CustomGalleria(){
             numVisible: 1
         }
     ];
+    
     return (
-        <Galleria value={galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
+        <Galleria value={galleriaService.photo_model} responsiveOptions={responsiveOptions} numVisible={5}
                   style={{maxWidth: '100%'}}
                   showThumbnails={false} showIndicators changeItemOnIndicatorHover showIndicatorsOnItem
                   item={itemGalleryTemplate}/>
@@ -33,10 +35,10 @@ const itemGalleryTemplate = (item) => {
 
         <Card  bg={'brand.white'} w={'full'}  align="center" justify="center" m={'3px'} boxShadow={'l'} rounded={'xl'} >
             <CardHeader>
-                <Heading align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.title}</Heading>
+                <Heading align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.name}</Heading>
             </CardHeader>
             <CardBody>
-                <Image src={item.itemImageSrc}
+                <Image src={item.datafile}
                        roundedTop={'full'}
                        border={'2px'}
                        borderColor={'brand.blue'}

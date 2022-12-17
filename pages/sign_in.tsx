@@ -16,42 +16,26 @@ import {
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
-import { myErrorState } from '../Atoms/errorAtom';
-import { myLayoutState } from '../Atoms/layout';
-import { myLoaderState } from '../Atoms/loadingAtom';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
-import { myDataState } from '../Atoms/responseAtom';
+import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { setCookie } from '../src/services/cookies_file';
-import { SignRequest } from './api';
+import { SignRequest } from '../src/services/api';
+import { NextPageWithLayout } from './_app';
 
-export default function SignIn() {
-	const [headerFooterState, setHeaderFooterState] =useRecoilState(myLayoutState);
+ const SignIn: NextPageWithLayout = () => {
 	const [localState] = useRecoilState(myLocalState);
 	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
-	const [error, setError] = useRecoilState(myErrorState);
-	const [loaded,setLoaded] = useRecoilState(myLoaderState);
-	const [data, setData] = useRecoilState(myDataState); 
-	
 	const router = useRouter();
    
-    useState(() => {
-		setHeaderFooterState({
-			...headerFooterState,
-			footer: 'none',
-			appBar: 'none',
-		});
-		console.log('bottom ' + headerFooterState.footer);
-
-      
-	});
+   
 	async function goSignUpPage() {
 		console.log('localValue...' + localValue);
 		const { pathname, asPath, query } = router;
-		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() });
+		await router.push('/sign_up', '/sign_up', { locale: localValue.trim(),shallow: true });
 	}
 	
 	
@@ -59,7 +43,12 @@ async function loginResult(response:any) {
 	debugger
 	await setCookie('cookies',response.access);
 	const { pathname, asPath, query } = router;
-	await router.push('/welcome', '/welcome', { locale: localValue.trim() });
+	if(response.role=="A")
+	{await router.push('/admin/article_admin', '/admin/article_admin', { locale: localValue.trim(),shallow: true });}
+	else
+	{await router.push('/welcome', '/welcome', { locale: localValue.trim(),shallow: true });}
+	
+	
    }
 
 	return (
@@ -99,19 +88,6 @@ async function loginResult(response:any) {
 						/>
 					</Text>
 
-					{/* <FormControl isInvalid={isError} isRequired >
-                    <FormLabel>
-						<FormattedMessage id={'email'} defaultMessage='email' />
-					</FormLabel>
-					<Input
-						type='email'
-						borderColor={'brand.blue'}
-						onChange={onEmailTextChanged}
-					/>
-                      {!isError ? <></> : (
-                          <FormErrorMessage>Email is Invalid</FormErrorMessage>
-                        )}
-                     </FormControl> */}
 
 					<Formik
 						initialValues={{  password: '',username:'' }}
@@ -247,3 +223,12 @@ async function loginResult(response:any) {
 		</Stack>
 	);
 }
+SignIn.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutWithoutBar>
+            {page}
+        </LayoutWithoutBar>
+    )
+}
+
+export default  SignIn;

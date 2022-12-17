@@ -1,22 +1,24 @@
 
-import {useRecoilState} from "recoil";
-import {myAdminAppBarState, myLayoutState} from "../../Atoms/layout";
-import {useState} from "react";
-import {Box} from "@chakra-ui/react";
+import {ReactElement, useState} from "react";
 import ArticleAdmin from "./article_admin";
+import LayoutAdmin from "../../src/components/layout_admin";
+import { NextPageWithLayout } from "../_app";
 
 
-export function MainAdmin(){
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
-    const [adminAppBarState, setAdminAppBarState] = useRecoilState(myAdminAppBarState);
-    useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "block"})
-        setAdminAppBarState(true)
-    });
+const MainAdmin: NextPageWithLayout = () => {
+  
     return(
-        <Box>
             <ArticleAdmin />
-        </Box>
+      
 
     )
 }
+MainAdmin.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutAdmin>
+            {page}
+        </LayoutAdmin>
+    )
+}
+
+export default  MainAdmin;

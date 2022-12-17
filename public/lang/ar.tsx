@@ -49,6 +49,8 @@ export default {
     choose_files:"أختر الملفات",
     upload:"تحميل",
     close:"إغلاق",
+    add_certificate:"إضافة شهادة",
+    edit_certificate:"تعديل شهادة",
     add_article:"إضافة مقالة",
     edit_article:"تعديل المقالة",
     images:"الصور",
@@ -65,6 +67,7 @@ export default {
     firstname:"الاسم الأول",
     lastname:"الاسم الأخير",
     try_agin:"الرجاء إعادة المحاولة ",
-    wrong:"Something went wrong"
+    wrong:"Something went wrong",
+    Key_words:"الكلمات المفتاحية",
 
 }

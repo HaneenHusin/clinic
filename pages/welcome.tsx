@@ -24,12 +24,11 @@ import CustomGalleria from '../src/components/galleria';
 import TestCard from '../src/components/test_card_part';
 import VideoPart from '../src/components/video_part';
 import React, { ReactElement, useState } from 'react';
-import { myAdminAppBarState, myLayoutState } from '../Atoms/layout';
 import { getCookie } from '../src/services/cookies_file';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
 import Layout from '../src/components/layout';
 import { NextPageWithLayout } from './_app';
-import { LoadingProgressProvider } from '../src/components/LoadingProgressContext ';
+import { certificateList, home } from '../src/services/api';
 
 
 const Welcome: NextPageWithLayout = () => {
@@ -47,21 +46,14 @@ const Welcome: NextPageWithLayout = () => {
 			numVisible: 1,
 		},
 	];
-	const [headerFooterState, setHeaderFooterState] =
-		useRecoilState(myLayoutState);
 	const [localState, setLocalState] = useRecoilState(myLocalState);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const [adminAppBarState, setAdminAppBarState] =
-		useRecoilState(myAdminAppBarState);
-		
+	const [slider, setSlider] = useState("");
+
+	const homeResponse = home();
+	setSlider(()=>{})
 
 	useState(async () => {
-		setHeaderFooterState({
-			...headerFooterState,
-			footer: 'block',
-			appBar: 'block',
-		});
-		setAdminAppBarState(false);
 		setLocalState(getCookie('language'));
 		setDirState(localState == 'ar' ? 'rtl' : 'ltr');
 		console.log("welcome dirr " + dirState)
@@ -70,8 +62,17 @@ const Welcome: NextPageWithLayout = () => {
 	});
 
 	return (
-		<div dir={dirState}>
-			<CustomGalleria />
+		<Box dir={dirState} pt={"10px"}>
+			{homeResponse.isLoading == true ? (
+				<div id='globalLoader'>
+					<img src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
+					/>
+				</div>
+			) : (
+				<></>
+			)}
+				
+			<CustomGalleria galleriaService={homeResponse.data?.data.sliders}></CustomGalleria>)
 			<Center>
 				<VStack>
 					<VStack
@@ -173,15 +174,13 @@ const Welcome: NextPageWithLayout = () => {
 					</Flex>
 				</VStack>
 			</Center>
-		</div>
+		</Box>
 	);
 }
 Welcome.getLayout = function getLayout(page: ReactElement) {
     return (
         <Layout>
-			 <LoadingProgressProvider>
             {page}
-			 </LoadingProgressProvider>
         </Layout>
     )
 }

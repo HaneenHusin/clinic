@@ -4,8 +4,7 @@ import {Card} from "@chakra-ui/card";
 import {CardBody, Stack, Image, Text, Button, IconButton, HStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import { myDirectionState } from "../../Atoms/localAtoms";
-import Article from "../../pages/article";
+import { myDirectionState, myLocalState } from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
 
 const responsiveOptions = [
@@ -40,8 +39,10 @@ export default function CustomCarousel() {
 export function RelatedNewsClinic() {
     const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
+    const [localState,setLocalState] = useRecoilState(myLocalState);
+    const localValue = `${localState} `;
     async function goArticlePage() {
-        await router.push('/article');
+        await router.push('/article', '/article',  { locale: localValue.trim(),shallow: true} );
 
     }
      return (

@@ -1,10 +1,7 @@
 import {
-	Box,
 	Button,
-	Checkbox,
 	Flex,
 	FormLabel,
-	HStack,
 	Image,
 	Input,
 	Stack,
@@ -13,24 +10,16 @@ import {
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
-import { myLayoutState } from '../Atoms/layout';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
-import { SignRequest } from './api';
+import LayoutWithoutBar from '../src/components/layout_without_bar';
+import { SignRequest } from '../src/services/api';
+import { NextPageWithLayout } from './_app';
 
-export default function SignUp() {
-	const [headerFooterState, setHeaderFooterState] =useRecoilState(myLayoutState);
+const   SignUp: NextPageWithLayout = () => {
 	const router = useRouter();
-	useState(() => {
-		setHeaderFooterState({
-			...headerFooterState,
-			footer: 'none',
-			appBar: 'none',
-		});
-		console.log('bottom ' + headerFooterState.footer);
-	});
 	const [localState] = useRecoilState(myLocalState);
 	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
@@ -38,7 +27,7 @@ export default function SignUp() {
 
 	async function Register(response:any) {
 		const { pathname, asPath, query } = router;
-	await router.push('/sign_in', '/sign_in', { locale: localValue.trim() });
+	await router.push('/sign_in', '/sign_in', { locale: localValue.trim(),shallow: true });
 	}
 
 	return (
@@ -62,33 +51,7 @@ export default function SignUp() {
 							defaultMessage='welcome our clinic'
 						/>
 					</Text>
-					{/* <label>
-						<FormattedMessage id={'email'} defaultMessage='email' />
-					</label>
-					<Input
-						type='email'
-						borderColor={'brand.blue'}
-						onChange={onEmailTextChanged}
-					/>
-					<label>
-						<FormattedMessage id={'password'} defaultMessage='password' />
-					</label>
-					<Input
-						type='password'
-						borderColor={'brand.blue'}
-						onChange={onPassTextChanged}
-					/>
-					<label>
-						<FormattedMessage
-							id={'confirm_pass'}
-							defaultMessage='Confirm password'
-						/>
-					</label>
-					<Input
-						type='password'
-						borderColor={'brand.blue'}
-						onChange={onPassTextMatchChanged}
-					/> */}
+					
                     	<Formik
 						initialValues={{ email: '', password: '',confirm_password:'',username:'',firstname:'',lastname:'' }}
 						validate={(values) => {
@@ -241,3 +204,12 @@ export default function SignUp() {
 		</Stack>
 	);
 }
+SignUp.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutWithoutBar>
+            {page}
+        </LayoutWithoutBar>
+    )
+}
+
+export default  SignUp;

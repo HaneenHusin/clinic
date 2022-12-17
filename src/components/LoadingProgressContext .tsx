@@ -1,8 +1,5 @@
 import {Progress, VStack, CircularProgress, Skeleton} from '@chakra-ui/react'
 import { createContext, ReactElement, useContext, useState, useEffect, useRef } from 'react'
-import {myLoaderState} from "../../Atoms/loadingAtom";
-import {useRecoilState} from "recoil";
-import AppBar from "./appbar";
 
 type Props = {
     children: ReactElement | ReactElement[]
@@ -41,7 +38,6 @@ export const LoadingProgressProvider = ({ children }: Props): ReactElement => {
     const step = useRef(5)
     const [value, setValue] = useState(0)
     const [isOn, setOn] = useState(false)
-    const [loaded] = useRecoilState(myLoaderState);
     useEffect(() => {
         if (isOn) {
             let timeout: number = 0
@@ -98,3 +94,28 @@ export const LoadingProgressProvider = ({ children }: Props): ReactElement => {
         </LoadingProgressContext.Provider>
     )
 }
+
+
+// export const usePageLoading = () => {
+//   const [isPageLoading, setIsPageLoading] = useState(false);
+
+//   useEffect(() => {
+//     const routeEventStart = () => {
+//       setIsPageLoading(true);
+//     };
+//     const routeEventEnd = () => {
+//       setIsPageLoading(false);
+//     };
+
+//     Router.events.on('routeChangeStart', routeEventStart);
+//     Router.events.on('routeChangeComplete', routeEventEnd);
+//     Router.events.on('routeChangeError', routeEventEnd);
+//     return () => {
+//       Router.events.off('routeChangeStart', routeEventStart);
+//       Router.events.off('routeChangeComplete', routeEventEnd);
+//       Router.events.off('routeChangeError', routeEventEnd);
+//     };
+//   }, []);
+
+//   return { isPageLoading };
+// };

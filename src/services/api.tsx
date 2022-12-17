@@ -1,16 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+
 import axios from "axios";
-import exp from "constants";
 import useSWR from "swr";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, createStandaloneToast, useToast } from '@chakra-ui/react';
-import { useRecoilState } from 'recoil';
-import { myDataState } from '../Atoms/responseAtom';
-import { useEffect, useRef } from 'react';
-import { myLoaderState } from '../Atoms/loadingAtom';
-import { FormattedMessage } from 'react-intl';
-import React from 'react';
-import { ToastErrorShow, ToastSuccessShow } from './toast';
-import { ArticleList } from '../src/types/article_list';
+import { ToastErrorShow, ToastSuccessShow } from '../components/toast';
+import { ArticleList } from '../types/article_list';
+import { CertificateList } from "../types/certificate_list";
+import { HomeList } from "../types/home_list";
+import { SlidersList } from "../types/slider_list";
 
 
 axios.defaults.baseURL = "https://adhd.nasayimhalab.net/api";
@@ -23,7 +18,7 @@ const fetcher = (url:string) => axios.get(url).then(res => res.data)
 
 
 export function home(){
-    const { data, error } = useSWR(`/home/`, fetcher)
+    const { data, error } = useSWR<HomeList, Error>(`/home/`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -39,8 +34,8 @@ export function articlesList(page:number, pageSize:number){
     }
 }
 
-export function cities(){
-    const { data, error } = useSWR(`/cities/`, fetcher)
+export function certificateList(page:number, pageSize:number){
+    const { data, error } = useSWR<CertificateList, Error>(`/certificates/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -48,8 +43,8 @@ export function cities(){
     }
 }
 
-export function services(){
-    const { data, error } = useSWR(`/services/`, fetcher)
+export function sliders(){
+    const { data, error } = useSWR<SlidersList, Error>(`/sliders/`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -107,6 +102,23 @@ export function SignRequest(
     onSuccess:Function,
   ) {
    axios.put(`${endpoint}`, Data)
+   .then((response) => {
+       console.log(response.data);
+       onSuccess(response.data.data)
+       ToastSuccessShow("Success !")
+   })
+   .catch(error => {
+    ToastErrorShow("Please try agin ,Faild process")
+       console.log(error)
+   })
+
+  }
+
+  export function DeleteRequest(
+    endpoint: string,
+    onSuccess:Function,
+  ) {
+   axios.delete(`${endpoint}`)
    .then((response) => {
        console.log(response.data);
        onSuccess(response.data.data)

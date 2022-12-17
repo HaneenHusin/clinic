@@ -33,26 +33,32 @@ import {
 	ModalHeader,
 	ModalFooter,
 	ModalBody,
-	ModalCloseButton,
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
-import React, { useMemo, useState } from 'react';
-import { galleriaService } from '../../src/services/Photos';
+import React, { ReactElement, useMemo, useState } from 'react';
 import { FileUpload } from 'primereact/fileupload';
 import { Galleria } from 'primereact/galleria';
-import { articlesList,  PostRequest,  postrequest,  UpdateRequest } from '../api';
-import { Paginator } from 'primereact/paginator';
+import { articlesList,  DeleteRequest,  PostRequest,  UpdateRequest } from '../../src/services/api';
+import { Paginator } from 'primereact/paginator'
 import { Formik } from 'formik';
+import LayoutAdmin from '../../src/components/layout_admin';
+import { NextPageWithLayout } from '../_app';
+import { useRecoilState } from 'recoil';
+import { myDirectionState } from '../../Atoms/localAtoms';
+import { useRouter } from 'next/router';
 
-export default function ArticleAdmin() {
+const ArticleAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
+	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const articlesResponse = articlesList(1, 10);
-
+	const [dirState, setDirState] = useRecoilState(myDirectionState);
+	const router = useRouter();
+	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -64,7 +70,7 @@ export default function ArticleAdmin() {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onload = () => {
-				setImgsSrc((imgs) => [...imgs, reader.result]);
+				setImgsSrc((imgs) => [...imgs, file.objectURL]);
 				console.log('imgsSrc ' + imgsSrc);
 			};
 			reader.onerror = () => {
@@ -74,19 +80,22 @@ export default function ArticleAdmin() {
 	};
 	async function refresh(response:any)
 	{
-		console.log('articlesResponse' + response.data);
 		onClose();
-	window.location.reload()
+		router.push('/admin/article_admin', '/admin/article_admin', { shallow: true })
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
 		console.log('articlesResponse' + articlesResponse.data);
+		console.log("index.."+index)
 	}
-	function openEditModal(value:number) {
+	function openEditModal(indexValue:number,idValue:number) {
+		debugger
 		onOpen();
 		setIsEdit(false);
-		setIndex(value)
+		setIndex(indexValue);
+		setId(idValue);
+		setImgsSrc((imgs) => [...imgs, []]);
 	}
 	const responsiveOptions = [
 		{
@@ -102,8 +111,9 @@ export default function ArticleAdmin() {
 			numVisible: 1,
 		},
 	];
+
 	return (
-		<Stack p={'10px'}>
+		<Stack p={'10px'} dir={dirState} margin={"2%"}>
 			{articlesResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<img
@@ -118,10 +128,10 @@ export default function ArticleAdmin() {
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
 					<FormattedMessage id={'article'} defaultMessage='article' />
 				</Text>
-				<Button variant='outline' colorScheme='brand' onClick={openModal}>
+				<Button variant='outline' colorScheme='brand' onClick={openModal}fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
 						className='pi pi-plus'
-						style={{ fontSize: '1em', marginRight: '12px' }}
+						style={{ fontSize: '1em', marginRight: '12px',marginLeft: '12px' }}
 					></i>
 					<FormattedMessage id={'import'} defaultMessage='import' />
 				</Button>
@@ -129,24 +139,30 @@ export default function ArticleAdmin() {
 			<TableContainer w={'full'}>
 				<Table
 					variant='striped'
-					border={'0px'}
-					colorScheme={'brand.dark'}
+					border={'1px'}
+					colorScheme={'gray'}
 					size={{ base: 'xs', md: 'md', lg: 'lg' }}
 				>
 					<TableCaption>ADHD CENTER</TableCaption>
 					<Thead>
 						<Tr>
-							<Th fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'images'} defaultMessage='images' />
 							</Th>
-							<Th fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'title'} defaultMessage='title' />
 							</Th>
-							<Th fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'sluge'} defaultMessage='sluge' />
 							</Th>
-							<Th fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'body'} defaultMessage='body' />
+							</Th>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
+								
+							</Th>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
+								
 							</Th>
 						</Tr>
 					</Thead>
@@ -204,7 +220,7 @@ export default function ArticleAdmin() {
 									
 									<IconButton
 										aria-label={'edit'}
-										onClick={()=>openEditModal(index)}
+										onClick={()=>openEditModal(index,item.id)}
 										icon={
 											<i
 												className='pi pi-pencil'
@@ -217,6 +233,7 @@ export default function ArticleAdmin() {
 									
 									<IconButton
 										aria-label={'edit'}
+										onClick={()=> DeleteRequest(`/admin/articles/${item.id}/`,refresh)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -232,15 +249,14 @@ export default function ArticleAdmin() {
 			</TableContainer>
 
 			{isEdit == true ? (
-				<Modal isOpen={isOpen} onClose={onClose}>
+				<Modal isOpen={isOpen} onClose={onClose} >
 					<ModalOverlay />
-					<ModalContent>
+					<ModalContent dir={dirState}>
 						<ModalHeader>
 							{' '}
 							<FormattedMessage id={'add_article'} />
 						</ModalHeader>
-						<ModalCloseButton />
-						<Formik 	initialValues={{  title: '',sluge:'',body:'',photos:'',key_wards:'' }}
+						<Formik 	initialValues={{  title: '',sluge:'',body:'',photos:'',key_words:'' }}
 						validate={(values) => {
 							const errors = {};
 							if (!values.title) {
@@ -252,6 +268,9 @@ export default function ArticleAdmin() {
 							if (!values.body) {
                                 errors.body =<FormattedMessage  id={'required'} defaultMessage='required' />;
                             }
+							if (!values.key_words) {
+                                errors.key_words =<FormattedMessage  id={'required'} defaultMessage='required' />;
+                            }
 							return errors;
 						}}
 						onSubmit={(values, { setSubmitting }) => {
@@ -261,10 +280,10 @@ export default function ArticleAdmin() {
                             
                             const dataToRequestAPI = {
 	                        title: values.title,
-	                        sluge: values.sluge,
+	                        slug: values.sluge,
 							body: values.body,
 							photos: imgsSrc,
-							key_wards:""
+							key_wards:values.key_words
 
                                   }
 								  PostRequest('/admin/articles/',dataToRequestAPI,refresh)
@@ -298,7 +317,7 @@ export default function ArticleAdmin() {
 									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
 									 
 									<FormLabel>
-										<FormattedMessage id={'sluge'} defaultMessage='sluge' />
+										<FormattedMessage id={'sluge'} defaultMessage='slug' />
 									</FormLabel>
 									<Input variant='outline' 	
 									type='text'
@@ -308,6 +327,18 @@ export default function ArticleAdmin() {
 									borderColor={'brand.blue'}
 									value={values.sluge}/>
 									 <Text color={"red"}>{errors.sluge && touched.sluge && errors.sluge}</Text>	
+									
+									 <FormLabel>
+										<FormattedMessage id={'Key_words'} defaultMessage='key words' />
+									</FormLabel>
+									<Input variant='outline' 	
+									type='text'
+									name='key_words'
+									onChange={handleChange}
+									onBlur={handleBlur}
+									borderColor={'brand.blue'}
+									value={values.key_words}/>
+									 <Text color={"red"}>{errors.key_words && touched.key_words && errors.key_words}</Text>	
 									
 
 									<FormLabel>
@@ -364,10 +395,10 @@ export default function ArticleAdmin() {
 						</ModalBody>
 
 						<ModalFooter>
-							<Button variant='outline' mr={3} onClick={onClose}>
+							<Button variant='outline' mr={3} ml={3} onClick={onClose}>
 								{<FormattedMessage id={'close'} defaultMessage='close' />}
 							</Button>
-							<Button variant='primary'type='submit'
+							<Button variant='primary'type='submit' 
 										disabled={isSubmitting}>
 								{<FormattedMessage id={'upload'} defaultMessage='upload'  />}
 							</Button>
@@ -378,9 +409,9 @@ export default function ArticleAdmin() {
 					</ModalContent>
 				</Modal>
 			) : (
-				<Modal isOpen={isOpen} onClose={onClose}>
+				<Modal isOpen={isOpen} onClose={onClose} >
 					<ModalOverlay />
-					<ModalContent>
+					<ModalContent dir={dirState}>
 						<ModalHeader>
 							{' '}
 							<FormattedMessage
@@ -388,8 +419,7 @@ export default function ArticleAdmin() {
 								defaultMessage='Edit article'
 							/>
 						</ModalHeader>
-						<ModalCloseButton />
-						<Formik initialValues={{  title: '',sluge:'',body:'',photos:'',key_wards:'' }}
+						<Formik initialValues={{  title: '',sluge:'',body:'',photos:'',key_words:'' }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
@@ -397,14 +427,12 @@ export default function ArticleAdmin() {
                             
                             const dataToRequestAPI = {
 	                        title:values.title =='' ? articlesResponse.data?.data.results[index].title:values.title,
-	                        sluge: values.sluge =='' ? articlesResponse.data?.data.results[index].slug:values.sluge,
+	                        slug: values.sluge =='' ? articlesResponse.data?.data.results[index].slug:values.sluge,
 							body: values.body =='' ? articlesResponse.data?.data.results[index].body:values.body,
-							photos: values.photos =='' ? articlesResponse.data?.data.results[index].photos:values.photos,
-							key_wards:""
+							key_wards:values.key_words =='' ? articlesResponse.data?.data.results[index].key_wards:values.key_words,
 
                                   }
-							console.log("values.body...."+ values.body)
-								  UpdateRequest(`/admin/articles/${index}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/articles/${id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -449,6 +477,19 @@ export default function ArticleAdmin() {
 									value={values.sluge}/>
 									 <Text color={"red"}>{errors.sluge && touched.sluge && errors.sluge}</Text>	
 									
+									 <FormLabel>
+										<FormattedMessage id={'Key_words'} defaultMessage='key words' />
+									</FormLabel>
+									<Input variant='outline' 	
+									type='text'
+									name='key_words'
+									onChange={handleChange}
+									onBlur={handleBlur}
+									borderColor={'brand.blue'}
+									placeholder={articlesResponse.data?.data.results[index].key_wards}
+									value={values.key_words}/>
+									 <Text color={"red"}>{errors.key_words && touched.key_words && errors.key_words}</Text>	
+
 
 									<FormLabel>
 										<FormattedMessage id={'body'} defaultMessage='body' />
@@ -468,12 +509,12 @@ export default function ArticleAdmin() {
 						</ModalBody>
 
 						<ModalFooter>
-							<Button variant='outline' mr={3} onClick={onClose}>
+							<Button variant='outline' mr={3}  ml={3} onClick={onClose}>
 								{<FormattedMessage id={'close'} defaultMessage='close' />}
 							</Button>
 							<Button variant='primary'type='submit'
 										disabled={isSubmitting}>
-								{<FormattedMessage id={'upload'} defaultMessage='upload'  />}
+								{<FormattedMessage id={'edit'} defaultMessage='edit'  />}
 							</Button>
 						</ModalFooter>
 						</form>
@@ -492,6 +533,18 @@ export default function ArticleAdmin() {
 		</Stack>
 	);
 }
+ArticleAdmin.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutAdmin>
+            {page}
+        </LayoutAdmin>
+    )
+}
+
+export default  ArticleAdmin;
+
+
+
 const itemGalleryTemplate = (item) => {
 	return (
 		<Card

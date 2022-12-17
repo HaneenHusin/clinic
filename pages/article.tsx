@@ -7,17 +7,9 @@ import {
     Text,
     useBreakpointValue,
 } from '@chakra-ui/react';
-import {useState} from "react";
-import {useRecoilState} from "recoil";
-import {myLayoutState} from "../Atoms/layout";
 
 export default function Article() {
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
-    useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none",admin_appBar: "none"})
-        console.log("bottom " + headerFooterState.footer);
-
-    });
+    
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>

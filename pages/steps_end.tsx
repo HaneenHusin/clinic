@@ -2,29 +2,22 @@ import {
     Box, Button,
     Heading,
     HStack, Icon, Input,
-    Flex,
-    Stack,
     Text,
     VStack
 } from "@chakra-ui/react";
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import {myLayoutState} from "../Atoms/layout";
 import {Card} from "@chakra-ui/card";
 import {CheckIcon} from '@chakra-ui/icons'
 import {myDirectionState} from "../Atoms/localAtoms";
+import { NextPageWithLayout } from "./_app";
+import LayoutWithoutBar from "../src/components/layout_without_bar";
 
 
-export default function StepsEnd() {
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
+const StepsEnd: NextPageWithLayout = () => {
     const [dirState] = useRecoilState(myDirectionState);
 
-    useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none",admin_appBar: "none"})
-        console.log("bottom " + headerFooterState.footer);
-
-    });
     return (
         <Box
             dir={dirState}
@@ -67,3 +60,12 @@ export default function StepsEnd() {
 
     );
 }
+StepsEnd.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutWithoutBar>
+            {page}
+        </LayoutWithoutBar>
+    )
+}
+
+export default  StepsEnd;

@@ -1,7 +1,6 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, ReactElement} from 'react';
 import {Image} from 'primereact/Image';
 import {useRecoilState} from "recoil";
-import {myLayoutState} from "../Atoms/layout";
 import {Box, Button, CardBody, Flex, HStack, Stack, Text} from "@chakra-ui/react";
 import {Carousel} from "primereact/carousel";
 import {galleriaService} from "../src/services/Photos";
@@ -10,19 +9,15 @@ import {Card} from "@chakra-ui/card";
 import {FormattedMessage} from "react-intl";
 import {ProgressBar} from "primereact/progressbar";
 import StepsEnd from "./steps_end";
-import {useRouter} from "next/router";
 import {myDirectionState} from "../Atoms/localAtoms";
+import { NextPageWithLayout } from './_app';
+import LayoutWithoutBar from '../src/components/layout_without_bar';
+import { useRouter } from 'next/router';
 
-export default function StepsDemo() {
-    const [headerFooterState, setHeaderFooterState] = useRecoilState(myLayoutState);
+const StepsDemo: NextPageWithLayout = () => {
     const [dirState] = useRecoilState(myDirectionState);
 
-    useState(() => {
-        setHeaderFooterState({...headerFooterState, footer: "none", appBar: "none",admin_appBar: "none"})
-        console.log("bottom " + headerFooterState.footer);
-
-    });
-
+  
 
     return (
         <Stack
@@ -31,9 +26,6 @@ export default function StepsDemo() {
             h={'full'}
             bg={'brand.white'}
             backgroundSize={'cover'}>
-            {/*<div className="col-12 md:col-6 overflow-hidden">*/}
-            {/*    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ-ajsv7dw4zBasIv-nzzWmiSrb2n9X2fQKQ&usqp=CAU" alt="hero-1" className="md:ml-auto block md:h-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />*/}
-            {/*</div>*/}
             <HStack>
                 <svg width="466" height="603" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <path d="M0,0 L100,0 C25,50 50,75 0,100z" fill="#CAE5F0"/>
@@ -46,12 +38,6 @@ export default function StepsDemo() {
                           showIndicators={false}></Carousel>
             </Box>
 
-
-            {/*<Box  >*/}
-            {/*    <svg viewBox="0 0 100 100"  width="230" height="230">*/}
-            {/*        <path transform="rotate(-180, 50, 50) " d="M0,0 l100,0 C25,50 50,75 0,100z" fill="#8aa7ca"/>*/}
-            {/*    </svg>*/}
-            {/*</Box>*/}
         </Stack>
 
     );
@@ -165,4 +151,13 @@ export function StepsTest() {
         </Card>
     );
 }
+StepsDemo.getLayout = function getLayout(page: ReactElement) {
+    return (
+        <LayoutWithoutBar>
+            {page}
+        </LayoutWithoutBar>
+    )
+}
+
+export default  StepsDemo;
 
