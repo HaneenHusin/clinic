@@ -66,18 +66,29 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 	const onChange = (e) => {
 		debugger;
-		for (const file of e.files) {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				setImgsSrc((imgs) => [...imgs, file.objectURL]);
-				console.log('imgsSrc ' + imgsSrc);
-			};
-			reader.onerror = () => {
-				console.log(reader.error);
-			};
-		}
-	};
+		// for (const file of e.files) {
+		// 	const reader = new FileReader();
+		// 	reader.readAsDataURL(file);
+		// 	reader.onload = () => {
+		// 		setImgsSrc((imgs) => [...imgs, file.objectURL]);
+		// 		console.log('imgsSrc ' + imgsSrc);
+		// 	};
+		// 	reader.onerror = () => {
+		// 		console.log(reader.error);
+		// 	};
+		// }
+ // get files from event on the input element as an array objectURL
+ let files = [...e.files];
+
+ if (files && files.length > 0) {
+    const formData = new FormData();
+	var imagefile = document.querySelector('#file');
+    imagefile?.forEach((file) => {formData.append("files", file.objectURL); setImgsSrc((imgs) => [...imgs,formData]);} );
+	console.log("files...."+files);
+	
+ }
+
+}
 	async function refresh(response:any)
 	{
 		onClose();
@@ -116,7 +127,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		<Stack p={'10px'} dir={dirState} margin={"2%"}>
 			{articlesResponse.isLoading == true ? (
 				<div id='globalLoader'>
-					<img
+					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
 						alt=''
 					/>
@@ -141,6 +152,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 					variant='striped'
 					border={'1px'}
 					colorScheme={'gray'}
+					borderColor={"brand.dark"}
 					size={{ base: 'xs', md: 'md', lg: 'lg' }}
 				>
 					<TableCaption>ADHD CENTER</TableCaption>

@@ -5,6 +5,7 @@ import { ToastErrorShow, ToastSuccessShow } from '../components/toast';
 import { ArticleList } from '../types/article_list';
 import { CertificateList } from "../types/certificate_list";
 import { HomeList } from "../types/home_list";
+import { InformationList } from "../types/information_list";
 import { SlidersList } from "../types/slider_list";
 
 
@@ -43,8 +44,8 @@ export function certificateList(page:number, pageSize:number){
     }
 }
 
-export function sliders(){
-    const { data, error } = useSWR<SlidersList, Error>(`/sliders/`, fetcher)
+export function slidersList(page:number, pageSize:number){
+    const { data, error } = useSWR<SlidersList, Error>(`/sliders/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -52,8 +53,8 @@ export function sliders(){
     }
 }
 
-export function clinics(){
-    const { data, error } = useSWR(`/clinics/`, fetcher)
+export function informationList(page:number, pageSize:number){
+    const { data, error } = useSWR<InformationList, Error>(`/information/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -84,7 +85,11 @@ export function SignRequest(
     Data:any,
     onSuccess:Function,
   ) {
-   axios.post(`${endpoint}`, Data)
+   axios.post(`${endpoint}`, Data , {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+})
    .then((response) => {
        console.log(response.data);
        onSuccess(response.data.data)
