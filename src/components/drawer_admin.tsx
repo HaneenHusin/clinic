@@ -135,6 +135,22 @@ export function DrawerAdmin() {
 								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
 						<Divider />
+						<HStack
+								justify={'space-between'}
+								p={'8px'}
+								mt={'10px'}
+								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
+								onClick={ ()=> router.push('/admin/photos', '/admin/photos', { locale: localValue.trim(),shallow: true })}>
+							
+								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
+									<FormattedMessage
+										id={'photos'}
+										defaultMessage='photos'
+									/>
+								</Text>
+								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
+							</HStack>
 
 					</DrawerBody>
 

@@ -82,8 +82,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
  if (files && files.length > 0) {
     const formData = new FormData();
-	var imagefile = document.querySelector('#file');
-    imagefile?.forEach((file) => {formData.append("files", file.objectURL); setImgsSrc((imgs) => [...imgs,formData]);} );
+    files?.forEach((file) => {formData.append("files", file.objectURL); setImgsSrc((imgs) => [...imgs,formData]);} );
 	console.log("files...."+files);
 	
  }

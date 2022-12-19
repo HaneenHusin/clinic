@@ -154,7 +154,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							<Tr key={item.title}>
 								<Td w={'15%'} h={'15%'}>
 									<Galleria
-										value={item[index].photo_model}
+										value={slidersResponse.data?.data.results}
 										responsiveOptions={responsiveOptions}
 										numVisible={5}
 										style={{ maxWidth: '100%' }}
@@ -165,7 +165,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									/>
 								</Td>
 						
-								<Tooltip label={item.body}>
+								<Tooltip label={item.text}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -173,7 +173,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.body}
+										{item.text}
 									</Td>
 								</Tooltip>
 								<Td>
@@ -238,7 +238,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							photo: imgsSrc,
 
                                   }
-								  PostRequest('/admin/certificates/',dataToRequestAPI,refresh)
+								  PostRequest('/admin/sliders/',dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -440,7 +440,7 @@ const itemGalleryTemplate = (item) => {
 		>
 			<CardBody>
 				<Image
-					src={item.datafile}
+					src={item.photo_model.datafile}
 					onError={(e) =>
 						(e.target.src ='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}

@@ -56,7 +56,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const infoResponse = informationList(1, 20);
+	const infoResponse = informationList(1, 10);
 	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -274,6 +274,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
+									type='text'
 									name='text'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}

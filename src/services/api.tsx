@@ -7,6 +7,7 @@ import { CertificateList } from "../types/certificate_list";
 import { HomeList } from "../types/home_list";
 import { InformationList } from "../types/information_list";
 import { SlidersList } from "../types/slider_list";
+import { photosList } from "../types/photos";
 
 
 axios.defaults.baseURL = "https://adhd.nasayimhalab.net/api";
@@ -54,7 +55,15 @@ export function slidersList(page:number, pageSize:number){
 }
 
 export function informationList(page:number, pageSize:number){
-    const { data, error } = useSWR<InformationList, Error>(`/information/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<InformationList, Error>(`/admin/information/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function photosList(page:number, pageSize:number){
+    const { data, error } = useSWR<photosList, Error>(`/admin/photos/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,

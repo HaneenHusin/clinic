@@ -79,6 +79,7 @@ export default {
     information:"Information",
     feedback:"Feedback_",
     mange_your_clinic:"Mange your clinic",
+    photos:"photos editor",
 
     
 }

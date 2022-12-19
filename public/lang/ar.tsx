@@ -77,8 +77,9 @@ export default {
     edit_information:" تعديل معلومات العيادة",
     value:"القيمة",
     name:"الاسم",
-    information:"لبيانات",
+    information:"البيانات",
     feedback:"التقييمات ",
     mange_your_clinic:"إدارة العيادة",
+    photos:"محرر الصور",
 
 }
