@@ -55,8 +55,8 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const certificateResponse = certificateList(1, 20);
-	
+	const certificateResponse = certificateList(1, 10);
+	console.log("certificateResponse....."+certificateResponse.data?.data.results)
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -135,6 +135,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							variant='striped'
 							border={'1px'}
 							colorScheme={'gray'}
+							borderColor={"brand.dark"}
 							size={{ base: 'xs', md: 'md', lg: 'lg' }}
 				>
 					<TableCaption>ADHD CENTER</TableCaption>
@@ -156,7 +157,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							<Tr key={item.title}>
 								<Td w={'15%'} h={'15%'}>
 									<Galleria
-										value={item[index].photo_model}
+										value={certificateResponse.data?.data.results}
 										responsiveOptions={responsiveOptions}
 										numVisible={5}
 										style={{ maxWidth: '100%' }}
@@ -178,7 +179,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									</Td>
 								</Tooltip>
 								
-								<Tooltip label={item.body}>
+								<Tooltip label={item.text}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -186,7 +187,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.body}
+										{item.text}
 									</Td>
 								</Tooltip>
 								<Td>
@@ -195,8 +196,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										aria-label={'edit'}
 										onClick={()=>openEditModal(index,item.id)}
 										icon={
-											<i
-												className='pi pi-pencil'
+											<i className='pi pi-pencil'
 												style={{ fontSize: '1em', color: 'green' }}
 											></i>
 										}
@@ -306,7 +306,6 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									name='choose_file'
 									url='https://primefaces.org/primereact/showcase/upload.php'
 									accept='image/*'
-									customUpload
 									uploadHandler={onChange}
 									onChange={handleChange}
 									onBlur={handleBlur}
@@ -368,7 +367,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							text: values.text =='' ? certificateResponse.data?.data.results[index].text:values.text,
 							
                                   }
-								  UpdateRequest(`/admin/articles/${id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/certificates/${id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -469,12 +468,13 @@ const itemGalleryTemplate = (item) => {
 		>
 			<CardBody>
 				<Image
-					src={item.datafile}
+					src={item.photo_model.datafile}
 					onError={(e) =>
 						(e.target.src ='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}
-					alt={item.alt}
-					style={{ width: '100%', display: 'block' }}
+					alt={""}
+					width={ item.photo_model.width}
+					style={{  display: 'block' }}
 				/>
 			</CardBody>
 		</Card>

@@ -2,7 +2,7 @@ import {Card, CardBody} from "@chakra-ui/card";
 import {Box, CardHeader, Heading, Text, StackDivider, HStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 
-export default function CardWithDivider_part() {
+export default function Information() {
     return(
         <Card bg={'brand.white'} rounded={'3xl'} align="center" justify="center"border={"1px"} borderColor={"brand.darkGray"} >
             <CardBody>

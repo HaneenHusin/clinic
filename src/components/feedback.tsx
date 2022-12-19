@@ -6,7 +6,7 @@ import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import { myDirectionState } from "../../Atoms/localAtoms";
 
-export default function CommentPart() {
+export default function Feedback(galleriaService:any) {
     const responsiveOptions = [
         {
             breakpoint: '1024px',
@@ -23,9 +23,9 @@ export default function CommentPart() {
     ];
     const [dirState] = useRecoilState(myDirectionState);
     return (
-        <Card bg={'brand.white'} w= {{ base: '55%', md: '60%', lg: '65%' }} rounded={'full'}  dir={dirState}>
-            <Galleria value={galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
-                      style={{maxWidth: '100%'}}
+        <Card bg={'brand.white'} w= {{ base: '65%', md: '65%', lg: '55%' }} h={{ base: '60%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
+            <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
+                     
                       showThumbnails={false} showIndicators changeItemOnIndicatorHover
                       item={itemTemplate}/>
         </Card>
@@ -36,8 +36,8 @@ export default function CommentPart() {
 const itemTemplate = (item) => {
     return (
 
-       <HStack m={'18px'}>
-           <VStack  mt={'20px'}  justify={'start'} align={'start'} p={['12px']}>
+       <HStack p={"5"}>
+           <VStack    justify={'start'} align={'start'} width={"full"} >
                <Text  fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                      color={'brand.blue'}>
                    <FormattedMessage id={'featured_recommendations'}/>
@@ -47,12 +47,22 @@ const itemTemplate = (item) => {
                    <FormattedMessage id={'parents_comment'}/>
                </Text>
            </VStack>
-           <Box w={['4%' ,'10%']}></Box>
-           <Avatar size='xs' name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+           <Box w={{md:'4%' ,lg:'10%'}}></Box>
+           <VStack width={"full"}>
+            <HStack>
+            <Avatar size='xs' name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+            <Text fontSize={['md', 'lg', 'xl', '2xl']} fontWeight={'semibold'}
+                 color={'brand.textGray'}>
+               {item.title}
+           </Text>
+            </HStack>
+          
            <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                  color={'brand.textGray'}>
-               {item.itemImageSrc}
+               {item.brief}
            </Text>
+           </VStack>
+           
 
 
            <HStack>

@@ -3,24 +3,14 @@ import {
 	Box,
 	Center,
 	Flex,
-	Heading,
-	HStack,
-	Stack,
 	Text,
 	VStack,
 	Image,
-	Skeleton,
-	chakra,
-	Spinner,
-	SkeletonText,
 } from '@chakra-ui/react';
 import { galleriaService } from '../src/services/Photos';
 import { FormattedMessage } from 'react-intl';
-import CardWithDivider_part from '../src/components/card-with-divider_part';
 import Certificates from '../src/components/certificate_part';
-import CommentPart from '../src/components/comment_part';
 import CustomCarousel from '../src/components/carousel';
-import CustomGalleria from '../src/components/galleria';
 import TestCard from '../src/components/test_card_part';
 import VideoPart from '../src/components/video_part';
 import React, { ReactElement, useState } from 'react';
@@ -28,7 +18,10 @@ import { getCookie } from '../src/services/cookies_file';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
 import Layout from '../src/components/layout';
 import { NextPageWithLayout } from './_app';
-import { certificateList, home } from '../src/services/api';
+import {  home } from '../src/services/api';
+import Feedback from '../src/components/feedback';
+import Sliders from '../src/components/sliders';
+import Information from '../src/components/information';
 
 
 const Welcome: NextPageWithLayout = () => {
@@ -51,13 +44,13 @@ const Welcome: NextPageWithLayout = () => {
 	const [slider, setSlider] = useState("");
 
 	const homeResponse = home();
-	setSlider(()=>{})
 
 	useState(async () => {
 		setLocalState(getCookie('language'));
 		setDirState(localState == 'ar' ? 'rtl' : 'ltr');
 		console.log("welcome dirr " + dirState)
 		console.log("welcome localState " + localState)
+		console.log("homeResponse"+homeResponse.data?.data)
 		
 	});
 
@@ -65,14 +58,14 @@ const Welcome: NextPageWithLayout = () => {
 		<Box dir={dirState} pt={"10px"}>
 			{homeResponse.isLoading == true ? (
 				<div id='globalLoader'>
-					<img src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
+					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
 					/>
 				</div>
 			) : (
 				<></>
 			)}
 				
-			<CustomGalleria galleriaService={homeResponse.data?.data.sliders}></CustomGalleria>)
+			<Sliders galleriaService={homeResponse.data?.data.sliders}></Sliders>
 			<Center>
 				<VStack>
 					<VStack
@@ -143,20 +136,25 @@ const Welcome: NextPageWithLayout = () => {
 					</Flex>
 					<TestCard />
 					<Box pt={'10%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
-						<CardWithDivider_part />
+						<Information />
 					</Box>
-					<Box pt={'10%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
+					<Box pt={'4%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
 						<VideoPart />
 					</Box>
 					<Flex pt={'10%'} align='center' justify='center' w={'80%'}>
 						<Certificates certificateCount={galleriaService} />
 					</Flex>
 					<Flex pt={'5%'} align='center' justify='center' w={'100%'}>
-						<chakra.path
-							d='M96.086 48.095h2.812l.399-11.824h-3.61l.399 11.824zM98.863 50.45c-.344-.335-.8-.503-1.371-.503-.563 0-1.02.171-1.371.515-.344.336-.516.762-.516 1.278 0 .515.172.941.516 1.277.352.336.809.504 1.371.504.57 0 1.027-.168 1.371-.504.352-.336.527-.762.527-1.277 0-.524-.175-.954-.527-1.29z'
-							fill='#00075102'
-						/>
-						<CommentPart />
+						
+								{homeResponse.isLoading == true ? (
+				<div id='globalLoader'>
+					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
+					/>
+				</div>
+			) : (
+				<Feedback galleriaService={homeResponse.data?.data.feedback}></Feedback>
+			)}
+						
 					</Flex>
 					<Flex pt={'3%'} pb={'5%'} align='center' justify='center'>
 						<VStack>
@@ -169,8 +167,17 @@ const Welcome: NextPageWithLayout = () => {
 							>
 								<FormattedMessage id={'related_news'} />
 							</Text>
-							<CustomCarousel template='relatedNews' />
-						</VStack>
+							{homeResponse.isLoading == true ? (
+				<div id='globalLoader'>
+					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
+					/>
+				</div>
+			) : (
+				<CustomCarousel  template='relatedNews' galleriaService={homeResponse.data?.data.articles} ></CustomCarousel>
+					
+			)}
+				
+							</VStack>
 					</Flex>
 				</VStack>
 			</Center>

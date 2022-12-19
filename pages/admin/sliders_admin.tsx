@@ -40,11 +40,12 @@ import { FileUpload } from 'primereact/fileupload';
 import { Galleria } from 'primereact/galleria';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
-import { certificateList, DeleteRequest, PostRequest, UpdateRequest } from '../../src/services/api';
+import { certificateList, DeleteRequest, PostRequest, slidersList, UpdateRequest } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
+import router from 'next/router';
 
 const SlidersAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,7 +56,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const certificateResponse = certificateList(1, 20);
+	const slidersResponse = slidersList(1, 20);
 	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -79,12 +80,12 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	async function refresh(response:any)
 	{
 		onClose();
-		router.push('/admin/certificates_admin', '/admin/certificates_admin', { shallow: true })
+		router.push('/admin/sliders_admin', '/admin/sliders_admin', { shallow: true })
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('articlesResponse' + certificateResponse.data);
+		console.log('articlesResponse' + slidersResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
 		console.log("index...."+indexValue);
@@ -109,7 +110,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	];
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
-			{certificateResponse.isLoading == true ? (
+			{slidersResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
 						alt=''
@@ -120,7 +121,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'certificate'} defaultMessage='certificate' />
+					<FormattedMessage id={'slider'} defaultMessage='slider' />
 				</Text>
 				<Button variant='outline' colorScheme='brand' onClick={openModal} fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
@@ -144,15 +145,12 @@ const SlidersAdmin: NextPageWithLayout = () => {
 								<FormattedMessage id={'images'} defaultMessage='images' />
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
-							</Th>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'body'} defaultMessage='body' />
+								<FormattedMessage id={'text'} defaultMessage='text' />
 							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						{certificateResponse.data?.data.results.map((item:any,index:number) => (
+						{slidersResponse.data?.data.results.map((item:any,index:number) => (
 							<Tr key={item.title}>
 								<Td w={'15%'} h={'15%'}>
 									<Galleria
@@ -166,18 +164,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 										item={itemGalleryTemplate}
 									/>
 								</Td>
-								<Tooltip label={item.title}>
-									<Td
-										fontSize={['sm', 'md', 'lg', 'xl']}
-										maxWidth={'100px'}
-										textOverflow={'ellipsis'}
-										overflow={'hidden'}
-										whiteSpace={'nowrap'}
-									>
-										{item.title}
-									</Td>
-								</Tooltip>
-								
+						
 								<Tooltip label={item.body}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
@@ -206,7 +193,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									
 									<IconButton
 										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/certificates/${item.id}/`,refresh)}
+										onClick={()=> DeleteRequest(`/admin/sliders/${item.id}/`,refresh)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -226,13 +213,13 @@ const SlidersAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_certificate'} />
+							<FormattedMessage id={'add_slider'} />
 						</ModalHeader>
-						<Formik 	initialValues={{  title: '',text:'',photos:'' }}
+						<Formik 	initialValues={{ text:'',photo:'' }}
 						validate={(values) => {
 							const errors = {};
-							if (!values.title) {
-								errors.title = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
+							if (!values.photo) {
+								errors.photo = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
 							}
                            
 							if (!values.text) {
@@ -247,7 +234,6 @@ const SlidersAdmin: NextPageWithLayout = () => {
                               
                             
                             const dataToRequestAPI = {
-	                        title: values.title,
 							text: values.text,
 							photo: imgsSrc,
 
@@ -270,20 +256,9 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						<ModalBody>
 							<Stack spacing={3}>
 
-						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
-									</FormLabel>
-									<Input variant='outline'
-										type='text'
-										name='title'
-									onChange={handleChange}
-									onBlur={handleBlur}
-									borderColor={'brand.blue'}
-									value={values.title} />
-									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
-									
+						              
 									<FormLabel>
-										<FormattedMessage id={'body'} defaultMessage='body' />
+										<FormattedMessage id={'text'} defaultMessage='text' />
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
@@ -311,7 +286,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									onChange={handleChange}
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.photos}
+									value={values.photo}
 									chooseLabel={
 										<FormattedMessage
 											id={'choose_files'}
@@ -319,6 +294,8 @@ const SlidersAdmin: NextPageWithLayout = () => {
 										/>
 									}
 								/>
+								<Text color={"red"}>{errors.photo && touched.photo && errors.photo}</Text>	
+									
 									<div>
 									<SimpleGrid
 										spacing={5}
@@ -353,22 +330,22 @@ const SlidersAdmin: NextPageWithLayout = () => {
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_certificate'}
-								defaultMessage='Edit certificate'
+								id={'edit_slider'}
+								defaultMessage='Edit slider'
 							/>
 						</ModalHeader>
-						<Formik initialValues={{  title: '',text:'',photos:'' }}
+						<Formik initialValues={{ text:'',photo:'' }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
                             
                             const dataToRequestAPI = {
-	                        title:values.title =='' ? certificateResponse.data?.data.results[index].title:values.title,
-							text: values.text =='' ? certificateResponse.data?.data.results[index].text:values.text,
+	                        photo:values.photo =='' ? slidersResponse.data?.data.results[index].photo_model:values.photo,
+							text: values.text =='' ? slidersResponse.data?.data.results[index].text:values.text,
 							
                                   }
-								  UpdateRequest(`/admin/articles/${id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/sliders/${id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -386,20 +363,14 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						<ModalBody>
 							<Stack spacing={3}>
 
-						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
-									</FormLabel>
-									<Input
-									 variant='outline'
-										type='text'
-										name='title'
-										placeholder={certificateResponse.data?.data.results[index].title}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									borderColor={'brand.blue'}
-									value={values.title} />
-									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
-									 
+							<SimpleGrid
+										spacing={5}
+										columns={[2, 3]}
+										templateColumns='repeat(3, 1fr)'
+										w='full%'
+									>
+										{imgsSrc.map((link) => (<Image key={index} src={link} />))}
+									</SimpleGrid>
 									
 									<FormLabel>
 										<FormattedMessage id={'body'} defaultMessage='body' />
@@ -409,7 +380,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									name='text'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									placeholder={certificateResponse.data?.data.results[index].text}
+									placeholder={slidersResponse.data?.data.results[index].text}
 									value={values.text} />
 									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
 									
@@ -437,7 +408,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 			p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={certificateResponse.data?.data.results.length}
+				totalRecords={slidersResponse.data?.data.results.length}
 				rowsPerPageOptions={[10, 20, 30]}
 				onPageChange={onBasicPageChange}
 			></Paginator>

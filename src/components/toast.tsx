@@ -7,7 +7,7 @@ export function ToastErrorShow(text:string){
     toast({   
     description: text,
     status: 'error',
-    duration: 9000,
+    duration: 4000,
     position:"top",
     isClosable: true,});
 }
@@ -17,7 +17,7 @@ export function ToastSuccessShow(text:string){
     toast({   
     description: text,
     status: 'success',
-    duration: 9000,
+    duration: 4000,
     position:"top",
     isClosable: true,});
 }

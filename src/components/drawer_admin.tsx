@@ -16,7 +16,6 @@ import {
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
-import CertificatesAdmin from '../../pages/admin/certificates_admin';
 import { useRecoilState } from 'recoil';
 import { myLocalState } from '../../Atoms/localAtoms';
 export function DrawerAdmin() {
@@ -56,11 +55,12 @@ export function DrawerAdmin() {
 							justify={'space-between'}
 							p={'8px'}
 							cursor={"pointer"}
+							_hover={{transform: "scale(1.05,1.05)"}}
 							onClick={ ()=> router.push('/admin/article_admin', '/admin/article_admin', { locale: localValue.trim(),shallow: true })}>
 							<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 								<FormattedMessage id={'article'} defaultMessage='article' />
 							</Text>
-							<i className='pi pi-book' style={{ fontSize: '2em' }}></i>
+							<i className='pi pi-book' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 						</HStack>
 						
 						<Divider />
@@ -70,6 +70,7 @@ export function DrawerAdmin() {
 								p={'8px'}
 								mt={'10px'}
 								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
 								onClick={ ()=> router.push('/admin/certificates_admin', '/admin/certificates_admin', { locale: localValue.trim(),shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
@@ -78,7 +79,7 @@ export function DrawerAdmin() {
 										defaultMessage='certificate'
 									/>
 								</Text>
-								<i className='pi pi-bookmark' style={{ fontSize: '2em' }}></i>
+								<i className='pi pi-bookmark' style={{ fontSize: '2em',color: 'lightblue'  }}></i>
 							</HStack>
 							<Divider />
 							<HStack
@@ -86,15 +87,16 @@ export function DrawerAdmin() {
 								p={'8px'}
 								mt={'10px'}
 								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
 								onClick={ ()=> router.push('/admin/sliders_admin', '/admin/sliders_admin', { locale: localValue.trim(),shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
-										id={'sliders'}
-										defaultMessage='sliders'
+										id={'slider'}
+										defaultMessage='slider'
 									/>
 								</Text>
-								<i className='pi pi-images' style={{ fontSize: '2em' }}></i>
+								<i className='pi pi-images' style={{ fontSize: '2em',color: 'lightblue'  }}></i>
 							</HStack>
 						<Divider />
 
@@ -103,15 +105,16 @@ export function DrawerAdmin() {
 								p={'8px'}
 								mt={'10px'}
 								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
 								onClick={ ()=> router.push('/admin/information_admin', '/admin/information_admin', { locale: localValue.trim(),shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
-										id={'sliders'}
-										defaultMessage='sliders'
+										id={'information'}
+										defaultMessage='information'
 									/>
 								</Text>
-								<i className='pi pi-user' style={{ fontSize: '2em' }}></i>
+								<i className='pi pi-user' style={{ fontSize: '2em',color: 'lightblue' }}></i>
 							</HStack>
 						<Divider />
 
@@ -120,15 +123,16 @@ export function DrawerAdmin() {
 								p={'8px'}
 								mt={'10px'}
 								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
 								onClick={ ()=> router.push('/admin/feedback_admin', '/admin/feedback_admin', { locale: localValue.trim(),shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
-										id={'sliders'}
-										defaultMessage='sliders'
+										id={'feedback'}
+										defaultMessage='feedback'
 									/>
 								</Text>
-								<i className='pi pi-star' style={{ fontSize: '2em' }}></i>
+								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
 						<Divider />
 

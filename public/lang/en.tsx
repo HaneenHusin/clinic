@@ -67,7 +67,18 @@ export default {
     lastname:"Last name",
     try_agin:"Please try agin",
     wrong:"Something went wrong",
-    Key_words:"key words"
+    Key_words:"key words",
+    text:"Text",
+    add_slider:"Add slider",
+    edit_slider:" Edit slider",
+    slider:"Sliders",
+    add_information:"Add information",
+    edit_information:"Edit information",
+    value:"value",
+    name:"Name",
+    information:"Information",
+    feedback:"Feedback_",
+    mange_your_clinic:"Mange your clinic",
 
     
 }

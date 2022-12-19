@@ -6,6 +6,7 @@ import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import { myDirectionState, myLocalState } from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
+import Article from "../../pages/article";
 
 const responsiveOptions = [
     {
@@ -25,10 +26,13 @@ const responsiveOptions = [
     }
 ];
 
-export default function CustomCarousel() {
+export default function CustomCarousel(galleriaService:any) {
+    const [dirState] = useRecoilState(myDirectionState);  
+    console.log("galleriaService.galleriaService"+galleriaService.galleriaService)
         return (
+          
             <div className="card">
-                <Carousel value={galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions}
+                <Carousel dir={dirState} value={galleriaService.galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions}
                           showIndicators={false} ></Carousel>
             </div>
 
@@ -36,14 +40,18 @@ export default function CustomCarousel() {
 }
 
 
-export function RelatedNewsClinic() {
+export function RelatedNewsClinic(item) {
     const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
     const [localState,setLocalState] = useRecoilState(myLocalState);
     const localValue = `${localState} `;
-    async function goArticlePage() {
-        await router.push('/article', '/article',  { locale: localValue.trim(),shallow: true} );
-
+    async function goArticlePage(item:any) {
+        router.push({
+            pathname: '/article',
+            query: { item: JSON.stringify(item) },
+         }, undefined, { locale: localValue.trim(),shallow: true})
+         
+       
     }
      return (
         <Card w={'80%'} bg={'brand.blue'} rounded={'xl'} dir={dirState}>
@@ -55,21 +63,19 @@ export function RelatedNewsClinic() {
                 />
                 <Stack mt='6' spacing='3'  dir={dirState}>
                     <Text>
-                        This sofa is perfect for modern tropical spaces, baroque inspired
-                        spaces, earthy toned spaces and for people who love a chic design with a
-                        sprinkle of vintage design.
+                      {item.body}
                     </Text>
-                    <HStack onClick={() => goArticlePage()} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
+                    <HStack onClick={() => goArticlePage(item)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                               color={'brand.white'}>
                             <FormattedMessage id={'read_article'}/>
                         </Text>
                         {dirState=="rtl" ?
                             <IconButton colorScheme='brand.blue' aria-label={"more"}  >
-                            <i className="pi pi-arrow-right" style={{'fontSize': '1em'}}></i>
+                            <i className="pi pi-arrow-left" style={{'fontSize': '1em'}}></i>
                         </IconButton>
                             : <IconButton colorScheme='brand.blue' aria-label={"more"} >
-                            <i className="pi pi-arrow-left" style={{'fontSize': '1em'}}></i>
+                            <i className="pi pi-arrow-right" style={{'fontSize': '1em'}}></i>
                         </IconButton>}
 
                     </HStack>
