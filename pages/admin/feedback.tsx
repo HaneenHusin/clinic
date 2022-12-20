@@ -7,11 +7,8 @@ import {
 	Td,
 	TableCaption,
 	TableContainer,
-	Flex,
 	HStack,
 	Text,
-	Box,
-	VStack,
 	Button,
 	Image,
 	Spacer,
@@ -20,8 +17,6 @@ import {
 	useDisclosure,
 	Input,
 	Textarea,
-	Card,
-	CardBody,
   SimpleGrid,
   Tooltip,
   FormLabel,
@@ -36,17 +31,16 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { FileUpload } from 'primereact/fileupload';
-import { Galleria } from 'primereact/galleria';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
-import { certificateList, DeleteRequest, PostRequest, UpdateRequest } from '../../src/services/api';
+import { DeleteRequest, feedbackList, PostRequest, UpdateRequest } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
+import router from 'next/router';
 
-const CertificatesAdmin: NextPageWithLayout = () => {
+const FeedbackAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
     const [isEdit,setIsEdit ] = useState(false);
@@ -55,36 +49,25 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const certificateResponse = certificateList(1, 10);
-	console.log("certificateResponse....."+certificateResponse.data?.data.results)
+	const feedbackResponse = feedbackList(1, 20);
+	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 	};
 
-	const onChange = (e) => {
-		debugger;
-		for (const file of e.files) {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				setImgsSrc((imgs) => [...imgs, reader.result]);
-				console.log('imgsSrc ' + imgsSrc);
-			};
-			reader.onerror = () => {
-				console.log(reader.error);
-			};
-		}
-	};
+	
 	async function refresh(response:any)
 	{
 		onClose();
-		router.push('/admin/certificates_admin', '/admin/certificates_admin', { shallow: true })
+		router.push('/admin/feedback', '/admin/feedback', { shallow: true })
+	
+
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('articlesResponse' + certificateResponse.data);
+		console.log('feedbackResponse' + feedbackResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
 		console.log("index...."+indexValue);
@@ -93,23 +76,10 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 		setIndex(indexValue);
 		setId(idValue)
 	}
-	const responsiveOptions = [
-		{
-			breakpoint: '1024px',
-			numVisible: 5,
-		},
-		{
-			breakpoint: '768px',
-			numVisible: 3,
-		},
-		{
-			breakpoint: '560px',
-			numVisible: 1,
-		},
-	];
+	
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
-			{certificateResponse.isLoading == true ? (
+			{feedbackResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
 						alt=''
@@ -120,7 +90,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'certificate'} defaultMessage='certificate' />
+					<FormattedMessage id={'feedback'} defaultMessage='feedback' />
 				</Text>
 				<Button variant='outline' colorScheme='brand' onClick={openModal} fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
@@ -135,38 +105,23 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							variant='striped'
 							border={'1px'}
 							colorScheme={'gray'}
-							borderColor={"brand.dark"}
 							size={{ base: 'xs', md: 'md', lg: 'lg' }}
 				>
 					<TableCaption>ADHD CENTER</TableCaption>
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'images'} defaultMessage='images' />
-							</Th>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'title'} defaultMessage='title' />
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'body'} defaultMessage='body' />
+								<FormattedMessage id={'text'} defaultMessage='text' />
 							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						{certificateResponse.data?.data.results.map((item:any,index:number) => (
+						{feedbackResponse.data?.data.results.map((item:any,index:number) => (
 							<Tr key={item.title}>
-								<Td w={'15%'} h={'15%'}>
-									<Galleria
-										value={certificateResponse.data?.data.results}
-										responsiveOptions={responsiveOptions}
-										numVisible={5}
-										style={{ maxWidth: '100%' }}
-										showThumbnails={false}
-										showIndicators
-										changeItemOnIndicatorHover
-										item={itemGalleryTemplate}
-									/>
-								</Td>
+								
 								<Tooltip label={item.title}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
@@ -179,7 +134,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									</Td>
 								</Tooltip>
 								
-								<Tooltip label={item.text}>
+								<Tooltip label={item.brief}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -187,7 +142,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.text}
+										{item.brief}
 									</Td>
 								</Tooltip>
 								<Td>
@@ -196,7 +151,8 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										aria-label={'edit'}
 										onClick={()=>openEditModal(index,item.id)}
 										icon={
-											<i className='pi pi-pencil'
+											<i
+												className='pi pi-pencil'
 												style={{ fontSize: '1em', color: 'green' }}
 											></i>
 										}
@@ -206,7 +162,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									
 									<IconButton
 										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/certificates/${item.id}/`,refresh)}
+										onClick={()=> DeleteRequest(`/admin/feedback/${item.id}/`,refresh)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -226,17 +182,17 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_certificate'} />
+							<FormattedMessage id={'add_feedback'} />
 						</ModalHeader>
-						<Formik 	initialValues={{  title: '',text:'',photos:'' }}
+						<Formik 	initialValues={{  title: '',brief:'' }}
 						validate={(values) => {
 							const errors = {};
 							if (!values.title) {
 								errors.title = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
 							}
                            
-							if (!values.text) {
-                                errors.text =<FormattedMessage  id={'required'} defaultMessage='required' />;
+							if (!values.brief) {
+                                errors.brief =<FormattedMessage  id={'required'} defaultMessage='required' />;
                             }
 							
 							return errors;
@@ -248,11 +204,10 @@ const CertificatesAdmin: NextPageWithLayout = () => {
                             
                             const dataToRequestAPI = {
 	                        title: values.title,
-							text: values.text,
-							photo: imgsSrc,
+							brief: values.brief,
 
                                   }
-								  PostRequest('/admin/certificates/',dataToRequestAPI,refresh)
+								  PostRequest('/admin/feedback/',dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -283,41 +238,17 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
 									
 									<FormLabel>
-										<FormattedMessage id={'body'} defaultMessage='body' />
+										<FormattedMessage id={'text'} defaultMessage='text' />
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
-									name='text'
+									name='brief'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.text} />
-									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
+									value={values.brief} />
+									 <Text color={"red"}>{errors.brief && touched.brief && errors.brief}</Text>	
 									
 
-									<FormLabel>
-									<FormattedMessage
-										id={'choose_file'}
-										defaultMessage='choose file'
-									/>
-								</FormLabel>
-								<FileUpload
-									multiple
-									mode='basic'
-									name='choose_file'
-									url='https://primefaces.org/primereact/showcase/upload.php'
-									accept='image/*'
-									uploadHandler={onChange}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									borderColor={'brand.blue'}
-									value={values.photos}
-									chooseLabel={
-										<FormattedMessage
-											id={'choose_files'}
-											defaultMessage='choose file'
-										/>
-									}
-								/>
 									<div>
 									<SimpleGrid
 										spacing={5}
@@ -352,22 +283,22 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_certificate'}
-								defaultMessage='Edit certificate'
+								id={'edit_feedback'}
+								defaultMessage='Edit feedback'
 							/>
 						</ModalHeader>
-						<Formik initialValues={{  title: '',text:'',photos:'' }}
+						<Formik initialValues={{  title: '',brief:'' }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
                             
                             const dataToRequestAPI = {
-	                        title:values.title =='' ? certificateResponse.data?.data.results[index].title:values.title,
-							text: values.text =='' ? certificateResponse.data?.data.results[index].text:values.text,
+	                        title:values.title =='' ? feedbackResponse.data?.data.results[index].title:values.title,
+							brief: values.brief =='' ? feedbackResponse.data?.data.results[index].brief:values.brief,
 							
                                   }
-								  UpdateRequest(`/admin/certificates/${id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/feedback/${id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -392,7 +323,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									 variant='outline'
 										type='text'
 										name='title'
-										placeholder={certificateResponse.data?.data.results[index].title}
+										placeholder={feedbackResponse.data?.data.results[index].title}
 									onChange={handleChange}
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
@@ -401,18 +332,18 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									 
 									
 									<FormLabel>
-										<FormattedMessage id={'body'} defaultMessage='body' />
+										<FormattedMessage id={'text'} defaultMessage='text' />
 									</FormLabel>
 									<Textarea 	
+									name='brief'
 									onChange={handleChange}
-									name='text'
+									
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									placeholder={certificateResponse.data?.data.results[index].text}
-									value={values.text} />
-									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
+									placeholder={feedbackResponse.data?.data.results[index].brief}
+									value={values.brief} />
+									 <Text color={"red"}>{errors.brief && touched.brief && errors.brief}</Text>	
 									
-
 								
 							</Stack>
 						</ModalBody>
@@ -436,7 +367,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={certificateResponse.data?.data.results.length}
+				totalRecords={feedbackResponse.data?.data.results.length}
 				rowsPerPageOptions={[10, 20, 30]}
 				onPageChange={onBasicPageChange}
 			></Paginator>
@@ -444,7 +375,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	);
 }
 
-CertificatesAdmin.getLayout = function getLayout(page: ReactElement) {
+FeedbackAdmin.getLayout = function getLayout(page: ReactElement) {
     return (
         <LayoutAdmin>
             {page}
@@ -452,31 +383,4 @@ CertificatesAdmin.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default  CertificatesAdmin;
-const itemGalleryTemplate = (item) => {
-	return (
-		<Card
-			bg={'brand.white'}
-			w={'full'}
-			align='center'
-			justify='center'
-			m={'3px'}
-			boxShadow={'l'}
-			rounded={'xl'}
-      border={"2px"}
-      borderColor={'brand.blue'}
-		>
-			<CardBody>
-				<Image
-					src={item.photo_model.datafile}
-					onError={(e) =>
-						(e.target.src ='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
-					}
-					alt={""}
-					width={ item.photo_model.width}
-					style={{  display: 'block' }}
-				/>
-			</CardBody>
-		</Card>
-	);
-};
+export default  FeedbackAdmin;

@@ -80,6 +80,10 @@ export default {
     feedback:"Feedback_",
     mange_your_clinic:"Mange your clinic",
     photos:"photos editor",
+    photos_add:"Add photos",
+    drag_file:"Drag and drop files to here to upload.",
+    add_feedback:"Add feedback",
+    edit_feedback:"Edit feedback",
 
     
 }

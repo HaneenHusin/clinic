@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { galleriaService } from '../src/services/Photos';
 import { FormattedMessage } from 'react-intl';
-import Certificates from '../src/components/certificate_part';
+import Certificates from '../src/components/certificate';
 import CustomCarousel from '../src/components/carousel';
 import TestCard from '../src/components/test_card_part';
 import VideoPart from '../src/components/video_part';

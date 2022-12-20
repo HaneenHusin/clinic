@@ -80,7 +80,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	async function refresh(response:any)
 	{
 		onClose();
-		router.push('/admin/sliders_admin', '/admin/sliders_admin', { shallow: true })
+		router.push('/admin/sliders', '/admin/sliders', { shallow: true })
 	}
 	function openModal() {
 		onOpen();

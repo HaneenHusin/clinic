@@ -44,7 +44,7 @@ async function loginResult(response:any) {
 	await setCookie('cookies',response.access);
 	const { pathname, asPath, query } = router;
 	if(response.role=="A")
-	{await router.push('/admin/article_admin', '/admin/article_admin', { locale: localValue.trim(),shallow: true });}
+	{await router.push('/admin/article', '/admin/article', { locale: localValue.trim(),shallow: true });}
 	else
 	{await router.push('/welcome', '/welcome', { locale: localValue.trim(),shallow: true });}
 	

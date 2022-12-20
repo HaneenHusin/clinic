@@ -1,6 +1,5 @@
 import {
 	Table,
-	Thead,
 	Tbody,
 	Tr,
 	Th,
@@ -11,22 +10,15 @@ import {
 	HStack,
 	Text,
 	Box,
-	VStack,
 	Button,
 	Image,
-	Spacer,
 	Stack,
 	IconButton,
 	useDisclosure,
-	Input,
-	Textarea,
 	Card,
 	CardBody,
 	SimpleGrid,
-	Tooltip,
-	FormLabel,
-    CardHeader,
-    CardFooter,
+	CardFooter,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -39,54 +31,35 @@ import {
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { FileUpload } from 'primereact/fileupload';
-import { Galleria } from 'primereact/galleria';
-import {
-    DeleteRequest,
-	photosList,
-	PostRequest,
-} from '../../src/services/api';
-import { Formik } from 'formik';
+import { DeleteRequest, photosList, PostRequest } from '../../src/services/api';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { NextPageWithLayout } from '../_app';
 import { useRecoilState } from 'recoil';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import router, { useRouter } from 'next/router';
+import { Paginator } from 'primereact/paginator';
 
 const PhotosAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [imgsSrc, setImgsSrc] = useState([]);
-	const [isEdit, setIsEdit] = useState(false);
-	const [index, setIndex] = useState(0);
+	const [imgsSrc, setImgsSrc] = useState('');
 	const photosResponse = photosList(1, 10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
+	const [basicFirst, setBasicFirst] = useState(0);
+	const [basicRows, setBasicRows] = useState(10);
 	const router = useRouter();
 
 
-	const onChange = (e) => {
-		debugger;
-		// for (const file of e.files) {
-		// 	const reader = new FileReader();
-		// 	reader.readAsDataURL(file);
-		// 	reader.onload = () => {
-		// 		setImgsSrc((imgs) => [...imgs, file.objectURL]);
-		// 		console.log('imgsSrc ' + imgsSrc);
-		// 	};
-		// 	reader.onerror = () => {
-		// 		console.log(reader.error);
-		// 	};
-		// }
-		// get files from event on the input element as an array objectURL
-		let files = [...e.files];
-
-		if (files && files.length > 0) {
-			const formData = new FormData();
-			files?.forEach((file) => {
-				formData.append('files', file.objectURL);
-				setImgsSrc((imgs) => [...imgs, formData]);
-			});
-			console.log('files....' + files);
-		}
+	const onBasicPageChange = (event) => {
+		setBasicFirst(event.first);
+		setBasicRows(event.rows);
 	};
+
+	const onChange = (event: any) => {
+		var formData = new FormData();
+		formData.append('datafile', event.files[0]);
+		PostRequest('/admin/photos/', formData, refresh);
+	};
+
 	async function refresh(response: any) {
 		onClose();
 		router.push('/admin/photos', '/admin/photos', {
@@ -94,19 +67,10 @@ const PhotosAdmin: NextPageWithLayout = () => {
 		});
 	}
 	function openModal() {
-		onOpen();
-		setIsEdit(true);
-		console.log('photos' + photosResponse.data);
-		console.log('index..' + index);
-	}
-	function openEditModal(indexValue: number, idValue: number) {
-		debugger;
-		onOpen();
-		setIsEdit(false);
-		setIndex(indexValue);
-		setId(idValue);
-		setImgsSrc((imgs) => [...imgs, []]);
-	}
+		onOpen();}
+
+
+
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -121,7 +85,9 @@ const PhotosAdmin: NextPageWithLayout = () => {
 			numVisible: 1,
 		},
 	];
-
+	const chooseOptions = {icon: 'pi pi-fw pi-plus p-8 m-8',className:'p-8 m-8'};
+	const uploadOptions = {icon: 'pi pi-upload p-8 m-8', className: 'p-button-success p-8 m-8'};
+	const cancelOptions = { icon: 'pi pi-times p-8 m-8', className: 'p-button-danger p-8 m-8'};
 	return (
 		<Stack p={'10px'} dir={dirState} margin={'2%'}>
 			{photosResponse.isLoading == true ? (
@@ -135,9 +101,10 @@ const PhotosAdmin: NextPageWithLayout = () => {
 				<></>
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
-				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
+				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'} >
 					<FormattedMessage id={'photos'} defaultMessage='photos' />
 				</Text>
+				
 				<Button
 					variant='outline'
 					colorScheme='brand'
@@ -162,158 +129,106 @@ const PhotosAdmin: NextPageWithLayout = () => {
 					<TableCaption>ADHD CENTER</TableCaption>
 
 					<Tbody>
-							<Tr >
-								<Td w={'15%'} h={'15%'}>
-									<Galleria
-										value={photosResponse.data?.data.results}
-										responsiveOptions={responsiveOptions}
-										numVisible={5}
-										style={{ maxWidth: '100%' }}
-										showThumbnails={false}
-										showIndicators
-										changeItemOnIndicatorHover
-										item={itemGalleryTemplate}
-									/>
-								</Td>
-							</Tr>
-						
+						<Tr>
+							<Td w={'15%'} h={'15%'}>
+								{/* <Galleria
+									value={photosResponse.data?.data.results}
+									responsiveOptions={responsiveOptions}
+									numVisible={5}
+									style={{ maxWidth: '100%' }}
+									showThumbnails={false}
+									showIndicators
+									changeItemOnIndicatorHover
+									item={itemGalleryTemplate}
+								/> */}
+								<div>
+									<SimpleGrid
+										spacing={5}
+										columns={[2, 3]}
+										templateColumns='repeat(3, 1fr)'
+										w='full%'
+									>
+										{photosResponse.data?.data.results.map((link) => (
+											<Box key={link.id}>
+												<IconButton
+													aria-label={'edit'}
+													size={'lg'}
+													onClick={() =>
+														DeleteRequest(`/admin/photos/${link.id}/`, refresh)
+													}
+													icon={
+														<i
+															className='pi pi-trash'
+															style={{ fontSize: '1em', color: 'red' }}
+														></i>
+													}
+												></IconButton>
+												<Image src={link.datafile} alt={''} />
+											</Box>
+										))}
+									</SimpleGrid>
+								</div>
+							</Td>
+						</Tr>
 					</Tbody>
 				</Table>
 			</TableContainer>
 
-				<Modal isOpen={isOpen} onClose={onClose}>
-					<ModalOverlay />
-					<ModalContent dir={dirState}>
-						<ModalHeader>
-							<FormattedMessage id={'add_article'} />
-						</ModalHeader>
-						<Formik
-							initialValues={{
-								title: '',
-								photos: '',
-							}}
-							validate={(values) => {
-								const errors = {};
-								if (!values.title) {
-									errors.title = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
-									);
-								}
+			<Modal isOpen={isOpen} onClose={onClose} size={"5xl"}>
+				<ModalOverlay />
+				<ModalContent dir={dirState}>
+					<ModalHeader>
+						<FormattedMessage id={'photos_add'} />
+					</ModalHeader>
+
+					<ModalBody>
+						<FileUpload
+							name='files'
+							url='#'
+							customUpload
+							uploadHandler={onChange}
+							accept='image/*'
+							maxFileSize={1000000}
+							chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}
+							emptyTemplate={
+								<p className='m-0'><FormattedMessage id={'drag_file'} /></p>
+							}
+							chooseLabel={
+								<FormattedMessage
+									id={'choose_files'}
+									defaultMessage='choose file'
+								/>
+							}
+							uploadLabel={
+								<FormattedMessage
+									id={'upload'}
+									defaultMessage='upload file'
+								/>
+							}
+							cancelLabel={
+								<FormattedMessage
+									id={'close'}
+									defaultMessage='close '
+								/>
+							}
 							
-							
-							
-								return errors;
-							}}
-							onSubmit={(values, { setSubmitting }) => {
-								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
+						/>
+					</ModalBody>
 
-									const dataToRequestAPI = {
-										title: values.title,
-										photos: imgsSrc,
-									};
-									PostRequest('/admin/photos/', dataToRequestAPI, refresh);
-									setSubmitting(false);
-								}, 400);
-							}}
-						>
-							{({
-								values,
-								errors,
-								touched,
-								handleChange,
-								handleBlur,
-								handleSubmit,
-								isSubmitting,
-							}) => (
-								<form onSubmit={handleSubmit}>
-									<ModalBody>
-										<Stack spacing={3}>
-											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
-											</FormLabel>
-											<Input
-												variant='outline'
-												type='text'
-												name='title'
-												onChange={handleChange}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.title}
-											/>
-											<Text color={'red'}>
-												{errors.title && touched.title && errors.title}
-											</Text>
-
-										
-
-											<FormLabel>
-												<FormattedMessage
-													id={'choose_file'}
-													defaultMessage='choose file'
-												/>
-											</FormLabel>
-											<FileUpload
-												multiple
-												mode='basic'
-												name='choose_file'
-												url='https://primefaces.org/primereact/showcase/upload.php'
-												accept='image/*'
-												customUpload
-												uploadHandler={onChange}
-												onChange={handleChange}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.photos}
-												chooseLabel={
-													<FormattedMessage
-														id={'choose_files'}
-														defaultMessage='choose file'
-													/>
-												}
-											/>
-											<div>
-												<SimpleGrid
-													spacing={5}
-													columns={[2, 3]}
-													templateColumns='repeat(3, 1fr)'
-													w='full%'
-												>
-													{imgsSrc.map((link) => (
-														<Image src={link} />
-													))}
-												</SimpleGrid>
-											</div>
-										</Stack>
-									</ModalBody>
-
-									<ModalFooter>
-										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
-										</Button>
-										<Button
-											variant='primary'
-											type='submit'
-											disabled={isSubmitting}
-										>
-											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
-											}
-										</Button>
-									</ModalFooter>
-								</form>
-							)}
-						</Formik>
-					</ModalContent>
-				</Modal>
-			
-			
+					<ModalFooter>
+						<Button variant='outline' mr={3} ml={3} onClick={onClose}>
+							{<FormattedMessage id={'close'} defaultMessage='close' />}
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+			<Paginator
+				first={basicFirst}
+				rows={basicRows}
+				totalRecords={photosResponse.data?.data.results.length}
+				rowsPerPageOptions={[10, 20, 30]}
+				onPageChange={onBasicPageChange}
+			></Paginator>
 		</Stack>
 	);
 };
@@ -323,9 +238,9 @@ PhotosAdmin.getLayout = function getLayout(page: ReactElement) {
 
 export default PhotosAdmin;
 async function refresh(response: any) {
-    router.push('/admin/photos', '/admin/photos', {
-        shallow: true,
-    });
+	router.push('/admin/photos', '/admin/photos', {
+		shallow: true,
+	});
 }
 const itemGalleryTemplate = (item) => {
 	return (
@@ -340,7 +255,6 @@ const itemGalleryTemplate = (item) => {
 			border={'2px'}
 			borderColor={'brand.blue'}
 		>
-            
 			<CardBody>
 				<Image
 					src={item.datafile}
@@ -349,24 +263,26 @@ const itemGalleryTemplate = (item) => {
 							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}
 					alt={item.name}
-                    roundedLeft={"md"}
-					style={{ width: '100%', display: 'block' }}
+					roundedTop={'full'}
+					width={item.width}
+					height={item.height}
+					border={'1px'}
+					borderColor={'brand.blue'}
 				/>
 			</CardBody>
-            <CardFooter>
-            <IconButton
+			<CardFooter>
+				<IconButton
 					aria-label={'edit'}
-                    size={"lg"}
-					 onClick={() => DeleteRequest(`/admin/photos/${item.id}/`, refresh)}
+					size={'lg'}
+					onClick={() => DeleteRequest(`/admin/photos/${item.id}/`, refresh)}
 					icon={
 						<i
-                      
 							className='pi pi-trash'
 							style={{ fontSize: '1em', color: 'red' }}
 						></i>
 					}
 				></IconButton>
-            </CardFooter>
+			</CardFooter>
 		</Card>
 	);
 };

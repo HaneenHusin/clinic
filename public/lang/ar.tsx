@@ -45,7 +45,7 @@ export default {
     title:"عنوان",
     sluge:"sluge",
     body:"الموضوع",
-    choose_file:"أختر الملف أوالصور للتحميل",
+    choose_file:"اختر الملف أو الصور للتحميل",
     choose_files:"  أختر الملفات ", 
     upload:"تحميل",
     close:"إغلاق",
@@ -81,5 +81,10 @@ export default {
     feedback:"التقييمات ",
     mange_your_clinic:"إدارة العيادة",
     photos:"محرر الصور",
+    photos_add:"إضافة صورة",
+    drag_file:"اسحب أو اختر الملفات المطلوبة",
+    add_feedback:"إضافة تقييم",
+   edit_feedback:"تعديل تقييم",
+
 
 }

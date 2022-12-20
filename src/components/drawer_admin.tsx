@@ -40,12 +40,12 @@ export function DrawerAdmin() {
 				placement='right'
 				onClose={onClose}
 				finalFocusRef={btnRef}
+				placement={"left"} 
 			>
 				<DrawerOverlay />
 				<DrawerContent>
 					<DrawerCloseButton />
 					<DrawerHeader>
-						{' '}
 						<FormattedMessage id={'mange_your_clinic'} defaultMessage='mange your clinic' />
 					</DrawerHeader>
 
@@ -56,7 +56,7 @@ export function DrawerAdmin() {
 							p={'8px'}
 							cursor={"pointer"}
 							_hover={{transform: "scale(1.05,1.05)"}}
-							onClick={ ()=> router.push('/admin/article_admin', '/admin/article_admin', { locale: localValue.trim(),shallow: true })}>
+							onClick={ ()=> router.push('/admin/article', '/admin/article', { shallow: true })}>
 							<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 								<FormattedMessage id={'article'} defaultMessage='article' />
 							</Text>
@@ -71,7 +71,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/certificates_admin', '/admin/certificates_admin', { locale: localValue.trim(),shallow: true })}>
+								onClick={ ()=> router.push('/admin/certificates', '/admin/certificates', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -88,7 +88,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/sliders_admin', '/admin/sliders_admin', { locale: localValue.trim(),shallow: true })}>
+								onClick={ ()=> router.push('/admin/sliders', '/admin/sliders', {shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -106,7 +106,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/information_admin', '/admin/information_admin', { locale: localValue.trim(),shallow: true })}>
+								onClick={ ()=> router.push('/admin/information', '/admin/information', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -124,7 +124,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/feedback_admin', '/admin/feedback_admin', { locale: localValue.trim(),shallow: true })}>
+								onClick={ ()=> router.push('/admin/feedback', '/admin/feedback', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -141,7 +141,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/photos', '/admin/photos', { locale: localValue.trim(),shallow: true })}>
+								onClick={ ()=> router.push('/admin/photos', '/admin/photos')}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage

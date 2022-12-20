@@ -8,16 +8,17 @@ import {myProgressState} from "../Atoms/progressAtom";
 import {Card} from "@chakra-ui/card";
 import {FormattedMessage} from "react-intl";
 import {ProgressBar} from "primereact/progressbar";
-import StepsEnd from "./steps_end";
+import StepsEnd from "./steps_result";
 import {myDirectionState} from "../Atoms/localAtoms";
 import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { useRouter } from 'next/router';
+import { quizeList } from '../src/services/api';
 
-const StepsDemo: NextPageWithLayout = () => {
+const quize: NextPageWithLayout = () => {
     const [dirState] = useRecoilState(myDirectionState);
-
-  
+    const quizeResponse = quizeList(1, 20);
+    
 
     return (
         <Stack
@@ -34,7 +35,7 @@ const StepsDemo: NextPageWithLayout = () => {
                 </Image>
             </HStack>
             <Box pb={'10%'} align="center" justify="center">
-                <Carousel value={galleriaService} itemTemplate={StepsTest} numVisible={1} numScroll={1}
+                <Carousel value={quizeResponse.data?.data.results} itemTemplate={StepsTest} numVisible={1} numScroll={1}
                           showIndicators={false}></Carousel>
             </Box>
 
@@ -43,7 +44,7 @@ const StepsDemo: NextPageWithLayout = () => {
     );
 }
 
-export function StepsTest() {
+export function StepsTest(item) {
     const [progressState, setProgressState] = useRecoilState(myProgressState);
 
     const itemSteps = [
@@ -151,7 +152,7 @@ export function StepsTest() {
         </Card>
     );
 }
-StepsDemo.getLayout = function getLayout(page: ReactElement) {
+quize.getLayout = function getLayout(page: ReactElement) {
     return (
         <LayoutWithoutBar>
             {page}
@@ -159,5 +160,5 @@ StepsDemo.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default  StepsDemo;
+export default  quize;
 

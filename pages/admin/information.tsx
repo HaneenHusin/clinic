@@ -36,8 +36,6 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { FileUpload } from 'primereact/fileupload';
-import { Galleria } from 'primereact/galleria';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { certificateList, DeleteRequest, informationList, PostRequest, UpdateRequest } from '../../src/services/api';
@@ -63,29 +61,16 @@ const InformationAdmin: NextPageWithLayout = () => {
 		setBasicRows(event.rows);
 	};
 
-	const onChange = (e) => {
-		debugger;
-		for (const file of e.files) {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				setImgsSrc((imgs) => [...imgs, reader.result]);
-				console.log('imgsSrc ' + imgsSrc);
-			};
-			reader.onerror = () => {
-				console.log(reader.error);
-			};
-		}
-	};
+	
 	async function refresh(response:any)
 	{
 		onClose();
-		router.push('/admin/information_admin', '/admin/information_admin', { shallow: true })
+		router.push('/admin/information', '/admin/information', { shallow: true })
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('articlesResponse' + infoResponse.data);
+		console.log('infoResponse' + infoResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
 		console.log("index...."+indexValue);
@@ -94,20 +79,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 		setIndex(indexValue);
 		setId(idValue)
 	}
-	const responsiveOptions = [
-		{
-			breakpoint: '1024px',
-			numVisible: 5,
-		},
-		{
-			breakpoint: '768px',
-			numVisible: 3,
-		},
-		{
-			breakpoint: '560px',
-			numVisible: 1,
-		},
-	];
+	
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
 			{infoResponse.isLoading == true ? (
@@ -274,8 +246,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
-									type='text'
-									name='text'
+									name='value'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
 									value={values.value} />
@@ -358,7 +329,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
-									name='text'
+									name='value'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
 									placeholder={infoResponse.data?.data.results[index].value}

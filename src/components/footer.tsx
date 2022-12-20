@@ -11,7 +11,7 @@ import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import SocialButton from "./social_button";
 import {myDirectionState} from "../../Atoms/localAtoms";
-import CopyRightDiv from "./copy_right_part";
+import CopyRightDiv from "./copy_right";
 
 
 

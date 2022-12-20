@@ -2,12 +2,14 @@
 import axios from "axios";
 import useSWR from "swr";
 import { ToastErrorShow, ToastSuccessShow } from '../components/toast';
-import { ArticleList } from '../types/article_list';
-import { CertificateList } from "../types/certificate_list";
-import { HomeList } from "../types/home_list";
-import { InformationList } from "../types/information_list";
-import { SlidersList } from "../types/slider_list";
+import { ArticleList } from '../types/article';
+import { CertificateList } from "../types/certificate";
+import { HomeList } from "../types/home";
+import { InformationList } from "../types/information";
+import { SlidersList } from "../types/slider";
 import { photosList } from "../types/photos";
+import { FeedbackList } from "../types/feedback";
+import { QuizeList, QuizList } from "../types/quize";
 
 
 axios.defaults.baseURL = "https://adhd.nasayimhalab.net/api";
@@ -28,7 +30,7 @@ export function home(){
     }
 }
 export function articlesList(page:number, pageSize:number){
-    const { data, error } = useSWR<ArticleList, Error>(`/articles/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<ArticleList, Error>(`/admin/articles/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -70,7 +72,22 @@ export function photosList(page:number, pageSize:number){
         isError: error
     }
 }
-
+export function feedbackList(page:number, pageSize:number){
+    const { data, error } = useSWR<FeedbackList, Error>(`/admin/feedback/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function quizeList(page:number, pageSize:number){
+    const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
 export function SignRequest(
     endpoint: string,
     Data:any,
@@ -89,6 +106,9 @@ export function SignRequest(
    })
 
   }
+
+
+ 
   export function PostRequest(
     endpoint: string,
     Data:any,
