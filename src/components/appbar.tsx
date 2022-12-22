@@ -53,18 +53,19 @@ export  function AppBarAdmin() {
         debugger
         const {pathname, asPath, query} = router
         await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim(),shallow: true } );
+        await router.push( '/welcome', '/welcome'  , { locale: localValue.trim(),shallow: true } );
         
     }
     async function goSignUpPage() {
         debugger
         const { pathname, asPath, query } = router;
 		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() ,shallow: true});
-
+        
     }
     async function goSite() {
         const {pathname, asPath, query} = router
         await router.push( '/sign_in','/sign_in',  { locale: localValue.trim(),shallow: true } );
-
+       
     }
     return (
         <>

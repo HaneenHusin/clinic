@@ -9,7 +9,7 @@ import { InformationList } from "../types/information";
 import { SlidersList } from "../types/slider";
 import { photosList } from "../types/photos";
 import { FeedbackList } from "../types/feedback";
-import { QuizeList, QuizList, ResultsList } from "../types/quize";
+import { QuizeList } from "../types/quize";
 import { QuestionList } from "../types/question";
 import { AnswerList } from "../types/answer";
 
@@ -83,6 +83,14 @@ export function feedbackList(page:number, pageSize:number){
     }
 }
 export function quizeList(page:number, pageSize:number){
+    const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function quizeClientList(page:number, pageSize:number){
     const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,

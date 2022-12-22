@@ -13,11 +13,13 @@ import {CheckIcon} from '@chakra-ui/icons'
 import {myDirectionState} from "../Atoms/localAtoms";
 import { NextPageWithLayout } from "./_app";
 import LayoutWithoutBar from "../src/components/layout_without_bar";
+import { useRouter } from "next/router";
 
 
-const StepsEnd: NextPageWithLayout = () => {
+const StepsEnd: NextPageWithLayout = (props:any) => {
     const [dirState] = useRecoilState(myDirectionState);
-
+    const router = useRouter();
+	const userData = JSON.parse(router.query.item);
     return (
         <Box
             dir={dirState}

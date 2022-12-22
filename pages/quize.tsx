@@ -16,13 +16,12 @@ import { useRouter } from 'next/router';
 import { quizeList } from '../src/services/api';
 
 const quize: NextPageWithLayout = () => {
-    const [dirState] = useRecoilState(myDirectionState);
-    const quizeResponse = quizeList(1, 20);
-    
+   
+  
 
     return (
         <Stack
-            dir={dirState}
+          
             w={'full'}
             h={'full'}
             bg={'brand.white'}
@@ -35,8 +34,8 @@ const quize: NextPageWithLayout = () => {
                 </Image>
             </HStack>
             <Box pb={'10%'} align="center" justify="center">
-                <Carousel value={quizeResponse.data?.data.results} itemTemplate={StepsTest} numVisible={1} numScroll={1}
-                          showIndicators={false}></Carousel>
+                {/* <Carousel value={quizeResponse.data?.data.results} itemTemplate={StepsTest} numVisible={1} numScroll={1}
+                          showIndicators={false}></Carousel> */}
             </Box>
 
         </Stack>
@@ -102,26 +101,36 @@ export function StepsTest(item) {
         setProgressState(progressState + val)
         if (progressState == 99) {
             console.log("StepsEnd  ")
-            router.replace( '/steps_end' );
+            // router.replace( '/steps_end' );
+            router.push({
+                pathname: '/steps_result',
+                query: { item: JSON.stringify(item) },
+             }, undefined, { shallow: true})
+             
         }
     }
 
-
+    const [dirState] = useRecoilState(myDirectionState);
     return (
 
         <Card w={['50%', '78%', '90%', '70%']} bg={'brand.white'} border={'2px'} borderColor={'brand.gray'}
-              rounded={'xl'} boxShadow={'xl'}>
+              rounded={'xl'} boxShadow={'xl'}   dir={dirState}>
 
             <CardBody>
                 <Card w={['50%', '90%', '70%']} p={['2%', '5%', '4%', '2%']} bg={'brand.white'} rounded={'full'}
                       border={'2px'} borderColor={'brand.gray'} align={'center'} justify={'center'}>
                     <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                           color={'brand.blue'}>
-                        <FormattedMessage id={'footer_caption'}/>
+                        {/* <FormattedMessage id={'footer_caption'}/> */}
+                        {item.title}
                     </Text>
                 </Card>
                 <Stack mt='6' spacing='3'>
                     <HStack spacing={2} align="center" justify="center">
+                        {item.questions_list.answers_list.map((item:any,index:number) => ( 
+                        <Button key={item.id} variant='primary' onClick={() => activeSteps(5.5)}>
+                            <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}> {item.text} </Text>
+                        </Button>))}
                         <Button variant='primary' onClick={() => activeSteps(5.5)}>
                             <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}> <FormattedMessage
                                 id={'never'}/> </Text>

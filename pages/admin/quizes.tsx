@@ -145,11 +145,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<Td>
 										<Link
 											shallow={true}
-											href={{
-												pathname: '/admin/questions',
-												query: { item: JSON.stringify(item) },
-											}}
-										>
+											href={`/admin/questions/${item.id}`}>
 											<Text
 												textDecoration={'underline'}
 												fontSize={['sm', 'md', 'lg', 'xl']}
@@ -164,10 +160,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<Td>
 										<Link
 											shallow={true}
-											href={{
-												pathname: '/admin/results',
-												query: { item: JSON.stringify(item) },
-											}}
+											href={`/admin/results/${item.id}`}
 										>
 											<Text
 												textDecoration={'underline'}

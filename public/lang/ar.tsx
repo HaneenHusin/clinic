@@ -99,6 +99,7 @@ export default {
   edit_result:"تعديل نتيجة",
   min_point:"النقطة الأدنى",
   max_point:"النقطة الأعلى",
-  answer:"الإجابة"
+  answer:"الإجابة",
+  answers:"الإجابات"
 
 }

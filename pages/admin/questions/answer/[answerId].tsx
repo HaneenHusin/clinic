@@ -31,17 +31,17 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { NextPageWithLayout } from '../_app';
-import LayoutAdmin from '../../src/components/layout_admin';
-import { answerList, DeleteRequest, PostRequest, UpdateRequest } from '../../src/services/api';
+import { NextPageWithLayout } from '../../../_app';
+import LayoutAdmin from '../../../../src/components/layout_admin';
+import { answerList, DeleteRequest, PostRequest, UpdateRequest } from '../../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
+import { myDirectionState } from '../../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
 
-const AnswerAdmin: NextPageWithLayout = (props:any) => {
+const AnswerAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
     const [isEdit,setIsEdit ] = useState(false);
 	const [index, setIndex] = useState(0);
@@ -53,11 +53,14 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
+	const { answerId } = router.query
+	const {query: { qId },
+	  } = router
+
+	let answerResponse = answerList(pageNum, basicRows,qId,answerId,);
+	console.log(" router.query"+ qId)
 	
-	const userData = JSON.parse(router.query.item);
-	const quizId = JSON.parse(router.query.quizId);
-	let answerResponse = answerList(pageNum, basicRows,quizId, userData.id);
-	console.log("answer"+userData.id +quizId)
+	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -98,7 +101,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'answer'} defaultMessage='answer' />
+					<FormattedMessage id={'answers'} defaultMessage='answers' />
 				</Text>
 				<Button variant='outline' colorScheme='brand' onClick={openModal} fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
@@ -170,7 +173,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 									
 									<IconButton
 										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/${item.id}/`,refresh)}
+										onClick={()=> DeleteRequest(`/admin/quize/${quizId}/questions/${answerId}/answers/${item.id}/`,refresh)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -215,7 +218,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 							points: values.points,
 
                                   }
-								  PostRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/`,dataToRequestAPI,refresh)
+								  PostRequest(`/admin/quize/${quizId}/questions/${answerId}/answers/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -297,7 +300,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 							points: values.points 
 							
                                   }
-								  UpdateRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/${answerResponse.data?.data.results[index]?.id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/quize/${quizId}/questions/${answerId}/answers/${answerResponse.data?.data.results[index]?.id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}

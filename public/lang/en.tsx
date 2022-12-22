@@ -98,7 +98,9 @@ export default {
     edit_result:"Edit result",
     min_point:"Min point",
     max_point:"Max point",
-    answer:"Answer"
+    answer:"Answer",
+    answers:"Answers"
+   
   
 
 

@@ -31,23 +31,24 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { NextPageWithLayout } from '../_app';
-import LayoutAdmin from '../../src/components/layout_admin';
+import { NextPageWithLayout } from '../../_app';
+import LayoutAdmin from '../../../src/components/layout_admin';
 import {
 	DeleteRequest,
 	feedbackList,
 	PostRequest,
 	resultList,
 	UpdateRequest,
-} from '../../src/services/api';
+} from '../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
+import { myDirectionState } from '../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
+import quize from '../../quize';
 
-const ResultsAdmin: NextPageWithLayout = (props: any) => {
+const ResultsAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
@@ -59,8 +60,9 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
-	const userData = JSON.parse(router.query.item);
-	let resultResponse =resultList(pageNum, basicRows, userData.id);
+	const { resultId } = router.query;
+
+	let resultResponse = resultList(pageNum, basicRows, resultId);
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -68,21 +70,27 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/quize/${idQuize}/result/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(
+			`/admin/quize/${resultId}/result/?page=${pageNum}&pageSize=${basicRows}`
+		);
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(indexValue:number,idResult:number,idQuize:number) {
-		console.log("index...."+indexValue);
+	function openEditModal(
+		indexValue: number,
+		idResult: number,
+		idQuize: number
+	) {
+		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
-		setIdResult(idResult)
-		setIdQuize(idQuize)
+		setIdResult(idResult);
+		setIdQuize(idQuize);
 	}
 
 	return (
@@ -99,7 +107,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'result'} defaultMessage='result' />
+					<FormattedMessage id={'results'} defaultMessage='result' />
 				</Text>
 				<Button
 					variant='outline'
@@ -173,7 +181,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id,userData.id)}
+											onClick={() => openEditModal(index, item.id, resultId)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -187,7 +195,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 											aria-label={'delete'}
 											onClick={() =>
 												DeleteRequest(
-													`/admin/quize/${userData.id}/results/${item.id}/`,
+													`/admin/quize/${resultId}/results/${item.id}/`,
 													refresh
 												)
 											}
@@ -255,7 +263,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 										max_point: values.max_point,
 									};
 									PostRequest(
-										`/admin/quize/${userData.id}/results/`,
+										`/admin/quize/${resultId}/results/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -293,26 +301,6 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 
 											<FormLabel>
 												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='max_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.max_point}
-											/>
-											<Text color={'red'}>
-												{errors.max_point &&
-													touched.max_point &&
-													errors.max_point}
-											</Text>
-
-											<FormLabel>
-												<FormattedMessage
 													id={'min_point'}
 													defaultMessage='min point'
 												/>
@@ -329,6 +317,26 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 												{errors.min_point &&
 													touched.min_point &&
 													errors.min_point}
+											</Text>
+
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
+											<Text color={'red'}>
+												{errors.max_point &&
+													touched.max_point &&
+													errors.max_point}
 											</Text>
 										</Stack>
 									</ModalBody>
@@ -366,7 +374,11 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 							/>
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: resultResponse.data?.data?.results[index]?.text, max_point: resultResponse.data?.data?.results[index]?.max_point, min_point: resultResponse.data?.data?.results[index]?.min_point }}
+							initialValues={{
+								text: resultResponse.data?.data?.results[index]?.text,
+								max_point: resultResponse.data?.data?.results[index]?.max_point,
+								min_point: resultResponse.data?.data?.results[index]?.min_point,
+							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
@@ -377,7 +389,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 										min_point: values.min_point,
 									};
 									UpdateRequest(
-										`/admin/quize/${idQuize}/results/${idResult}/`,
+										`/admin/quize/${resultId}/results/${idResult}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -409,30 +421,6 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 												borderColor={'brand.blue'}
 												value={values.text}
 											/>
-											<Text color={'red'}>
-												{errors.text && touched.text && errors.text}
-											</Text>
-
-											<FormLabel>
-												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='max_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.max_point}
-											/>
-											<Text color={'red'}>
-												{errors.max_point &&
-													touched.max_point &&
-													errors.max_point}
-											</Text>
-
 											<FormLabel>
 												<FormattedMessage
 													id={'min_point'}
@@ -447,11 +435,20 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 												borderColor={'brand.blue'}
 												value={values.min_point}
 											/>
-											<Text color={'red'}>
-												{errors.min_point &&
-													touched.min_point &&
-													errors.min_point}
-											</Text>
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
 										</Stack>
 									</ModalBody>
 

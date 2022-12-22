@@ -34,38 +34,38 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { NextPageWithLayout } from '../_app';
-import LayoutAdmin from '../../src/components/layout_admin';
+import { NextPageWithLayout } from '../../_app';
+import LayoutAdmin from '../../../src/components/layout_admin';
 import {
 	DeleteRequest,
 	PostRequest,
 	questionsList,
 	UpdateRequest,
-} from '../../src/services/api';
+} from '../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
+import { myDirectionState } from '../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 
-const QuestionAdmin: NextPageWithLayout = (props: any) => {
+const QuestionAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [idQuize, setIdQuize] = useState(0);
 	const [idQuestion, setIdQuuestion] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
-	const userData = JSON.parse(router.query.item);
+	const { qId } = router.query
 
-	let quizeResponse = questionsList(pageNum, basicRows, userData.id);
+
+	let questionResponse = questionsList(pageNum, basicRows, qId);
 
 	const onBasicPageChange = (event) => {
 		debugger;
@@ -74,10 +74,10 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${idQuize}/questions/?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${qId}/questions/?page=${pageNum}&pageSize=${basicRows}`
 		);
 	}
 	function openModal() {
@@ -86,20 +86,18 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 	}
 	function openEditModal(
 		indexValue: number,
-		idQuestion: number,
-		idQuize: number
+		idQuestion: number
 	) {
 		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setIdQuuestion(idQuestion);
-		setIdQuize(idQuize);
 	}
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{quizeResponse.isLoading == true ? (
+			{questionResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -142,7 +140,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{quizeResponse.data?.data.results?.map(
+						{questionResponse.data?.data.results?.map(
 							(item: any, index: number) => (
 								<Tr key={item.title}>
 									<Tooltip label={item.text}>
@@ -159,10 +157,8 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 									<Td>
 										<Link
 											shallow={true}
-											href={{
-												pathname: '/admin/answer',
-												query: { item: JSON.stringify(item),quizId:JSON.stringify(userData.id) },
-											}}
+											href={`/admin/questions/${qId}/answer/${item.id}`}
+												
 										>
 											<Text
 												textDecoration={'underline'}
@@ -179,7 +175,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id, userData.id)}
+											onClick={() => openEditModal(index, item.id)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -193,7 +189,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 											aria-label={'delete'}
 											onClick={() =>
 												DeleteRequest(
-													`/admin/quize/${userData.id}/questions/${item.id}/`,
+													`/admin/quize/${qId}/questions/${item.id}/`,
 													refresh
 												)
 											}
@@ -242,7 +238,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 										text: values.text,
 									};
 									PostRequest(
-										`/admin/quize/${userData.id}/questions/`,
+										`/admin/quize/${qId}/questions/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -314,7 +310,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								text: quizeResponse.data?.data?.results[index]?.text,
+								text: questionResponse.data?.data?.results[index]?.text,
 							}}
 							validate={(values) => {
 								const errors = {};
@@ -337,7 +333,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 										text: values.text,
 									};
 									UpdateRequest(
-										`/admin/quize/${idQuize}/questions/${idQuestion}/`,
+										`/admin/quize/${qId}/questions/${idQuestion}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -397,7 +393,7 @@ const QuestionAdmin: NextPageWithLayout = (props: any) => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={userData.data?.data.count}
+				totalRecords={questionResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>
