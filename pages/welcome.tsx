@@ -41,7 +41,6 @@ const Welcome: NextPageWithLayout = () => {
 	];
 	const [localState, setLocalState] = useRecoilState(myLocalState);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const [slider, setSlider] = useState("");
 
 	const homeResponse = home();
 
@@ -82,7 +81,7 @@ const Welcome: NextPageWithLayout = () => {
 							<FormattedMessage id={'first_caption'} />
 						</Text>
 						<Image
-							src={'assets/images/test1.png'}
+							src={'/assets/images/test1.png'}
 							rounded={'lg'}
 							onError={(e) =>
 								(e.target.src =
@@ -106,7 +105,7 @@ const Welcome: NextPageWithLayout = () => {
 							<FormattedMessage id={'second_caption'} />
 						</Text>
 						<Image
-							src={'assets/images/test2.png'}
+							src={'/assets/images/test2.png'}
 							rounded={'lg'}
 							onError={(e) =>
 								(e.target.src =

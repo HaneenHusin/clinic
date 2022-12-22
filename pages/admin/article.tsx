@@ -7,14 +7,11 @@ import {
 	Td,
 	TableCaption,
 	TableContainer,
-	Flex,
 	HStack,
 	Text,
 	Box,
-	VStack,
 	Button,
 	Image,
-	Spacer,
 	Stack,
 	IconButton,
 	useDisclosure,
@@ -41,7 +38,6 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { FileUpload } from 'primereact/fileupload';
 import { Galleria } from 'primereact/galleria';
 import {
 	articlesList,
@@ -56,13 +52,13 @@ import { NextPageWithLayout } from '../_app';
 import { useRecoilState } from 'recoil';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRouter } from 'next/router';
-import { Dialog } from 'primereact/dialog';
 import Gridphotot from '../../src/components/grid_photo';
-import { myImagesState } from '../../Atoms/imagesAtom';
+import { myImagesState, myListImagesState } from '../../Atoms/imagesAtom';
+import { Editor } from 'primereact/editor';
+import parse from 'html-react-parser';
 
 const ArticleAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [isImageModal, setIsImageModal] = useState(false);
 	const [displayMaximizable, setDisplayMaximizable] = useState(false);
@@ -70,64 +66,24 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(1);
 	const [basicRows, setBasicRows] = useState(10);
-	const articlesResponse = articlesList(basicFirst,basicRows);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const [imageState, setimageState] = useRecoilState(myImagesState);
+	const [pageNum, setPageNum] = useState(1);
+	const articlesResponse = articlesList(pageNum, basicRows);
+	const [dirState] = useRecoilState(myDirectionState);
+	const [imageState, setimageState] = useRecoilState(myListImagesState);
+	const [text1, setText1] = useState<string>('');
+
 	const router = useRouter();
 	const onBasicPageChange = (event) => {
-		debugger
-		setBasicFirst(event.page+1);
+		setBasicFirst(event.first);
 		setBasicRows(event.rows);
-
+		setPageNum(event.page + 1)
 	};
-	
-	const onChange = (e) => {
-		debugger;
-		// for (const file of e.files) {
-		// 	const reader = new FileReader();
-		// 	reader.readAsDataURL(file);
-		// 	reader.onload = () => {
-		// 		setImgsSrc((imgs) => [...imgs, file.objectURL]);
-		// 		console.log('imgsSrc ' + imgsSrc);
-		// 	};
-		// 	reader.onerror = () => {
-		// 		console.log(reader.error);
-		// 	};
-		// }
-		// get files from event on the input element as an array objectURL
-		let files = [...e.files];
 
-		if (files && files.length > 0) {
-			const formData = new FormData();
-			files?.forEach((file) => {
-				formData.append('files', file.objectURL);
-				setImgsSrc((imgs) => [...imgs, formData]);
-			});
-			console.log('files....' + files);
-		}
-	};
 	async function refresh(response: any) {
 		onClose();
 		router.push('/admin/article', '/admin/article', { shallow: true });
 	}
-	const renderFooter = (name) => {
-		return (
-			<div>
-				<Button
-					label='No'
-					icon='pi pi-times'
-					onClick={() => onHide(name)}
-					className='p-button-text'
-				/>
-				<Button
-					label='Yes'
-					icon='pi pi-check'
-					onClick={() => onHide(name)}
-					autoFocus
-				/>
-			</div>
-		);
-	};
+
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
@@ -135,31 +91,17 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		console.log('articlesResponse' + articlesResponse.data);
 		console.log('index..' + index);
 	}
-	function openImageModal() {
-		onOpen();
-		setIsImageModal(true);
-		console.log('articlesResponse' + articlesResponse.data);
-		console.log('index..' + index);
-	}
+
 	function openEditModal(indexValue: number, idValue: number) {
-		debugger;
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setId(idValue);
-		setImgsSrc((imgs) => [...imgs, []]);
 	}
 	const dialogFuncMap = {
 		displayMaximizable: setDisplayMaximizable,
 	};
 
-	const onClick = (name) => {
-		dialogFuncMap[`${name}`](true);
-	};
-
-	const onHide = (name) => {
-		dialogFuncMap[`${name}`](false);
-	};
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -235,8 +177,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 						{articlesResponse.data?.data.results.map((item, index) => (
 							<Tr key={item.title}>
 								<Td w={'15%'} h={'15%'}>
-									{' '}
-									{/* <Image src={item.itemImageSrc} rounded={'lg'} /> */}
 									<Galleria
 										value={
 											articlesResponse.data?.data.results[index].photos_list
@@ -272,7 +212,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										{item.slug}
 									</Td>
 								</Tooltip>
-								<Tooltip label={item.body}>
+								<Tooltip label={parse(`${item.body}`)}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -280,7 +220,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.body}
+										{parse(`${item.body}`)}
 									</Td>
 								</Tooltip>
 								<Td>
@@ -327,9 +267,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 							initialValues={{
 								title: '',
 								sluge: '',
-								body: '',
-								photos:  [...imageState],
-								key_words: '',
+								body: articlesResponse.data?.data.results[index].body,
+								photos: [...imageState],
+								keywords: '',
 							}}
 							validate={(values) => {
 								const errors = {};
@@ -357,8 +297,8 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										/>
 									);
 								}
-								if (!values.key_words) {
-									errors.key_words = (
+								if (!values.keywords) {
+									errors.keywords = (
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='required'
@@ -370,14 +310,12 @@ const ArticleAdmin: NextPageWithLayout = () => {
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
-debugger
-values.photos=[...values.photos,imageState]
 									const dataToRequestAPI = {
 										title: values.title,
 										slug: values.sluge,
-										body: values.body,
-										photos:values.photos,
-										key_wards: values.key_words,
+										body: text1,
+										photos: imageState,
+										keywords: values.keywords,
 									};
 									PostRequest('/admin/articles/', dataToRequestAPI, refresh);
 									setimageState([]);
@@ -400,6 +338,7 @@ values.photos=[...values.photos,imageState]
 											<FormLabel>
 												<FormattedMessage id={'title'} defaultMessage='title' />
 											</FormLabel>
+
 											<Input
 												variant='outline'
 												type='text'
@@ -409,6 +348,7 @@ values.photos=[...values.photos,imageState]
 												borderColor={'brand.blue'}
 												value={values.title}
 											/>
+
 											<Text color={'red'}>
 												{errors.title && touched.title && errors.title}
 											</Text>
@@ -438,27 +378,25 @@ values.photos=[...values.photos,imageState]
 											<Input
 												variant='outline'
 												type='text'
-												name='key_words'
+												name='keywords'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.key_words}
+												value={values.keywords}
 											/>
 											<Text color={'red'}>
-												{errors.key_words &&
-													touched.key_words &&
-													errors.key_words}
+												{errors.keywords && touched.keywords && errors.keywords}
 											</Text>
 
 											<FormLabel>
 												<FormattedMessage id={'body'} defaultMessage='body' />
 											</FormLabel>
-											<Textarea
-												onChange={handleChange}
-												name='body'
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
+											<Editor
+												style={{ height: '220px' }}
 												value={values.body}
+												name='body'
+												onChange={handleChange}
+												onTextChange={(e) => setText1(e.htmlValue)}
 											/>
 											<Text color={'red'}>
 												{errors.body && touched.body && errors.body}
@@ -471,7 +409,13 @@ values.photos=[...values.photos,imageState]
 												<Accordion defaultIndex={[1]} allowMultiple>
 													<AccordionItem>
 														<h2>
-															<AccordionButton  _expanded={{ bg: 'brand.blue', color: 'white' ,fontsize:"lg" }}>
+															<AccordionButton
+																_expanded={{
+																	bg: 'brand.blue',
+																	color: 'white',
+																	fontsize: 'lg',
+																}}
+															>
 																<Box as='span' flex='1' textAlign='left'>
 																	<FormLabel>
 																		<FormattedMessage
@@ -484,7 +428,7 @@ values.photos=[...values.photos,imageState]
 															</AccordionButton>
 														</h2>
 														<AccordionPanel pb={4}>
-															<Gridphotot />
+															<Gridphotot isMulti={true} ></Gridphotot>
 														</AccordionPanel>
 													</AccordionItem>
 												</Accordion>
@@ -534,7 +478,6 @@ values.photos=[...values.photos,imageState]
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							{' '}
 							<FormattedMessage
 								id={'edit_article'}
 								defaultMessage='Edit article'
@@ -542,33 +485,21 @@ values.photos=[...values.photos,imageState]
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								title: '',
-								sluge: '',
-								body: '',
+								title: articlesResponse.data?.data.results[index].title,
+								sluge: articlesResponse.data?.data.results[index].slug,
+								body: articlesResponse.data?.data.results[index].body,
 								photos: [],
-								key_words: '',
+								keywords: articlesResponse.data?.data.results[index].keywords,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										title:
-											values.title == ''
-												? articlesResponse.data?.data.results[index].title
-												: values.title,
-										slug:
-											values.sluge == ''
-												? articlesResponse.data?.data.results[index].slug
-												: values.sluge,
-										body:
-											values.body == ''
-												? articlesResponse.data?.data.results[index].body
-												: values.body,
-										key_wards:
-											values.key_words == ''
-												? articlesResponse.data?.data.results[index].key_wards
-												: values.key_words,
+										title: (values.title = values.title),
+										slug: (values.sluge = values.sluge),
+										body: (values.body = text1),
+										keywords: (values.keywords = values.keywords),
 									};
 									UpdateRequest(
 										`/admin/articles/${id}/`,
@@ -594,18 +525,17 @@ values.photos=[...values.photos,imageState]
 											<FormLabel>
 												<FormattedMessage id={'title'} defaultMessage='title' />
 											</FormLabel>
+
 											<Input
 												variant='outline'
 												type='text'
 												name='title'
-												placeholder={
-													articlesResponse.data?.data.results[index].title
-												}
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
 												value={values.title}
 											/>
+
 											<Text color={'red'}>
 												{errors.title && touched.title && errors.title}
 											</Text>
@@ -620,9 +550,6 @@ values.photos=[...values.photos,imageState]
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												placeholder={
-													articlesResponse.data?.data.results[index].slug
-												}
 												value={values.sluge}
 											/>
 											<Text color={'red'}>
@@ -638,34 +565,27 @@ values.photos=[...values.photos,imageState]
 											<Input
 												variant='outline'
 												type='text'
-												name='key_words'
+												name='keywords'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												placeholder={
-													articlesResponse.data?.data.results[index].key_wards
-												}
-												value={values.key_words}
+												value={values.keywords}
 											/>
 											<Text color={'red'}>
-												{errors.key_words &&
-													touched.key_words &&
-													errors.key_words}
+												{errors.keywords && touched.keywords && errors.keywords}
 											</Text>
 
 											<FormLabel>
 												<FormattedMessage id={'body'} defaultMessage='body' />
 											</FormLabel>
-											<Textarea
-												onChange={handleChange}
-												name='body'
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												placeholder={
-													articlesResponse.data?.data.results[index].body
-												}
+											<Editor
+												style={{ height: '220px' }}
 												value={values.body}
+												name='body'
+												onChange={handleChange}
+												onTextChange={(e) => setText1(e.htmlValue)}
 											/>
+											
 											<Text color={'red'}>
 												{errors.body && touched.body && errors.body}
 											</Text>
@@ -695,7 +615,6 @@ values.photos=[...values.photos,imageState]
 				rows={basicRows}
 				totalRecords={articlesResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-				
 			></Paginator>
 		</Stack>
 	);
@@ -727,7 +646,7 @@ const itemGalleryTemplate = (item) => {
 							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}
 					alt={item.name}
-					style={{ width: '100%', display: 'block' }}
+					style={{ width: '100%', height:'80%', display: 'block' }}
 				/>
 			</CardBody>
 		</Card>

@@ -31,7 +31,7 @@ export default function TestCard( ){
         >
 
             <VStack dir={dirState}  >
-                <img src={"assets/images/TEST_LOGO.svg"} width={'40%'}/>
+                <img src={"/assets/images/TEST_LOGO.svg"} width={'40%'}/>
                 <HStack p={'8px'}>
                     <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                           color={'brand.textGray'}>
@@ -60,7 +60,7 @@ export default function TestCard( ){
                     <ModalCloseButton />
                     <ModalBody>
                         <VStack dir={dirState}>
-                            <img src={"assets/images/TEST.svg"} height={'50%'} width={'50%'}/>
+                            <img src={"/assets/images/TEST.svg"} height={'50%'} width={'50%'}/>
                             <Text align="center" fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                                   color={'brand.textBlue'} p={'4%'}>
                                 <FormattedMessage id={'test_caption'}/>

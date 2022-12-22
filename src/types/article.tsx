@@ -15,7 +15,7 @@ export interface ArticleList {
   export interface Result {
     created: string
     title: string
-    key_wards: string
+    keywords: string
     slug: string
     body: string
     photos: number[]

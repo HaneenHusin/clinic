@@ -1,5 +1,4 @@
 import {
-    Button,
     Flex,
     Heading,
     Image,
@@ -9,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import CustomGalleria from '../src/components/sliders';
+import parse from 'html-react-parser';
 
 export default function Article(props:any) {
     const router = useRouter();
@@ -34,13 +34,13 @@ console.log("prrrroooops : ",userData)
                             }}>
                             Freelance
                         </Text>
-                        <br />{' '}
+                        <br />
                         <Text color={'blue.400'} as={'span'}>
                            {userData.title}
-                        </Text>{' '}
+                        </Text>
                     </Heading>
                     <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.500'}>
-                       {userData.body}
+                       {parse(`${userData.body}`)}
                     </Text>
                    
                 </Stack>
@@ -57,7 +57,7 @@ console.log("prrrroooops : ",userData)
                         'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
                     }
                 /> */}
-                	<CustomGalleria galleriaService={userData.Photos}></CustomGalleria>
+                	<CustomGalleria galleriaService={userData.photos_list}></CustomGalleria>
             </Flex>
         </Stack>
     );

@@ -1,11 +1,7 @@
 import {
-	Box,
 	Button,
 	Checkbox,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormHelperText,
 	FormLabel,
 	HStack,
 	Image,
@@ -16,26 +12,23 @@ import {
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
-import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
+import { myDirectionState } from '../Atoms/localAtoms';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { setCookie } from '../src/services/cookies_file';
 import { SignRequest } from '../src/services/api';
 import { NextPageWithLayout } from './_app';
 
  const SignIn: NextPageWithLayout = () => {
-	const [localState] = useRecoilState(myLocalState);
-	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
 	const router = useRouter();
    
    
 	async function goSignUpPage() {
-		console.log('localValue...' + localValue);
 		const { pathname, asPath, query } = router;
-		await router.push('/sign_up', '/sign_up', { locale: localValue.trim(),shallow: true });
+		await router.push('/sign_up', '/sign_up', { shallow: true });
 	}
 	
 	
@@ -44,9 +37,9 @@ async function loginResult(response:any) {
 	await setCookie('cookies',response.access);
 	const { pathname, asPath, query } = router;
 	if(response.role=="A")
-	{await router.push('/admin/article', '/admin/article', { locale: localValue.trim(),shallow: true });}
+	{await router.push('/admin/article', '/admin/article', { shallow: true });}
 	else
-	{await router.push('/welcome', '/welcome', { locale: localValue.trim(),shallow: true });}
+	{await router.push('/welcome', '/welcome', {shallow: true });}
 	
 	
    }

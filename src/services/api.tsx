@@ -48,7 +48,7 @@ export function certificateList(page:number, pageSize:number){
 }
 
 export function slidersList(page:number, pageSize:number){
-    const { data, error } = useSWR<SlidersList, Error>(`/sliders/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<SlidersList, Error>(`/admin/sliders/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -114,11 +114,7 @@ export function SignRequest(
     Data:any,
     onSuccess:Function,
   ) {
-   axios.post(`${endpoint}`, Data , {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-})
+   axios.post(`${endpoint}`, Data )
    .then((response) => {
        console.log(response.data);
        onSuccess(response.data.data)

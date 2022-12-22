@@ -182,7 +182,7 @@ export function  AppBar() {
                 <Flex h={20} w={'full'} alignItems={'center'} boxShadow={'l'}>
 
                         <HStack display={'flex'} >
-                            <Image src={'assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>
+                            <Image src={'/assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>
                             <Text color='brand.blue'>ADHD Center</Text>
                         </HStack>
 
@@ -198,13 +198,13 @@ export function  AppBar() {
                         <Button variant='outline' colorScheme='brand'
                                 display={{base: 'none', md: 'flex'}}
                                 onClick={() => goLoginPage()}
-                                leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
+                                leftIcon={<Image src={'/assets/images/SIGN_IN.svg'}
                                                  h={'30px'}></Image>}><FormattedMessage
                             id={'login'} defaultMessage="Login"/></Button>
 
                         <Button variant='primary'  onClick={() => goSignUpPage()}
                                 display={{base: 'none', md: 'flex'}}
-                                leftIcon={<Image src={'assets/images/SIGN_UP.svg'}
+                                leftIcon={<Image src={'/assets/images/SIGN_UP.svg'}
                                                  h={'30px'}></Image>}><FormattedMessage
                             id={'join_us'} defaultMessage="Join us"/></Button>
                     </HStack>
@@ -226,7 +226,7 @@ export function  AppBar() {
                                     <Image
                                         boxSize='2rem'
                                         borderRadius='full'
-                                        src='assets/images/AR.svg'
+                                        src='/assets/images/AR.svg'
                                         alt='language'
                                         mr='12px'
                                     />
@@ -247,12 +247,12 @@ export function  AppBar() {
                         <Stack as={'nav'} spacing={4}>
                             <Button variant='outline' colorScheme='brand' m={"10px"}
                                     onClick={() => goLoginPage()}
-                                    leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
+                                    leftIcon={<Image src={'/assets/images/SIGN_IN.svg'}
                                                      h={'30px'}></Image>}><FormattedMessage
                                 id={'login'} defaultMessage="Login"/></Button>
 
                             <Button variant='primary' m={"10px"}
-                                    leftIcon={<Image src={'assets/images/SIGN_UP.svg'}  onClick={() => goSignUpPage()}     h={'30px'}></Image>}>
+                                    leftIcon={<Image src={'/assets/images/SIGN_UP.svg'}  onClick={() => goSignUpPage()}     h={'30px'}></Image>}>
                                         <FormattedMessage id={'join_us'} defaultMessage="Join us"/></Button>
                         </Stack>
 

@@ -1,7 +1,6 @@
 import {Card} from "@chakra-ui/card";
 import {Avatar, Box, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
 import {Galleria} from "primereact/galleria";
-import {galleriaService} from "../services/Photos";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import { myDirectionState } from "../../Atoms/localAtoms";
@@ -23,7 +22,7 @@ export default function Feedback(galleriaService:any) {
     ];
     const [dirState] = useRecoilState(myDirectionState);
     return (
-        <Card bg={'brand.white'} w= {{ base: '65%', md: '65%', lg: '55%' }} h={{ base: '60%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
+        <Card bg={'brand.white'} w= {{ base: '45%', md: '60%', lg: '50%' }} h={{ base: '60%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
             <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
                      
                       showThumbnails={false} showIndicators changeItemOnIndicatorHover
@@ -36,7 +35,7 @@ export default function Feedback(galleriaService:any) {
 const itemTemplate = (item) => {
     return (
 
-       <HStack p={"5"}>
+       <HStack p={"2"} justify={'space-between'}>
            <VStack    justify={'start'} align={'start'} width={"full"} >
                <Text  fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                      color={'brand.blue'}>
@@ -47,10 +46,9 @@ const itemTemplate = (item) => {
                    <FormattedMessage id={'parents_comment'}/>
                </Text>
            </VStack>
-           <Box w={{md:'4%' ,lg:'10%'}}></Box>
            <VStack width={"full"}>
             <HStack>
-            <Avatar size='xs' name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+            <Avatar size='xs' name='Dan Abrahmov' src='https://bit.ly/dan-abramov'  />
             <Text fontSize={['md', 'lg', 'xl', '2xl']} fontWeight={'semibold'}
                  color={'brand.textGray'}>
                {item.title}
@@ -63,11 +61,6 @@ const itemTemplate = (item) => {
            </Text>
            </VStack>
            
-
-
-           <HStack>
-
-           </HStack>
        </HStack>
     );
 }

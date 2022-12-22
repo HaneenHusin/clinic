@@ -69,7 +69,7 @@ export default {
     try_agin:"الرجاء إعادة المحاولة ",
     wrong:"Something went wrong",
     Key_words:"الكلمات المفتاحية",
-    text:"الموضوع",
+    text:"النص",
     add_slider:"إضافة عارض صور",
     edit_slider:" تعديل عارض صور",
     slider:"  معرض صور",
@@ -85,6 +85,19 @@ export default {
     drag_file:"اسحب أو اختر الملفات المطلوبة",
     add_feedback:"إضافة تقييم",
    edit_feedback:"تعديل تقييم",
-
+   select_one_item:"يرجى اختيار عنصر واحد فقط",
+   quizes:"الاختبارات",
+   questions:"الاسئلة",
+   results:"النتائج",
+   add_quize:"إضافة اختبار",
+  edit_quize:"تعديل اختبار",
+  add_question:"إضافة سؤال",
+  edit_question:"تعديل سؤال",
+  add_answer:"إضافة جواب",
+  edit_answer:"تعديل جواب",
+  add_result:"إضافة نتيجة",
+  edit_result:"تعديل نتيجة",
+  min_point:"النقطة الأدنى",
+  max_point:"النقطة الأعلى"
 
 }

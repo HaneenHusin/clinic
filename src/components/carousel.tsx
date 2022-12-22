@@ -4,9 +4,9 @@ import {Card} from "@chakra-ui/card";
 import {CardBody, Stack, Image, Text, Button, IconButton, HStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
-import { myDirectionState, myLocalState } from "../../Atoms/localAtoms";
+import { myDirectionState } from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
-import Article from "../../pages/article";
+import parse from 'html-react-parser';
 
 const responsiveOptions = [
     {
@@ -43,13 +43,11 @@ export default function CustomCarousel(galleriaService:any) {
 export function RelatedNewsClinic(item) {
     const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
-    const [localState,setLocalState] = useRecoilState(myLocalState);
-    const localValue = `${localState} `;
     async function goArticlePage(item:any) {
         router.push({
             pathname: '/article',
             query: { item: JSON.stringify(item) },
-         }, undefined, { locale: localValue.trim(),shallow: true})
+         }, undefined, { shallow: true})
          
        
     }
@@ -63,7 +61,7 @@ export function RelatedNewsClinic(item) {
                 />
                 <Stack mt='6' spacing='3'  dir={dirState}>
                     <Text>
-                      {item.body}
+                    {parse(`${item.body}`)}
                     </Text>
                     <HStack onClick={() => goArticlePage(item)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}

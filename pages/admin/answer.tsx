@@ -38,9 +38,9 @@ import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
 
-const FeedbackAdmin: NextPageWithLayout = () => {
+const AnswerAdmin: NextPageWithLayout = (props:any) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
     const [isEdit,setIsEdit ] = useState(false);
@@ -51,6 +51,8 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const feedbackResponse = feedbackList(pageNum,basicRows);
+	const router = useRouter();
+	const userData = JSON.parse(router.query.item);
 	
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -62,7 +64,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	async function refresh(response:any)
 	{
 		onClose();
-		 router.push('/admin/feedback', '/admin/feedback', { shallow: true })
+		 router.push('/admin/answer', '/admin/answer', { shallow: true })
 	
 	}
 	function openModal() {
@@ -91,7 +93,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'feedback'} defaultMessage='feedback' />
+					<FormattedMessage id={'answer'} defaultMessage='answer' />
 				</Text>
 				<Button variant='outline' colorScheme='brand' onClick={openModal} fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
@@ -123,7 +125,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 						{feedbackResponse.data?.data.results.map((item:any,index:number) => (
 							<Tr key={item.title}>
 								
-								<Tooltip label={item.title}>
+								<Tooltip label={item.text}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -131,11 +133,11 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.title}
+										{item.tsxt}
 									</Td>
 								</Tooltip>
 								
-								<Tooltip label={item.brief}>
+								<Tooltip label={item.points}>
 									<Td
 										fontSize={['sm', 'md', 'lg', 'xl']}
 										maxWidth={'100px'}
@@ -183,17 +185,17 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_feedback'} />
+							<FormattedMessage id={'add_answer'} />
 						</ModalHeader>
-						<Formik 	initialValues={{  title: '',brief:'' }}
+						<Formik 	initialValues={{  text: '',points:'' }}
 						validate={(values) => {
 							const errors = {};
-							if (!values.title) {
-								errors.title = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
+							if (!values.text) {
+								errors.text = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
 							}
                            
-							if (!values.brief) {
-                                errors.brief =<FormattedMessage  id={'required'} defaultMessage='required' />;
+							if (!values.points) {
+                                errors.points =<FormattedMessage  id={'required'} defaultMessage='required' />;
                             }
 							
 							return errors;
@@ -204,8 +206,8 @@ const FeedbackAdmin: NextPageWithLayout = () => {
                               
                             
                             const dataToRequestAPI = {
-	                        title: values.title,
-							brief: values.brief,
+	                        text: values.text,
+							points: values.points,
 
                                   }
 								  PostRequest('/admin/feedback/',dataToRequestAPI,refresh)
@@ -227,40 +229,30 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							<Stack spacing={3}>
 
 						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
+										<FormattedMessage id={'text'} defaultMessage='text' />
 									</FormLabel>
 									<Input variant='outline'
 										type='text'
-										name='title'
+										name='text'
 									onChange={handleChange}
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.title} />
-									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
+									value={values.text} />
+									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
 									
 									<FormLabel>
-										<FormattedMessage id={'text'} defaultMessage='text' />
+										<FormattedMessage id={'points'} defaultMessage='points' />
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
-									name='brief'
+									name='points'
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.brief} />
-									 <Text color={"red"}>{errors.brief && touched.brief && errors.brief}</Text>	
+									value={values.points} />
+									 <Text color={"red"}>{errors.points && touched.points && errors.points}</Text>	
 									
 
-									<div>
-									<SimpleGrid
-										spacing={5}
-										columns={[2, 3]}
-										templateColumns='repeat(3, 1fr)'
-										w='full%'
-									>
-										{imgsSrc.map((link) => (<Image key={index} src={link} />))}
-									</SimpleGrid>
-								</div>
-					
+								
 							</Stack>
 						</ModalBody>
 
@@ -284,19 +276,19 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 					<ModalContent  dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_feedback'}
-								defaultMessage='Edit feedback'
+								id={'edit_answer'}
+								defaultMessage='Edit answer'
 							/>
 						</ModalHeader>
-						<Formik initialValues={{  title:  feedbackResponse.data?.data.results[index].title,brief: feedbackResponse.data?.data.results[index].brief }}
+						<Formik initialValues={{  text:  "",points: "" }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
                             
                             const dataToRequestAPI = {
-	                        title:values.title ,
-							brief: values.brief 
+	                        text:values.text ,
+							points: values.points 
 							
                                   }
 								  UpdateRequest(`/admin/feedback/${id}/`,dataToRequestAPI,refresh)
@@ -318,30 +310,30 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							<Stack spacing={3}>
 
 						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
+										<FormattedMessage id={'text'} defaultMessage='text' />
 									</FormLabel>
 									<Input
 									 variant='outline'
 										type='text'
-										name='title'
+										name='text'
 									onChange={handleChange}
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.title} />
-									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
+									value={values.text} />
+									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
 									 
 									
 									<FormLabel>
-										<FormattedMessage id={'text'} defaultMessage='text' />
+										<FormattedMessage id={'points'} defaultMessage='points' />
 									</FormLabel>
 									<Textarea 	
-									name='brief'
+									name='points'
 									onChange={handleChange}
 									
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
-									value={values.brief} />
-									 <Text color={"red"}>{errors.brief && touched.brief && errors.brief}</Text>	
+									value={values.points} />
+									 <Text color={"red"}>{errors.points && touched.points && errors.points}</Text>	
 									
 								
 							</Stack>
@@ -373,7 +365,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	);
 }
 
-FeedbackAdmin.getLayout = function getLayout(page: ReactElement) {
+AnswerAdmin.getLayout = function getLayout(page: ReactElement) {
     return (
         <LayoutAdmin>
             {page}
@@ -381,4 +373,4 @@ FeedbackAdmin.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default  FeedbackAdmin;
+export default  AnswerAdmin;

@@ -13,21 +13,18 @@ import { useRouter } from 'next/router';
 import { ReactElement, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
-import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
+import { myDirectionState } from '../Atoms/localAtoms';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { SignRequest } from '../src/services/api';
 import { NextPageWithLayout } from './_app';
 
 const   SignUp: NextPageWithLayout = () => {
 	const router = useRouter();
-	const [localState] = useRecoilState(myLocalState);
-	const localValue = `${localState} `;
 	const [dirState] = useRecoilState(myDirectionState);
-	console.log('localValue    ' + localValue);
 
 	async function Register(response:any) {
 		const { pathname, asPath, query } = router;
-	await router.push('/sign_in', '/sign_in', { locale: localValue.trim(),shallow: true });
+	await router.push('/sign_in', '/sign_in', { shallow: true });
 	}
 
 	return (

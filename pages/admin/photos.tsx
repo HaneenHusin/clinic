@@ -42,7 +42,7 @@ import { Paginator } from 'primereact/paginator';
 const PhotosAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState('');
-	const photosResponse = photosList(1, 10);
+	const photosResponse = photosList(basicFirst,basicRows);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
@@ -50,7 +50,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 
 	const onBasicPageChange = (event) => {
-		setBasicFirst(event.first);
+		setBasicFirst(event.page+1);
 		setBasicRows(event.rows);
 	};
 
@@ -225,7 +225,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 			<Paginator
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={photosResponse.data?.data.results.length}
+				totalRecords={photosResponse.data?.data.count}
 				rowsPerPageOptions={[10, 20, 30]}
 				onPageChange={onBasicPageChange}
 			></Paginator>

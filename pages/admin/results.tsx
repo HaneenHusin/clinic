@@ -7,11 +7,8 @@ import {
 	Td,
 	TableCaption,
 	TableContainer,
-	Flex,
 	HStack,
 	Text,
-	Box,
-	VStack,
 	Button,
 	Image,
 	Spacer,
@@ -20,16 +17,9 @@ import {
 	useDisclosure,
 	Input,
 	Textarea,
-	Card,
-	CardBody,
 	SimpleGrid,
 	Tooltip,
 	FormLabel,
-	AccordionIcon,
-	AccordionItem,
-	AccordionButton,
-	AccordionPanel,
-	Accordion,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -44,8 +34,8 @@ import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
 import {
-	certificateList,
 	DeleteRequest,
+	feedbackList,
 	PostRequest,
 	UpdateRequest,
 } from '../../src/services/api';
@@ -53,22 +43,22 @@ import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router from 'next/router';
-import { myImagesState } from '../../Atoms/imagesAtom';
-import Gridphotot from '../../src/components/grid_photo';
+import router, { useRouter } from 'next/router';
 
-const CertificatesAdmin: NextPageWithLayout = () => {
+const ResultsAdmin: NextPageWithLayout = (props: any) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [id, setId] = useState(0);
+	const [idQuize, setIdQuize] = useState(0);
+	const [idResult, setIdResult] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [pageNum, setPageNum] = useState(1);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const certificateResponse = certificateList(pageNum, basicRows);
-	const [imageState, setimageState] = useRecoilState(myImagesState);
-	const [isImageModal, setIsImageModal] = useState(false);
+	const [pageNum, setPageNum] = useState(1);
+	const feedbackResponse = feedbackList(pageNum, basicRows);
+	const router = useRouter();
+	const userData = JSON.parse(router.query.item);
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -78,40 +68,24 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/certificates', '/admin/certificates', {
-			shallow: true,
-		});
+		router.push('/admin/result', '/admin/result', { shallow: true });
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		setIsImageModal(true);
-		console.log('articlesResponse' + certificateResponse.data);
 	}
-	function openEditModal(indexValue: number, idValue: number) {
-		console.log('index....' + indexValue);
+	function openEditModal(indexValue:number,idResult:number,idQuize:number) {
+		console.log("index...."+indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
-		setId(idValue);
+		setIdResult(idResult)
+		setIdQuize(idQuize)
 	}
-	const responsiveOptions = [
-		{
-			breakpoint: '1024px',
-			numVisible: 5,
-		},
-		{
-			breakpoint: '768px',
-			numVisible: 3,
-		},
-		{
-			breakpoint: '560px',
-			numVisible: 1,
-		},
-	];
+
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{certificateResponse.isLoading == true ? (
+			{feedbackResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -123,7 +97,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'certificate'} defaultMessage='certificate' />
+					<FormattedMessage id={'result'} defaultMessage='result' />
 				</Text>
 				<Button
 					variant='outline'
@@ -143,15 +117,11 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					variant='striped'
 					border={'1px'}
 					colorScheme={'gray'}
-					borderColor={'brand.dark'}
 					size={{ base: 'xs', md: 'md', lg: 'lg' }}
 				>
 					<TableCaption>ADHD CENTER</TableCaption>
 					<Thead>
 						<Tr>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'images'} defaultMessage='images' />
-							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'title'} defaultMessage='title' />
 							</Th>
@@ -161,22 +131,9 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{certificateResponse.data?.data.results.map(
+						{feedbackResponse.data?.data.results.map(
 							(item: any, index: number) => (
 								<Tr key={item.title}>
-									<Td w={'15%'} h={'15%'}>
-										<Image
-											src={item.photo_model.datafile}
-											onError={(e) =>
-												(e.target.src =
-													'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
-											}
-											alt={''}
-											width={item.photo_model.width}
-											height={'20%'}
-											style={{ display: 'block' }}
-										/>
-									</Td>
 									<Tooltip label={item.title}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
@@ -189,7 +146,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										</Td>
 									</Tooltip>
 
-									<Tooltip label={item.text}>
+									<Tooltip label={item.brief}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
 											maxWidth={'100px'}
@@ -197,13 +154,13 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 											overflow={'hidden'}
 											whiteSpace={'nowrap'}
 										>
-											{item.text}
+											{item.brief}
 										</Td>
 									</Tooltip>
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id)}
+											onClick={() => openEditModal(index, item.id,userData.id)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -217,7 +174,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 											aria-label={'delete'}
 											onClick={() =>
 												DeleteRequest(
-													`/admin/certificates/${item.id}/`,
+													`/admin/quize/${item.id}/results/${idResult}/`,
 													refresh
 												)
 											}
@@ -237,18 +194,18 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			</TableContainer>
 
 			{isEdit == true ? (
-				<Modal isOpen={isOpen} onClose={onClose} size={'5xl'}>
+				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_certificate'} />
+							<FormattedMessage id={'add_result'} />
 						</ModalHeader>
 						<Formik
-							initialValues={{ title: '', text: '', photo: '' }}
+							initialValues={{ text: '', min_point: 0, max_point: 0 }}
 							validate={(values) => {
 								const errors = {};
-								if (!values.title) {
-									errors.title = (
+								if (!values.text) {
+									errors.text = (
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='Required'
@@ -256,8 +213,16 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									);
 								}
 
-								if (!values.text) {
-									errors.text = (
+								if (!values.min_point) {
+									errors.min_point = (
+										<FormattedMessage
+											id={'required'}
+											defaultMessage='required'
+										/>
+									);
+								}
+								if (!values.max_point) {
+									errors.max_point = (
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='required'
@@ -270,19 +235,17 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
-									debugger;
 
 									const dataToRequestAPI = {
-										title: values.title,
 										text: values.text,
-										photo: imageState,
+										min_point: values.min_point,
+										max_point: values.max_point,
 									};
 									PostRequest(
-										'/admin/certificates/',
+										`/admin/quize/${idQuize}/results/`,
 										dataToRequestAPI,
 										refresh
 									);
-									setimageState('');
 									setSubmitting(false);
 								}, 400);
 							}}
@@ -300,26 +263,13 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+												<FormattedMessage id={'text'} defaultMessage='text' />
 											</FormLabel>
 											<Input
 												variant='outline'
 												type='text'
-												name='title'
-												onChange={handleChange}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.title}
-											/>
-											<Text color={'red'}>
-												{errors.title && touched.title && errors.title}
-											</Text>
-											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
-											</FormLabel>
-											<Textarea
-												onChange={handleChange}
 												name='text'
+												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
 												value={values.text}
@@ -327,33 +277,46 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 											<Text color={'red'}>
 												{errors.text && touched.text && errors.text}
 											</Text>
-											<Accordion defaultIndex={[1]} allowMultiple>
-												<AccordionItem>
-													<h2>
-														<AccordionButton
-															_expanded={{
-																bg: 'brand.blue',
-																color: 'white',
-																fontsize: 'lg',
-															}}
-														>
-															<Box as='span' flex='1' textAlign='left'>
-																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
-																</FormLabel>
-															</Box>
-															<AccordionIcon />
-														</AccordionButton>
-													</h2>
-													<AccordionPanel pb={4}>
-														<Gridphotot isMulti={false}></Gridphotot>
-													</AccordionPanel>
-												</AccordionItem>
-											</Accordion>
-											)
+
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
+											<Text color={'red'}>
+												{errors.max_point &&
+													touched.max_point &&
+													errors.max_point}
+											</Text>
+
+											<FormLabel>
+												<FormattedMessage
+													id={'min_point'}
+													defaultMessage='min point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='min_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.min_point}
+											/>
+											<Text color={'red'}>
+												{errors.min_point &&
+													touched.min_point &&
+													errors.min_point}
+											</Text>
 										</Stack>
 									</ModalBody>
 
@@ -385,27 +348,23 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					<ModalContent dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_certificate'}
-								defaultMessage='Edit certificate'
+								id={'edit_result'}
+								defaultMessage='Edit result'
 							/>
 						</ModalHeader>
 						<Formik
-							initialValues={{
-								title: certificateResponse.data?.data.results[index].title,
-								text: certificateResponse.data?.data.results[index].text,
-								photo: '',
-							}}
+							initialValues={{ text: '', max_point: '', min_point: '' }}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										title: values.title,
 										text: values.text,
-										photo: imageState,
+										max_point: values.max_point,
+										min_point: values.min_point,
 									};
 									UpdateRequest(
-										`/admin/certificates/${id}/`,
+										`/admin/quize/${idQuize}/results/${idResult}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -435,51 +394,51 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.title}
-											/>
-											<Text color={'red'}>
-												{errors.title && touched.title && errors.title}
-											</Text>
-											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
-											</FormLabel>
-											<Textarea
-												onChange={handleChange}
-												name='text'
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
 												value={values.text}
 											/>
 											<Text color={'red'}>
 												{errors.text && touched.text && errors.text}
 											</Text>
-											<Accordion defaultIndex={[1]} allowMultiple>
-												<AccordionItem>
-													<h2>
-														<AccordionButton
-															_expanded={{
-																bg: 'brand.blue',
-																color: 'white',
-																fontsize: 'lg',
-															}}
-														>
-															<Box as='span' flex='1' textAlign='left'>
-																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
-																</FormLabel>
-															</Box>
-															<AccordionIcon />
-														</AccordionButton>
-													</h2>
-													<AccordionPanel pb={4}>
-														<Gridphotot isMulti={false}></Gridphotot>
-													</AccordionPanel>
-												</AccordionItem>
-											</Accordion>
-											)
+
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
+											<Text color={'red'}>
+												{errors.max_point &&
+													touched.max_point &&
+													errors.max_point}
+											</Text>
+
+											<FormLabel>
+												<FormattedMessage
+													id={'min_point'}
+													defaultMessage='min point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='min_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.min_point}
+											/>
+											<Text color={'red'}>
+												{errors.min_point &&
+													touched.min_point &&
+													errors.min_point}
+											</Text>
 										</Stack>
 									</ModalBody>
 
@@ -505,43 +464,15 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={certificateResponse.data?.data.count}
+				totalRecords={feedbackResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>
 	);
 };
 
-CertificatesAdmin.getLayout = function getLayout(page: ReactElement) {
+ResultsAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
-export default CertificatesAdmin;
-const itemGalleryTemplate = (item) => {
-	return (
-		<Card
-			bg={'brand.white'}
-			w={'full'}
-			align='center'
-			justify='center'
-			m={'3px'}
-			boxShadow={'l'}
-			rounded={'xl'}
-			border={'2px'}
-			borderColor={'brand.blue'}
-		>
-			<CardBody>
-				<Image
-					src={item.photo_model.datafile}
-					onError={(e) =>
-						(e.target.src =
-							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
-					}
-					alt={''}
-					width={item.photo_model.width}
-					style={{ display: 'block' }}
-				/>
-			</CardBody>
-		</Card>
-	);
-};
+export default ResultsAdmin;

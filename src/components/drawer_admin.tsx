@@ -17,13 +17,10 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { myLocalState } from '../../Atoms/localAtoms';
 export function DrawerAdmin() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const btnRef = React.useRef();
 	const router = useRouter();
-	const [localState,setLocalState] = useRecoilState(myLocalState);
-    const localValue = `${localState} `;
 	return (
 		<>
 			<Button
@@ -147,6 +144,24 @@ export function DrawerAdmin() {
 									<FormattedMessage
 										id={'photos'}
 										defaultMessage='photos'
+									/>
+								</Text>
+								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
+							</HStack>
+
+							<Divider />
+						<HStack
+								justify={'space-between'}
+								p={'8px'}
+								mt={'10px'}
+								cursor={"pointer"}
+								_hover={{transform: "scale(1.05,1.05)"}}
+								onClick={ ()=> router.push('/admin/quizes', '/admin/quizes')}>
+							
+								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
+									<FormattedMessage
+										id={'quizes'}
+										defaultMessage='quizes'
 									/>
 								</Text>
 								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
