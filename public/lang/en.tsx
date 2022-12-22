@@ -84,6 +84,23 @@ export default {
     drag_file:"Drag and drop files to here to upload.",
     add_feedback:"Add feedback",
     edit_feedback:"Edit feedback",
+    select_one_item:"Please select one item",
+    quizes:"Quizes",
+    questions:"Questions",
+    results:"Results",
+    add_quize:"Add quize",
+    edit_quize:"Edit quize",
+    add_question:"Add question",
+    edit_question:"Edit question",
+    add_answer:"Add answer",
+    edit_answer:"Edit answer",
+    add_result:"Add result",
+    edit_result:"Edit result",
+    min_point:"Min point",
+    max_point:"Max point"
+  
+
+
 
     
 }
