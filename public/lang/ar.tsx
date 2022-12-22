@@ -87,7 +87,7 @@ export default {
    edit_feedback:"تعديل تقييم",
    select_one_item:"يرجى اختيار عنصر واحد فقط",
    quizes:"الاختبارات",
-   questions:"الاسئلة",
+   questions:"الأسئلة",
    results:"النتائج",
    add_quize:"إضافة اختبار",
   edit_quize:"تعديل اختبار",

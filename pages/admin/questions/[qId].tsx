@@ -62,8 +62,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
-	const { qId } = router.query
-
+	const { qId } = router.query;
 
 	let questionResponse = questionsList(pageNum, basicRows, qId);
 
@@ -74,7 +73,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		setPageNum(event.page + 1);
 	};
 
-	 function refresh(response: any) {
+	function refresh(response: any) {
 		onClose();
 		mutate(
 			`/admin/quize/${qId}/questions/?page=${pageNum}&pageSize=${basicRows}`
@@ -84,10 +83,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		onOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(
-		indexValue: number,
-		idQuestion: number
-	) {
+	function openEditModal(indexValue: number, idQuestion: number) {
 		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
@@ -97,6 +93,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
+		
 			{questionResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -108,6 +105,15 @@ const QuestionAdmin: NextPageWithLayout = () => {
 				<></>
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
+			<Breadcrumb fontWeight='medium' fontSize='sm'>
+				<BreadcrumbItem>
+					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
+				</BreadcrumbItem>
+
+				<BreadcrumbItem>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'questions'} defaultMessage='questions' /></Text></BreadcrumbLink>
+				</BreadcrumbItem>
+			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
 					<FormattedMessage id={'questions'} defaultMessage='questions' />
 				</Text>
@@ -158,7 +164,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 										<Link
 											shallow={true}
 											href={`/admin/questions/${qId}/answer/${item.id}`}
-												
 										>
 											<Text
 												textDecoration={'underline'}

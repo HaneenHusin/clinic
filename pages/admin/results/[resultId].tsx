@@ -20,6 +20,9 @@ import {
 	SimpleGrid,
 	Tooltip,
 	FormLabel,
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -47,6 +50,7 @@ import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import quize from '../../quize';
+import Link from 'next/link';
 
 const ResultsAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,6 +110,15 @@ const ResultsAdmin: NextPageWithLayout = () => {
 				<></>
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
+			<Breadcrumb fontWeight='medium' fontSize='sm'>
+				<BreadcrumbItem>
+					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
+				</BreadcrumbItem>
+
+				<BreadcrumbItem>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'result'} defaultMessage='result' /></Text></BreadcrumbLink>
+				</BreadcrumbItem>
+			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
 					<FormattedMessage id={'results'} defaultMessage='result' />
 				</Text>
