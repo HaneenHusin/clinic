@@ -56,6 +56,7 @@ import { useRecoilState } from 'recoil';
 import router from 'next/router';
 import { myImagesState } from '../../Atoms/imagesAtom';
 import Gridphotot from '../../src/components/grid_photo';
+import { mutate } from 'swr';
 
 const CertificatesAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,9 +79,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/certificates', '/admin/certificates', {
-			shallow: true,
-		});
+		mutate(`/admin/certificates/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();
@@ -393,7 +392,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							initialValues={{
 								title: certificateResponse.data?.data.results[index].title,
 								text: certificateResponse.data?.data.results[index].text,
-								photo: '',
+								photo:  '',
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
@@ -402,13 +401,14 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									const dataToRequestAPI = {
 										title: values.title,
 										text: values.text,
-										photo: imageState,
+										photo: imageState==''?certificateResponse.data?.data.results[index].photo:imageState,
 									};
 									UpdateRequest(
 										`/admin/certificates/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);
+									
 									setSubmitting(false);
 								}, 400);
 							}}

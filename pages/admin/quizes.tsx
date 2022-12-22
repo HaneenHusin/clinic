@@ -46,6 +46,7 @@ import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router from 'next/router';
 import Link from 'next/link';
+import { mutate } from 'swr';
 
 const QuizesAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,15 +68,11 @@ const QuizesAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		// router.push('/admin/quizes', '/admin/quizes', { shallow: true });
-
+		mutate(`/admin/quizes/?page=${pageNum}&pageSize=${basicRows}`);
 	}
-	// useEffect(() => {(
-	// 	 quizeResponse = quizeList(pageNum, basicRows))});
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('feedbackResponse' + quizeResponse.data);
 	}
 	function openEditModal(indexValue: number, idValue: number) {
 		console.log('index....' + indexValue);
@@ -146,22 +143,41 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									</Tooltip>
 
 									<Td>
-										<Link shallow={true}  href={{
-            pathname: '/admin/questions',
-            query: { item: JSON.stringify(item) }}}>
-                                            <Text textDecoration={"underline"} fontSize={['sm', 'md', 'lg', 'xl']}>
-                                            <FormattedMessage id={'questions'} defaultMessage='questions' />  
-                                            </Text>
+										<Link
+											shallow={true}
+											href={{
+												pathname: '/admin/questions',
+												query: { item: JSON.stringify(item) },
+											}}
+										>
+											<Text
+												textDecoration={'underline'}
+												fontSize={['sm', 'md', 'lg', 'xl']}
+											>
+												<FormattedMessage
+													id={'questions'}
+													defaultMessage='questions'
+												/>
+											</Text>
 										</Link>
 									</Td>
-                                    <Td>   
-										<Link shallow={true} href={{
-            pathname: '/admin/results',
-            query: {  item: JSON.stringify(item) },
-          }}>
-                                            <Text textDecoration={"underline"} fontSize={['sm', 'md', 'lg', 'xl']}>
-                                            <FormattedMessage id={'results'} defaultMessage='results' />  
-                                            </Text>
+									<Td>
+										<Link
+											shallow={true}
+											href={{
+												pathname: '/admin/results',
+												query: { item: JSON.stringify(item) },
+											}}
+										>
+											<Text
+												textDecoration={'underline'}
+												fontSize={['sm', 'md', 'lg', 'xl']}
+											>
+												<FormattedMessage
+													id={'results'}
+													defaultMessage='results'
+												/>
+											</Text>
 										</Link>
 									</Td>
 									<Td>
@@ -259,19 +275,6 @@ const QuizesAdmin: NextPageWithLayout = () => {
 											<Text color={'red'}>
 												{errors.title && touched.title && errors.title}
 											</Text>
-
-											<div>
-												<SimpleGrid
-													spacing={5}
-													columns={[2, 3]}
-													templateColumns='repeat(3, 1fr)'
-													w='full%'
-												>
-													{imgsSrc.map((link) => (
-														<Image key={index} src={link} />
-													))}
-												</SimpleGrid>
-											</div>
 										</Stack>
 									</ModalBody>
 
@@ -302,14 +305,11 @@ const QuizesAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_quize'}
-								defaultMessage='Edit quize'
-							/>
+							<FormattedMessage id={'edit_quize'} defaultMessage='Edit quize' />
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								title: quizeResponse.data?.data.results[index].title,
+								title: quizeResponse.data?.data?.results[index]?.title,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {

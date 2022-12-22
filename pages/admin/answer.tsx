@@ -33,27 +33,31 @@ import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
-import { DeleteRequest, feedbackList, PostRequest, UpdateRequest } from '../../src/services/api';
+import { answerList, DeleteRequest, PostRequest, UpdateRequest } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
+import { mutate } from 'swr';
 
 const AnswerAdmin: NextPageWithLayout = (props:any) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [imgsSrc, setImgsSrc] = useState([]);
     const [isEdit,setIsEdit ] = useState(false);
 	const [index, setIndex] = useState(0);
 	const [id, setId] = useState(0);
+	const [idQuize, setIdQuize] = useState(0);
+	const [idQuestion, setIdQuuestion] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const feedbackResponse = feedbackList(pageNum,basicRows);
 	const router = useRouter();
-	const userData = JSON.parse(router.query.item);
 	
+	const userData = JSON.parse(router.query.item);
+	const quizId = JSON.parse(router.query.quizId);
+	let answerResponse = answerList(pageNum, basicRows,quizId, userData.id);
+	console.log("answer"+userData.id +quizId)
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -64,13 +68,14 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 	async function refresh(response:any)
 	{
 		onClose();
-		 router.push('/admin/answer', '/admin/answer', { shallow: true })
-	
+		 mutate(
+			`/admin/quize/${idQuize}/questions/${idQuestion}/answers/?page=${pageNum}&pageSize=${basicRows}`
+		);
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('feedbackResponse' + feedbackResponse.data);
+		console.log('answerResponse' + answerResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
 		console.log("index...."+indexValue);
@@ -82,7 +87,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 	
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
-			{feedbackResponse.isLoading == true ? (
+			{answerResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
 						alt=''
@@ -122,7 +127,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{feedbackResponse.data?.data.results.map((item:any,index:number) => (
+						{answerResponse.data?.data?.results?.map((item:any,index:number) => (
 							<Tr key={item.title}>
 								
 								<Tooltip label={item.text}>
@@ -133,7 +138,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.tsxt}
+										{item.text}
 									</Td>
 								</Tooltip>
 								
@@ -145,7 +150,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 										overflow={'hidden'}
 										whiteSpace={'nowrap'}
 									>
-										{item.brief}
+										{item.points}
 									</Td>
 								</Tooltip>
 								<Td>
@@ -165,7 +170,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 									
 									<IconButton
 										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/feedback/${item.id}/`,refresh)}
+										onClick={()=> DeleteRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/${item.id}/`,refresh)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -210,7 +215,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 							points: values.points,
 
                                   }
-								  PostRequest('/admin/feedback/',dataToRequestAPI,refresh)
+								  PostRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -243,9 +248,10 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 									<FormLabel>
 										<FormattedMessage id={'points'} defaultMessage='points' />
 									</FormLabel>
-									<Textarea 	
+									<Input 	
 									onChange={handleChange}
 									name='points'
+									type="number"
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
 									value={values.points} />
@@ -280,7 +286,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 								defaultMessage='Edit answer'
 							/>
 						</ModalHeader>
-						<Formik initialValues={{  text:  "",points: "" }}
+						<Formik initialValues={{  text: answerResponse.data?.data.results[index]?.text ,points: answerResponse.data?.data.results[index]?.points }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
@@ -291,7 +297,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 							points: values.points 
 							
                                   }
-								  UpdateRequest(`/admin/feedback/${id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/quize/${quizId}/questions/${userData.id}/answers/${answerResponse.data?.data.results[index]?.id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -320,20 +326,18 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
 									value={values.text} />
-									 <Text color={"red"}>{errors.text && touched.text && errors.text}</Text>	
 									 
 									
 									<FormLabel>
 										<FormattedMessage id={'points'} defaultMessage='points' />
 									</FormLabel>
-									<Textarea 	
+									<Input 	
 									name='points'
 									onChange={handleChange}
-									
+									type="number"
 									onBlur={handleBlur}
 									borderColor={'brand.blue'}
 									value={values.points} />
-									 <Text color={"red"}>{errors.points && touched.points && errors.points}</Text>	
 									
 								
 							</Stack>
@@ -358,7 +362,7 @@ const AnswerAdmin: NextPageWithLayout = (props:any) => {
 			p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={feedbackResponse.data?.data.count}
+				totalRecords={answerResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>

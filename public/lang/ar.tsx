@@ -98,6 +98,7 @@ export default {
   add_result:"إضافة نتيجة",
   edit_result:"تعديل نتيجة",
   min_point:"النقطة الأدنى",
-  max_point:"النقطة الأعلى"
+  max_point:"النقطة الأعلى",
+  answer:"الإجابة"
 
 }

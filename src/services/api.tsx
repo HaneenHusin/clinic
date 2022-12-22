@@ -9,7 +9,9 @@ import { InformationList } from "../types/information";
 import { SlidersList } from "../types/slider";
 import { photosList } from "../types/photos";
 import { FeedbackList } from "../types/feedback";
-import { QuizeList, QuizList } from "../types/quize";
+import { QuizeList, QuizList, ResultsList } from "../types/quize";
+import { QuestionList } from "../types/question";
+import { AnswerList } from "../types/answer";
 
 
 axios.defaults.baseURL = "https://adhd.nasayimhalab.net/api";
@@ -82,6 +84,30 @@ export function feedbackList(page:number, pageSize:number){
 }
 export function quizeList(page:number, pageSize:number){
     const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function questionsList(page:number, pageSize:number,idQuize:number){
+    const { data, error } = useSWR<QuestionList, Error>(`/admin/quize/${idQuize}/questions/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function answerList(page:number, pageSize:number,idQuize:number,idQuestion:Number){
+    const { data, error } = useSWR<AnswerList, Error>(`/admin/quize/${idQuize}/questions/${idQuestion}/answers/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function resultList(page:number, pageSize:number,idQuize:number){
+    const { data, error } = useSWR<ResultsListAdmin, Error>(`/admin/quize/${idQuize}/results/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,

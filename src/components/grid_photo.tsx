@@ -18,7 +18,7 @@ import { useRecoilState } from 'recoil';
 import { myImagesState, myListImagesState } from '../../Atoms/imagesAtom';
 import { DeleteRequest, photosList } from '../services/api';
 
-export default function Gridphotot(isMulti: boolean) {
+export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 	const [imageState, setimageState] = useRecoilState(myImagesState);
 	const [listImageState, setListImageState] = useRecoilState(myListImagesState);
 	const [basicFirst, setBasicFirst] = useState(1);

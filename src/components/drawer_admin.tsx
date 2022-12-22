@@ -17,8 +17,10 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
+import { myDirectionState } from '../../Atoms/localAtoms';
 export function DrawerAdmin() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [dirState] = useRecoilState(myDirectionState);
 	const btnRef = React.useRef();
 	const router = useRouter();
 	return (
@@ -34,10 +36,9 @@ export function DrawerAdmin() {
 			</Button>
 			<Drawer
 				isOpen={isOpen}
-				placement='right'
+				placement={dirState=="rtl"?"left":"right"}
 				onClose={onClose}
 				finalFocusRef={btnRef}
-				placement={"left"} 
 			>
 				<DrawerOverlay />
 				<DrawerContent>
@@ -138,7 +139,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/photos', '/admin/photos')}>
+								onClick={ ()=> router.push('/admin/photos', '/admin/photos',{ shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -146,7 +147,7 @@ export function DrawerAdmin() {
 										defaultMessage='photos'
 									/>
 								</Text>
-								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
+								<i className='pi pi-paperclip' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
 
 							<Divider />
@@ -156,7 +157,7 @@ export function DrawerAdmin() {
 								mt={'10px'}
 								cursor={"pointer"}
 								_hover={{transform: "scale(1.05,1.05)"}}
-								onClick={ ()=> router.push('/admin/quizes', '/admin/quizes')}>
+								onClick={ ()=> router.push('/admin/quizes', '/admin/quizes',{ shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
 									<FormattedMessage
@@ -164,16 +165,16 @@ export function DrawerAdmin() {
 										defaultMessage='quizes'
 									/>
 								</Text>
-								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
+								<i className='pi pi-verified' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
 
 					</DrawerBody>
 
-					<DrawerFooter>
+					<DrawerFooter dir={dirState}>
 						<Button variant='outline' mr={3} onClick={onClose}>
 							Cancel
 						</Button>
-						<Button colorScheme='blue'>Save</Button>
+						
 					</DrawerFooter>
 				</DrawerContent>
 			</Drawer>

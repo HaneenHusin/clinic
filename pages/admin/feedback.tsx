@@ -39,6 +39,7 @@ import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router from 'next/router';
+import { mutate } from 'swr';
 
 const FeedbackAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -62,7 +63,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	async function refresh(response:any)
 	{
 		onClose();
-		 router.push('/admin/feedback', '/admin/feedback', { shallow: true })
+		mutate(`/admin/feedback/?page=${pageNum}&pageSize=${basicRows}`)
 	
 	}
 	function openModal() {

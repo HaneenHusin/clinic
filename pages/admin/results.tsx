@@ -37,6 +37,7 @@ import {
 	DeleteRequest,
 	feedbackList,
 	PostRequest,
+	resultList,
 	UpdateRequest,
 } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
@@ -44,6 +45,7 @@ import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
+import { mutate } from 'swr';
 
 const ResultsAdmin: NextPageWithLayout = (props: any) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -56,9 +58,9 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const feedbackResponse = feedbackList(pageNum, basicRows);
 	const router = useRouter();
 	const userData = JSON.parse(router.query.item);
+	let resultResponse =resultList(pageNum, basicRows, userData.id);
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -68,7 +70,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/result', '/admin/result', { shallow: true });
+		mutate(`/admin/quize/${idQuize}/result/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();
@@ -85,7 +87,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{feedbackResponse.isLoading == true ? (
+			{resultResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -131,10 +133,10 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{feedbackResponse.data?.data.results.map(
+						{resultResponse.data?.data?.results?.map(
 							(item: any, index: number) => (
-								<Tr key={item.title}>
-									<Tooltip label={item.title}>
+								<Tr key={item.text}>
+									<Tooltip label={item.text}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
 											maxWidth={'100px'}
@@ -142,11 +144,11 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 											overflow={'hidden'}
 											whiteSpace={'nowrap'}
 										>
-											{item.title}
+											{item.text}
 										</Td>
 									</Tooltip>
 
-									<Tooltip label={item.brief}>
+									<Tooltip label={item.min_point}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
 											maxWidth={'100px'}
@@ -154,7 +156,18 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 											overflow={'hidden'}
 											whiteSpace={'nowrap'}
 										>
-											{item.brief}
+											{item.min_point}
+										</Td>
+									</Tooltip>
+									<Tooltip label={item.max_point}>
+										<Td
+											fontSize={['sm', 'md', 'lg', 'xl']}
+											maxWidth={'100px'}
+											textOverflow={'ellipsis'}
+											overflow={'hidden'}
+											whiteSpace={'nowrap'}
+										>
+											{item.max_point}
 										</Td>
 									</Tooltip>
 									<Td>
@@ -174,7 +187,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 											aria-label={'delete'}
 											onClick={() =>
 												DeleteRequest(
-													`/admin/quize/${item.id}/results/${idResult}/`,
+													`/admin/quize/${userData.id}/results/${item.id}/`,
 													refresh
 												)
 											}
@@ -242,7 +255,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 										max_point: values.max_point,
 									};
 									PostRequest(
-										`/admin/quize/${idQuize}/results/`,
+										`/admin/quize/${userData.id}/results/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -353,7 +366,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 							/>
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: '', max_point: '', min_point: '' }}
+							initialValues={{ text: resultResponse.data?.data?.results[index]?.text, max_point: resultResponse.data?.data?.results[index]?.max_point, min_point: resultResponse.data?.data?.results[index]?.min_point }}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
@@ -464,7 +477,7 @@ const ResultsAdmin: NextPageWithLayout = (props: any) => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={feedbackResponse.data?.data.count}
+				totalRecords={resultResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>

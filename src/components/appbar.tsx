@@ -70,7 +70,7 @@ export  function AppBarAdmin() {
         <>
 
             <Box  bg={'brand.white'} boxShadow={'xl'} dir={dirState}>
-                <Flex h={'24'} px={8} w={'full'} alignItems={'center'} boxShadow={'l'}>
+                <Flex h={'24'} px={2} w={'full'} alignItems={'center'} boxShadow={'md'}>
 
                         <HStack display={'flex'} >
                             <Image src={'/assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>

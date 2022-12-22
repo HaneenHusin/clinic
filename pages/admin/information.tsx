@@ -51,6 +51,7 @@ import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router from 'next/router';
+import { mutate } from 'swr';
 
 const InformationAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -70,7 +71,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/information', '/admin/information', { shallow: true });
+		mutate(`/admin/information/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	
 	function openEditModal(indexValue: number, idValue: number) {

@@ -56,6 +56,7 @@ import Gridphotot from '../../src/components/grid_photo';
 import { myImagesState, myListImagesState } from '../../Atoms/imagesAtom';
 import { Editor } from 'primereact/editor';
 import parse from 'html-react-parser';
+import { mutate } from 'swr';
 
 const ArticleAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -81,7 +82,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/article', '/admin/article', { shallow: true });
+		mutate(`/admin/article/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 
 	function openModal() {
@@ -129,6 +130,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 			) : (
 				<></>
 			)}
+		
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
 					<FormattedMessage id={'article'} defaultMessage='article' />
@@ -179,7 +181,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								<Td w={'15%'} h={'15%'}>
 									<Galleria
 										value={
-											articlesResponse.data?.data.results[index].photos_list
+											articlesResponse.data?.data?.results[index]?.photos_list
 										}
 										responsiveOptions={responsiveOptions}
 										numVisible={5}
@@ -260,14 +262,13 @@ const ArticleAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							{' '}
 							<FormattedMessage id={'add_article'} />
 						</ModalHeader>
 						<Formik
 							initialValues={{
 								title: '',
 								sluge: '',
-								body: articlesResponse.data?.data.results[index].body,
+								body: '',
 								photos: [...imageState],
 								keywords: '',
 							}}
@@ -288,14 +289,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											defaultMessage='required'
 										/>
 									);
-								}
-								if (!values.body) {
-									errors.body = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
-									);
+								
 								}
 								if (!values.keywords) {
 									errors.keywords = (
@@ -485,11 +479,11 @@ const ArticleAdmin: NextPageWithLayout = () => {
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								title: articlesResponse.data?.data.results[index].title,
-								sluge: articlesResponse.data?.data.results[index].slug,
-								body: articlesResponse.data?.data.results[index].body,
+								title: articlesResponse.data?.data?.results[index]?.title,
+								sluge: articlesResponse.data?.data?.results[index]?.slug,
+								body: articlesResponse.data?.data?.results[index]?.body,
 								photos: [],
-								keywords: articlesResponse.data?.data.results[index].keywords,
+								keywords: articlesResponse.data?.data?.results[index]?.keywords,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {

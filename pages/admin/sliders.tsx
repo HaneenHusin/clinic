@@ -53,6 +53,7 @@ import { useRecoilState } from 'recoil';
 import router from 'next/router';
 import Gridphotot from '../../src/components/grid_photo';
 import { myImagesState } from '../../Atoms/imagesAtom';
+import { mutate } from 'swr';
 
 const SlidersAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,7 +76,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/sliders', '/admin/sliders', { shallow: true });
+		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();
@@ -334,13 +335,13 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							/>
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: slidersResponse.data?.data.results[index].text, photo: '' }}
+							initialValues={{ text: slidersResponse.data?.data?.results[index]?.text, photo: '' }}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										photo:imageState,
+										photo:imageState==''? slidersResponse.data?.data?.results[index]?.photo:imageState,
 										text:values.text 
 									};
 									UpdateRequest(
@@ -413,7 +414,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 															</AccordionButton>
 														</h2>
 														<AccordionPanel pb={4}>
-															<Gridphotot isMulti={true} ></Gridphotot>
+															<Gridphotot isMulti={false} ></Gridphotot>
 														</AccordionPanel>
 													</AccordionItem>
 												</Accordion>

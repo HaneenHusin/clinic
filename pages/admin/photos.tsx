@@ -38,20 +38,21 @@ import { useRecoilState } from 'recoil';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import router, { useRouter } from 'next/router';
 import { Paginator } from 'primereact/paginator';
+import { mutate } from 'swr';
 
 const PhotosAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [imgsSrc, setImgsSrc] = useState('');
-	const photosResponse = photosList(basicFirst,basicRows);
+	const [pageNum, setPageNum] = useState(1);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const router = useRouter();
-
+	const photosResponse = photosList(pageNum,basicRows);
 
 	const onBasicPageChange = (event) => {
-		setBasicFirst(event.page+1);
+		setBasicFirst(event.first);
 		setBasicRows(event.rows);
+		setPageNum(event.page + 1);
 	};
 
 	const onChange = (event: any) => {
@@ -62,9 +63,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		router.push('/admin/photos', '/admin/photos', {
-			shallow: true,
-		});
+		mutate(`/admin/photos/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();}
