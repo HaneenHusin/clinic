@@ -34,67 +34,72 @@ import {
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
-import { NextPageWithLayout } from '../../_app';
-import LayoutAdmin from '../../../src/components/layout_admin';
+import { NextPageWithLayout } from '../../../_app';
+import LayoutAdmin from '../../../../src/components/layout_admin';
 import {
 	DeleteRequest,
+	feedbackList,
 	PostRequest,
-	questionsList,
+	resultList,
 	UpdateRequest,
-} from '../../../src/services/api';
+} from '../../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../../Atoms/localAtoms';
+import { myDirectionState } from '../../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
-import { ChevronRightIcon } from '@chakra-ui/icons';
+import quize from '../../../quize';
 import Link from 'next/link';
 
-const QuestionAdmin: NextPageWithLayout = () => {
+const ResultsAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [idQuestion, setIdQuuestion] = useState(0);
+	const [idQuize, setIdQuize] = useState(0);
+	const [idResult, setIdResult] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
-	const { qId } = router.query;
+	const { quizId } = router.query;
 
-	let questionResponse = questionsList(pageNum, basicRows, qId);
-
+	let resultResponse = resultList(pageNum, basicRows, quizId);
+console.log("quizId..."+quizId)
 	const onBasicPageChange = (event) => {
-		debugger;
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		setPageNum(event.page + 1);
 	};
 
-	function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${qId}/questions/?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${quizId}/result/?page=${pageNum}&pageSize=${basicRows}`
 		);
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(indexValue: number, idQuestion: number) {
+	function openEditModal(
+		indexValue: number,
+		idResult: number,
+		idQuize: number
+	) {
 		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
-		setIdQuuestion(idQuestion);
+		setIdResult(idResult);
+		setIdQuize(idQuize);
 	}
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-		
-			{questionResponse.isLoading == true ? (
+			{resultResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -111,11 +116,11 @@ const QuestionAdmin: NextPageWithLayout = () => {
 				</BreadcrumbItem>
 
 				<BreadcrumbItem>
-					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'questions'} defaultMessage='questions' /></Text></BreadcrumbLink>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'results'} defaultMessage='results' /></Text></BreadcrumbLink>
 				</BreadcrumbItem>
 			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'questions'} defaultMessage='questions' />
+					<FormattedMessage id={'results'} defaultMessage='result' />
 				</Text>
 				<Button
 					variant='outline'
@@ -141,14 +146,17 @@ const QuestionAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
+								<FormattedMessage id={'title'} defaultMessage='title' />
+							</Th>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'text'} defaultMessage='text' />
 							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						{questionResponse.data?.data.results?.map(
+						{resultResponse.data?.data?.results?.map(
 							(item: any, index: number) => (
-								<Tr key={item.title}>
+								<Tr key={item.text}>
 									<Tooltip label={item.text}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
@@ -160,27 +168,33 @@ const QuestionAdmin: NextPageWithLayout = () => {
 											{item.text}
 										</Td>
 									</Tooltip>
-									<Td>
-										<Link
-											shallow={true}
-											href={`/admin/questions/${qId}/answer/${item.id}`}
-										>
-											<Text
-												textDecoration={'underline'}
-												fontSize={['sm', 'md', 'lg', 'xl']}
-											>
-												<FormattedMessage
-													id={'answer'}
-													defaultMessage='answer'
-												/>
-											</Text>
-										</Link>
-									</Td>
 
+									<Tooltip label={item.min_point}>
+										<Td
+											fontSize={['sm', 'md', 'lg', 'xl']}
+											maxWidth={'100px'}
+											textOverflow={'ellipsis'}
+											overflow={'hidden'}
+											whiteSpace={'nowrap'}
+										>
+											{item.min_point}
+										</Td>
+									</Tooltip>
+									<Tooltip label={item.max_point}>
+										<Td
+											fontSize={['sm', 'md', 'lg', 'xl']}
+											maxWidth={'100px'}
+											textOverflow={'ellipsis'}
+											overflow={'hidden'}
+											whiteSpace={'nowrap'}
+										>
+											{item.max_point}
+										</Td>
+									</Tooltip>
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id)}
+											onClick={() => openEditModal(index, item.id, quizId)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -194,7 +208,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 											aria-label={'delete'}
 											onClick={() =>
 												DeleteRequest(
-													`/admin/quize/${qId}/questions/${item.id}/`,
+													`/admin/quize/${quizId}/results/${item.id}/`,
 													refresh
 												)
 											}
@@ -218,10 +232,10 @@ const QuestionAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_question'} />
+							<FormattedMessage id={'add_result'} />
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: '' }}
+							initialValues={{ text: '', min_point: 0, max_point: 0 }}
 							validate={(values) => {
 								const errors = {};
 								if (!values.text) {
@@ -229,6 +243,23 @@ const QuestionAdmin: NextPageWithLayout = () => {
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='Required'
+										/>
+									);
+								}
+
+								if (!values.min_point) {
+									errors.min_point = (
+										<FormattedMessage
+											id={'required'}
+											defaultMessage='required'
+										/>
+									);
+								}
+								if (!values.max_point) {
+									errors.max_point = (
+										<FormattedMessage
+											id={'required'}
+											defaultMessage='required'
 										/>
 									);
 								}
@@ -241,9 +272,11 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 									const dataToRequestAPI = {
 										text: values.text,
+										min_point: values.min_point,
+										max_point: values.max_point,
 									};
 									PostRequest(
-										`/admin/quize/${qId}/questions/`,
+										`/admin/quize/${quizId}/results/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -278,6 +311,46 @@ const QuestionAdmin: NextPageWithLayout = () => {
 											<Text color={'red'}>
 												{errors.text && touched.text && errors.text}
 											</Text>
+
+											<FormLabel>
+												<FormattedMessage
+													id={'min_point'}
+													defaultMessage='min point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='min_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.min_point}
+											/>
+											<Text color={'red'}>
+												{errors.min_point &&
+													touched.min_point &&
+													errors.min_point}
+											</Text>
+
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
+											<Text color={'red'}>
+												{errors.max_point &&
+													touched.max_point &&
+													errors.max_point}
+											</Text>
 										</Stack>
 									</ModalBody>
 
@@ -309,26 +382,15 @@ const QuestionAdmin: NextPageWithLayout = () => {
 					<ModalContent dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_question'}
-								defaultMessage='Edit question'
+								id={'edit_result'}
+								defaultMessage='Edit result'
 							/>
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								text: questionResponse.data?.data?.results[index]?.text,
-							}}
-							validate={(values) => {
-								const errors = {};
-								if (!values.text) {
-									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
-									);
-								}
-
-								return errors;
+								text: resultResponse.data?.data?.results[index]?.text,
+								max_point: resultResponse.data?.data?.results[index]?.max_point,
+								min_point: resultResponse.data?.data?.results[index]?.min_point,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
@@ -336,9 +398,11 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 									const dataToRequestAPI = {
 										text: values.text,
+										max_point: values.max_point,
+										min_point: values.min_point,
 									};
 									UpdateRequest(
-										`/admin/quize/${qId}/questions/${idQuestion}/`,
+										`/admin/quize/${quizId}/results/${idResult}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -359,7 +423,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+												<FormattedMessage id={'text'} defaultMessage='text' />
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -370,9 +434,34 @@ const QuestionAdmin: NextPageWithLayout = () => {
 												borderColor={'brand.blue'}
 												value={values.text}
 											/>
-											<Text color={'red'}>
-												{errors.text && touched.text && errors.text}
-											</Text>
+											<FormLabel>
+												<FormattedMessage
+													id={'min_point'}
+													defaultMessage='min point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='min_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.min_point}
+											/>
+											<FormLabel>
+												<FormattedMessage
+													id={'max_point'}
+													defaultMessage='max point'
+												/>
+											</FormLabel>
+											<Input
+												onChange={handleChange}
+												name='max_point'
+												type={'number'}
+												onBlur={handleBlur}
+												borderColor={'brand.blue'}
+												value={values.max_point}
+											/>
 										</Stack>
 									</ModalBody>
 
@@ -398,15 +487,15 @@ const QuestionAdmin: NextPageWithLayout = () => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={questionResponse.data?.data.count}
+				totalRecords={resultResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>
 	);
 };
 
-QuestionAdmin.getLayout = function getLayout(page: ReactElement) {
+ResultsAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
-export default QuestionAdmin;
+export default ResultsAdmin;

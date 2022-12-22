@@ -18,10 +18,11 @@ import { getCookie } from '../src/services/cookies_file';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
 import Layout from '../src/components/layout';
 import { NextPageWithLayout } from './_app';
-import {  home } from '../src/services/api';
+import {  home, quizeClientList } from '../src/services/api';
 import Feedback from '../src/components/feedback';
 import Sliders from '../src/components/sliders';
 import Information from '../src/components/information';
+import { myQuizeState } from '../Atoms/quizAtom';
 
 
 const Welcome: NextPageWithLayout = () => {

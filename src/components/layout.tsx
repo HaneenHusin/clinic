@@ -31,7 +31,7 @@ function Layout ({children, ...props}: Props)  {
     
    
     return (
-        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}  backgroundImage="url(assets/images/Path_1.svg)"   {...props}>
+        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}  backgroundImage="url(/assets/images/Path_1.svg)"   {...props}>
             <Skeleton startColor='brand.blueLight' endColor='brand.textBlue' isLoaded={!isLoading}>
                 <AppBar/>
                <main>{children}</main> 

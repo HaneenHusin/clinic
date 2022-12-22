@@ -20,9 +20,6 @@ import {
 	SimpleGrid,
 	Tooltip,
 	FormLabel,
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -33,40 +30,35 @@ import {
 	ModalBody,
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { NextPageWithLayout } from '../../_app';
 import LayoutAdmin from '../../../src/components/layout_admin';
 import {
 	DeleteRequest,
 	feedbackList,
 	PostRequest,
-	resultList,
+	quizeList,
 	UpdateRequest,
 } from '../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router, { useRouter } from 'next/router';
-import { mutate } from 'swr';
-import quize from '../../quize';
+import router from 'next/router';
 import Link from 'next/link';
+import { mutate } from 'swr';
 
-const ResultsAdmin: NextPageWithLayout = () => {
+const QuizesAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [idQuize, setIdQuize] = useState(0);
-	const [idResult, setIdResult] = useState(0);
+	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const router = useRouter();
-	const { resultId } = router.query;
-
-	let resultResponse = resultList(pageNum, basicRows, resultId);
+	let quizeResponse = quizeList(pageNum, basicRows);
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -74,32 +66,25 @@ const ResultsAdmin: NextPageWithLayout = () => {
 		setPageNum(event.page + 1);
 	};
 
-	 function refresh(response: any) {
+	async function refresh(response: any) {
 		onClose();
-		mutate(
-			`/admin/quize/${resultId}/result/?page=${pageNum}&pageSize=${basicRows}`
-		);
+		mutate(`/admin/quizes/?page=${pageNum}&pageSize=${basicRows}`);
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(
-		indexValue: number,
-		idResult: number,
-		idQuize: number
-	) {
+	function openEditModal(indexValue: number, idValue: number) {
 		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
-		setIdResult(idResult);
-		setIdQuize(idQuize);
+		setId(idValue);
 	}
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{resultResponse.isLoading == true ? (
+			{quizeResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -110,17 +95,8 @@ const ResultsAdmin: NextPageWithLayout = () => {
 				<></>
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
-			<Breadcrumb fontWeight='medium' fontSize='sm'>
-				<BreadcrumbItem>
-					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
-				</BreadcrumbItem>
-
-				<BreadcrumbItem>
-					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'result'} defaultMessage='result' /></Text></BreadcrumbLink>
-				</BreadcrumbItem>
-			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'results'} defaultMessage='result' />
+					<FormattedMessage id={'quizes'} defaultMessage='quizes' />
 				</Text>
 				<Button
 					variant='outline'
@@ -148,16 +124,13 @@ const ResultsAdmin: NextPageWithLayout = () => {
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
 								<FormattedMessage id={'title'} defaultMessage='title' />
 							</Th>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
-							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						{resultResponse.data?.data?.results?.map(
+						{quizeResponse.data?.data.results.map(
 							(item: any, index: number) => (
-								<Tr key={item.text}>
-									<Tooltip label={item.text}>
+								<Tr key={item.title}>
+									<Tooltip label={item.title}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
 											maxWidth={'100px'}
@@ -165,36 +138,45 @@ const ResultsAdmin: NextPageWithLayout = () => {
 											overflow={'hidden'}
 											whiteSpace={'nowrap'}
 										>
-											{item.text}
+											{item.title}
 										</Td>
 									</Tooltip>
 
-									<Tooltip label={item.min_point}>
-										<Td
-											fontSize={['sm', 'md', 'lg', 'xl']}
-											maxWidth={'100px'}
-											textOverflow={'ellipsis'}
-											overflow={'hidden'}
-											whiteSpace={'nowrap'}
+									<Td>
+										<Link
+											shallow={true}
+											href={`/admin/quizes/${item.id}/questions/`}>
+											<Text
+												textDecoration={'underline'}
+												fontSize={['sm', 'md', 'lg', 'xl']}
+											>
+												<FormattedMessage
+													id={'questions'}
+													defaultMessage='questions'
+												/>
+											</Text>
+										</Link>
+									</Td>
+									<Td>
+										<Link
+											shallow={true}
+											href={`/admin/quizes/${item.id}/result`}
 										>
-											{item.min_point}
-										</Td>
-									</Tooltip>
-									<Tooltip label={item.max_point}>
-										<Td
-											fontSize={['sm', 'md', 'lg', 'xl']}
-											maxWidth={'100px'}
-											textOverflow={'ellipsis'}
-											overflow={'hidden'}
-											whiteSpace={'nowrap'}
-										>
-											{item.max_point}
-										</Td>
-									</Tooltip>
+											<Text
+												textDecoration={'underline'}
+												fontSize={['sm', 'md', 'lg', 'xl']}
+											>
+												<FormattedMessage
+													id={'results'}
+													defaultMessage='results'
+												/>
+											</Text>
+										</Link>
+									</Td>
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id, resultId)}
+											onClick={() => openEditModal(index, item.id)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -207,10 +189,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 										<IconButton
 											aria-label={'delete'}
 											onClick={() =>
-												DeleteRequest(
-													`/admin/quize/${resultId}/results/${item.id}/`,
-													refresh
-												)
+												DeleteRequest(`/admin/quize/${item.id}/`, refresh)
 											}
 											icon={
 												<i
@@ -232,34 +211,17 @@ const ResultsAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_result'} />
+							<FormattedMessage id={'add_quize'} />
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: '', min_point: 0, max_point: 0 }}
+							initialValues={{ title: '', brief: '' }}
 							validate={(values) => {
 								const errors = {};
-								if (!values.text) {
-									errors.text = (
+								if (!values.title) {
+									errors.title = (
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='Required'
-										/>
-									);
-								}
-
-								if (!values.min_point) {
-									errors.min_point = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
-									);
-								}
-								if (!values.max_point) {
-									errors.max_point = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
 										/>
 									);
 								}
@@ -271,15 +233,10 @@ const ResultsAdmin: NextPageWithLayout = () => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										text: values.text,
-										min_point: values.min_point,
-										max_point: values.max_point,
+										title: values.title,
+										brief: values.brief,
 									};
-									PostRequest(
-										`/admin/quize/${resultId}/results/`,
-										dataToRequestAPI,
-										refresh
-									);
+									PostRequest('/admin/quize/', dataToRequestAPI, refresh);
 									setSubmitting(false);
 								}, 400);
 							}}
@@ -297,59 +254,19 @@ const ResultsAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+												<FormattedMessage id={'title'} defaultMessage='title' />
 											</FormLabel>
 											<Input
 												variant='outline'
 												type='text'
-												name='text'
+												name='title'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.text}
+												value={values.title}
 											/>
 											<Text color={'red'}>
-												{errors.text && touched.text && errors.text}
-											</Text>
-
-											<FormLabel>
-												<FormattedMessage
-													id={'min_point'}
-													defaultMessage='min point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='min_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.min_point}
-											/>
-											<Text color={'red'}>
-												{errors.min_point &&
-													touched.min_point &&
-													errors.min_point}
-											</Text>
-
-											<FormLabel>
-												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='max_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.max_point}
-											/>
-											<Text color={'red'}>
-												{errors.max_point &&
-													touched.max_point &&
-													errors.max_point}
+												{errors.title && touched.title && errors.title}
 											</Text>
 										</Stack>
 									</ModalBody>
@@ -381,28 +298,21 @@ const ResultsAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_result'}
-								defaultMessage='Edit result'
-							/>
+							<FormattedMessage id={'edit_quize'} defaultMessage='Edit quize' />
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								text: resultResponse.data?.data?.results[index]?.text,
-								max_point: resultResponse.data?.data?.results[index]?.max_point,
-								min_point: resultResponse.data?.data?.results[index]?.min_point,
+								title: quizeResponse.data?.data?.results[index]?.title,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										text: values.text,
-										max_point: values.max_point,
-										min_point: values.min_point,
+										title: values.title,
 									};
 									UpdateRequest(
-										`/admin/quize/${resultId}/results/${idResult}/`,
+										`/admin/quize/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -432,36 +342,11 @@ const ResultsAdmin: NextPageWithLayout = () => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.text}
+												value={values.title}
 											/>
-											<FormLabel>
-												<FormattedMessage
-													id={'min_point'}
-													defaultMessage='min point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='min_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.min_point}
-											/>
-											<FormLabel>
-												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
-											</FormLabel>
-											<Input
-												onChange={handleChange}
-												name='max_point'
-												type={'number'}
-												onBlur={handleBlur}
-												borderColor={'brand.blue'}
-												value={values.max_point}
-											/>
+											<Text color={'red'}>
+												{errors.title && touched.title && errors.title}
+											</Text>
 										</Stack>
 									</ModalBody>
 
@@ -487,15 +372,15 @@ const ResultsAdmin: NextPageWithLayout = () => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={resultResponse.data?.data.count}
+				totalRecords={quizeResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>
 	);
 };
 
-ResultsAdmin.getLayout = function getLayout(page: ReactElement) {
+QuizesAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
-export default ResultsAdmin;
+export default QuizesAdmin;

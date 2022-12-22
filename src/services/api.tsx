@@ -90,8 +90,8 @@ export function quizeList(page:number, pageSize:number){
         isError: error
     }
 }
-export function quizeClientList(page:number, pageSize:number){
-    const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
+export function quizeclient(page:number, pageSize:number){
+    const { data, error } = useSWR<QuizeList, Error>(`/quiz/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,

@@ -14,7 +14,7 @@ import {useRecoilState} from "recoil";
 import {myDirectionState} from "../../Atoms/localAtoms";
 import React from "react";
 
-export default function TestCard(quiz:any ){
+export default function TestCard(){
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [dirState] = useRecoilState(myDirectionState);
 
@@ -73,7 +73,7 @@ export default function TestCard(quiz:any ){
                         <Button variant='outline' mr={3} onClick={onClose}>
                             Close
                         </Button>
-                        <Button variant='primary' onClick={()=>  router.replace( '/quize' )}> <FormattedMessage id={'lets_go'}/></Button>
+                        <Button variant='primary' onClick={()=> router.push('/quize', '/quize', { shallow: true })}> <FormattedMessage id={'lets_go'}/></Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

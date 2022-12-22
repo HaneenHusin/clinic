@@ -88,7 +88,7 @@ export  function AppBarAdmin() {
                                         leftIcon={<Image src={'/assets/images/SIGN_IN.svg'} h={'20px'}></Image>}><FormattedMessage  id={'to_site'} defaultMessage="to site"/></Button>
                     
                     <Box p={'5px'}>
-                        <Menu>
+                        {/* <Menu>
                             <MenuButton as={Button} color={'brand.textGray'} rightIcon={<ChevronDownIcon/>}>
                                 {appBarState}
                             </MenuButton>
@@ -108,7 +108,7 @@ export  function AppBarAdmin() {
                                     <span className={'ml-12'} color={'brand.textGray'}>EN</span>
                                 </MenuItem>
                             </MenuList>
-                        </Menu>
+                        </Menu> */}
                         <DrawerAdmin/>
                     </Box>
 

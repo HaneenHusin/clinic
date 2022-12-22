@@ -20,6 +20,9 @@ import {
 	SimpleGrid,
 	Tooltip,
 	FormLabel,
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -30,61 +33,68 @@ import {
 	ModalBody,
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { NextPageWithLayout } from '../_app';
-import LayoutAdmin from '../../src/components/layout_admin';
+import React, { ReactElement, useState } from 'react';
+import { NextPageWithLayout } from '../../../../_app';
 import {
 	DeleteRequest,
-	feedbackList,
 	PostRequest,
-	quizeList,
+	questionsList,
 	UpdateRequest,
-} from '../../src/services/api';
+} from '../../../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
+import { myDirectionState } from '../../../../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router from 'next/router';
-import Link from 'next/link';
+import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
+import { ChevronRightIcon } from '@chakra-ui/icons';
+import Link from 'next/link';
+import LayoutAdmin from '../../../../../src/components/layout_admin';
 
-const QuizesAdmin: NextPageWithLayout = () => {
+const QuestionAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [id, setId] = useState(0);
+	const [idQuestion, setIdQuuestion] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	let quizeResponse = quizeList(pageNum, basicRows);
+	const router = useRouter();
+	const { quizId } = router.query;
+
+	let questionResponse = questionsList(pageNum, basicRows, quizId);
 
 	const onBasicPageChange = (event) => {
+		debugger;
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	function refresh(response: any) {
 		onClose();
-		mutate(`/admin/quizes/?page=${pageNum}&pageSize=${basicRows}`);
+		mutate(
+			`/admin/quizes/${quizId}/questions/?page=${pageNum}&pageSize=${basicRows}`
+		);
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(indexValue: number, idValue: number) {
+	function openEditModal(indexValue: number, idQuestion: number) {
 		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
-		setId(idValue);
+		setIdQuuestion(idQuestion);
 	}
 
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{quizeResponse.isLoading == true ? (
+		
+			{questionResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
 						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -95,8 +105,17 @@ const QuizesAdmin: NextPageWithLayout = () => {
 				<></>
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
+			<Breadcrumb fontWeight='medium' fontSize='sm'>
+				<BreadcrumbItem>
+					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
+				</BreadcrumbItem>
+
+				<BreadcrumbItem>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'questions'} defaultMessage='questions' /></Text></BreadcrumbLink>
+				</BreadcrumbItem>
+			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'quizes'} defaultMessage='quizes' />
+					<FormattedMessage id={'questions'} defaultMessage='questions' />
 				</Text>
 				<Button
 					variant='outline'
@@ -122,15 +141,15 @@ const QuizesAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+								<FormattedMessage id={'text'} defaultMessage='text' />
 							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						{quizeResponse.data?.data.results.map(
+						{questionResponse.data?.data.results?.map(
 							(item: any, index: number) => (
 								<Tr key={item.title}>
-									<Tooltip label={item.title}>
+									<Tooltip label={item.text}>
 										<Td
 											fontSize={['sm', 'md', 'lg', 'xl']}
 											maxWidth={'100px'}
@@ -138,41 +157,26 @@ const QuizesAdmin: NextPageWithLayout = () => {
 											overflow={'hidden'}
 											whiteSpace={'nowrap'}
 										>
-											{item.title}
+											{item.text}
 										</Td>
 									</Tooltip>
-
 									<Td>
 										<Link
 											shallow={true}
-											href={`/admin/questions/${item.id}`}>
-											<Text
-												textDecoration={'underline'}
-												fontSize={['sm', 'md', 'lg', 'xl']}
-											>
-												<FormattedMessage
-													id={'questions'}
-													defaultMessage='questions'
-												/>
-											</Text>
-										</Link>
-									</Td>
-									<Td>
-										<Link
-											shallow={true}
-											href={`/admin/results/${item.id}`}
+											href={`/admin/quizes/${quizId}/questions/${item.id}`}
 										>
 											<Text
 												textDecoration={'underline'}
 												fontSize={['sm', 'md', 'lg', 'xl']}
 											>
 												<FormattedMessage
-													id={'results'}
-													defaultMessage='results'
+													id={'answer'}
+													defaultMessage='answer'
 												/>
 											</Text>
 										</Link>
 									</Td>
+
 									<Td>
 										<IconButton
 											aria-label={'edit'}
@@ -189,7 +193,10 @@ const QuizesAdmin: NextPageWithLayout = () => {
 										<IconButton
 											aria-label={'delete'}
 											onClick={() =>
-												DeleteRequest(`/admin/quize/${item.id}/`, refresh)
+												DeleteRequest(
+													`/admin/quize/${quizId}/questions/${item.id}/`,
+													refresh
+												)
 											}
 											icon={
 												<i
@@ -211,14 +218,14 @@ const QuizesAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'add_quize'} />
+							<FormattedMessage id={'add_question'} />
 						</ModalHeader>
 						<Formik
-							initialValues={{ title: '', brief: '' }}
+							initialValues={{ text: '' }}
 							validate={(values) => {
 								const errors = {};
-								if (!values.title) {
-									errors.title = (
+								if (!values.text) {
+									errors.text = (
 										<FormattedMessage
 											id={'required'}
 											defaultMessage='Required'
@@ -233,10 +240,13 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										title: values.title,
-										brief: values.brief,
+										text: values.text,
 									};
-									PostRequest('/admin/quize/', dataToRequestAPI, refresh);
+									PostRequest(
+										`/admin/quize/${quizId}/questions/`,
+										dataToRequestAPI,
+										refresh
+									);
 									setSubmitting(false);
 								}, 400);
 							}}
@@ -254,19 +264,19 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+												<FormattedMessage id={'text'} defaultMessage='text' />
 											</FormLabel>
 											<Input
 												variant='outline'
 												type='text'
-												name='title'
+												name='text'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.title}
+												value={values.text}
 											/>
 											<Text color={'red'}>
-												{errors.title && touched.title && errors.title}
+												{errors.text && touched.text && errors.text}
 											</Text>
 										</Stack>
 									</ModalBody>
@@ -298,21 +308,37 @@ const QuizesAdmin: NextPageWithLayout = () => {
 					<ModalOverlay />
 					<ModalContent dir={dirState}>
 						<ModalHeader>
-							<FormattedMessage id={'edit_quize'} defaultMessage='Edit quize' />
+							<FormattedMessage
+								id={'edit_question'}
+								defaultMessage='Edit question'
+							/>
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								title: quizeResponse.data?.data?.results[index]?.title,
+								text: questionResponse.data?.data?.results[index]?.text,
+							}}
+							validate={(values) => {
+								const errors = {};
+								if (!values.text) {
+									errors.text = (
+										<FormattedMessage
+											id={'required'}
+											defaultMessage='Required'
+										/>
+									);
+								}
+
+								return errors;
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										title: values.title,
+										text: values.text,
 									};
 									UpdateRequest(
-										`/admin/quize/${id}/`,
+										`/admin/quize/${quizId}/questions/${idQuestion}/`,
 										dataToRequestAPI,
 										refresh
 									);
@@ -333,19 +359,19 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+												<FormattedMessage id={'text'} defaultMessage='text' />
 											</FormLabel>
 											<Input
 												variant='outline'
 												type='text'
-												name='title'
+												name='text'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												borderColor={'brand.blue'}
-												value={values.title}
+												value={values.text}
 											/>
 											<Text color={'red'}>
-												{errors.title && touched.title && errors.title}
+												{errors.text && touched.text && errors.text}
 											</Text>
 										</Stack>
 									</ModalBody>
@@ -372,15 +398,15 @@ const QuizesAdmin: NextPageWithLayout = () => {
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
-				totalRecords={quizeResponse.data?.data.count}
+				totalRecords={questionResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>
 	);
 };
 
-QuizesAdmin.getLayout = function getLayout(page: ReactElement) {
+QuestionAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
-export default QuizesAdmin;
+export default QuestionAdmin;

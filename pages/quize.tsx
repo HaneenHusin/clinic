@@ -13,19 +13,31 @@ import {myDirectionState} from "../Atoms/localAtoms";
 import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { useRouter } from 'next/router';
-import { quizeList } from '../src/services/api';
+import { quizeclient } from '../src/services/api';
 
 const quize: NextPageWithLayout = () => {
    
-  
-
+  let quizeResponse = quizeclient(1,10);
+console.log("quizeResponse........."+quizeResponse.data?.data?.results)
     return (
+      
         <Stack
           
             w={'full'}
             h={'full'}
             bg={'brand.white'}
             backgroundSize={'cover'}>
+                  {quizeResponse.isLoading == true ? (
+            <div id='globalLoader'>
+                <Image
+                    src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
+                    alt=''
+                />
+            </div>
+        ) : (
+            <></>
+        )}
+    
             <HStack>
                 <svg width="466" height="603" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <path d="M0,0 L100,0 C25,50 50,75 0,100z" fill="#CAE5F0"/>
@@ -34,8 +46,8 @@ const quize: NextPageWithLayout = () => {
                 </Image>
             </HStack>
             <Box pb={'10%'} align="center" justify="center">
-                {/* <Carousel value={quizeResponse.data?.data.results} itemTemplate={StepsTest} numVisible={1} numScroll={1}
-                          showIndicators={false}></Carousel> */}
+                <Carousel value={quizeResponse.data?.data?.results} itemTemplate={StepsTest} numVisible={1} numScroll={1}
+                          showIndicators={false}></Carousel>
             </Box>
 
         </Stack>
@@ -127,11 +139,11 @@ export function StepsTest(item) {
                 </Card>
                 <Stack mt='6' spacing='3'>
                     <HStack spacing={2} align="center" justify="center">
-                        {item.questions_list.answers_list.map((item:any,index:number) => ( 
+                        {item.questions_list.map((item:any,index:number) => ( 
                         <Button key={item.id} variant='primary' onClick={() => activeSteps(5.5)}>
-                            <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}> {item.text} </Text>
+                            <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}> {item} </Text>
                         </Button>))}
-                        <Button variant='primary' onClick={() => activeSteps(5.5)}>
+                        {/* <Button variant='primary' onClick={() => activeSteps(5.5)}>
                             <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}> <FormattedMessage
                                 id={'never'}/> </Text>
                         </Button>
@@ -143,7 +155,7 @@ export function StepsTest(item) {
                             id={'most_of_the_time'}/></Text></Button>
                         <Button variant='primary' onClick={() => activeSteps(5.5)}><FormattedMessage
                             id={'all_the_time'}/>
-                        </Button>
+                        </Button> */}
                     </HStack>
                     <div>
 
