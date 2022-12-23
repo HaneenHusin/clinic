@@ -77,7 +77,7 @@ export default {
     value:"value",
     name:"Name",
     information:"Information",
-    feedback:"Feedback_",
+    feedback:"Feedback",
     mange_your_clinic:"Mange your clinic",
     photos:"photos editor",
     photos_add:"Add photos",
@@ -99,7 +99,11 @@ export default {
     min_point:"Min point",
     max_point:"Max point",
     answer:"Answer",
-    answers:"Answers"
+    answers:"Answers",
+    delete_item:"Delete item",
+    delete_confirm:"Do you want to delete this utem ?",
+    cancel:"Cancel"
+  
    
   
 

@@ -28,7 +28,7 @@ function LayoutAdmin ({children, ...props}: Props)  {
             });
       },  [Router]);
     return (
-        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}} backgroundImage="url(assets/images/Path_2.svg)"   {...props}>
+        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}} backgroundImage="url(/assets/images/Path_2.svg)"   {...props}>
             <Skeleton startColor='brand.blueLight' endColor='brand.textBlue' isLoaded={!isLoading}>
                 <AppBarAdmin/>
                <main>{children}</main> 

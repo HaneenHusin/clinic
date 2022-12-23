@@ -23,6 +23,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -63,7 +64,12 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	let answerResponse = answerList(pageNum, basicRows,quizId,qId,);
 	console.log(" router.query"+ qId)
 	
-	
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
+
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -187,9 +193,11 @@ const AnswerAdmin: NextPageWithLayout = () => {
 								</Td>
 								<Td>
 									
-									<IconButton
+								
+
+<IconButton
 										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/quize/${quizId}/questions/${qId}/answers/${item.id}/`,refresh)}
+										onClick= { onDeleteOpen }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -197,6 +205,30 @@ const AnswerAdmin: NextPageWithLayout = () => {
 											></i>
 										}
 									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(`/admin/quize/${quizId}/questions/${qId}/answers/${item.id}/`,refresh)}
+													}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 								</Td>
 							</Tr>
 						))}

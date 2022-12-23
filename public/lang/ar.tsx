@@ -100,6 +100,9 @@ export default {
   min_point:"النقطة الأدنى",
   max_point:"النقطة الأعلى",
   answer:"الإجابة",
-  answers:"الإجابات"
+  answers:"الإجابات",
+  delete_item:"حذف العنصر المحدد",
+  delete_confirm:"هل تريد حذف العنصر المحدد ؟",
+  cancel:"إلغاء"
 
 }

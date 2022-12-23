@@ -17,6 +17,7 @@ import {
 	Tooltip,
 	FormLabel,
 	Center,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -51,6 +52,11 @@ const InformationAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const infoResponse = informationList(pageNum, basicRows);
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -148,11 +154,10 @@ const InformationAdmin: NextPageWithLayout = () => {
 									></IconButton>
 								</Td>
 								<Td>
+									
 									<IconButton
-										aria-label={'delete'}
-										onClick={() =>
-											DeleteRequest(`/admin/information/${item.id}/`, refresh)
-										}
+										aria-label={'edit'}
+										onClick= { onDeleteOpen }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -160,6 +165,30 @@ const InformationAdmin: NextPageWithLayout = () => {
 											></i>
 										}
 									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(`/admin/information/${item.id}/`, refresh)
+													}}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 								</Td>
 							</Tr>
 						))}

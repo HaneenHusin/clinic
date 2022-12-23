@@ -20,6 +20,7 @@ import {
   SimpleGrid,
   Tooltip,
   FormLabel,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -52,7 +53,12 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const feedbackResponse = feedbackList(pageNum,basicRows);
-	
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
+
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -162,9 +168,10 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 								</Td>
 								<Td>
 									
+								
 									<IconButton
-										aria-label={'delete'}
-										onClick={()=> DeleteRequest(`/admin/feedback/${item.id}/`,refresh)}
+										aria-label={'edit'}
+										onClick= { onDeleteOpen }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -172,6 +179,30 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 											></i>
 										}
 									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(`/admin/feedback/${item.id}/`,refresh)
+													}}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 								</Td>
 							</Tr>
 						))}

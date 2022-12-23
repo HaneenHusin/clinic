@@ -27,6 +27,7 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionButton,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -37,7 +38,7 @@ import {
 	ModalBody,
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
-import React, { ReactElement, useMemo, useState } from 'react';
+import React, { ReactElement, useMemo, useRef, useState } from 'react';
 import { Galleria } from 'primereact/galleria';
 import {
 	articlesList,
@@ -72,17 +73,23 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const [dirState] = useRecoilState(myDirectionState);
 	const [imageState, setimageState] = useRecoilState(myListImagesState);
 	const [text1, setText1] = useState<string>('');
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const router = useRouter();
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
-		setPageNum(event.page + 1)
+		setPageNum(event.page + 1);
 	};
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/article/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/article/?page=${pageNum}&pageSize=${basicRows}`);
+		onDeleteClose();
 	}
 
 	function openModal() {
@@ -130,7 +137,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 			) : (
 				<></>
 			)}
-		
+
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
 					<FormattedMessage id={'article'} defaultMessage='article' />
@@ -240,9 +247,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								<Td>
 									<IconButton
 										aria-label={'edit'}
-										onClick={() =>
-											DeleteRequest(`/admin/articles/${item.id}/`, refresh)
-										}
+										onClick={onDeleteOpen}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -250,6 +255,47 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											></i>
 										}
 									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader>
+												<FormattedMessage
+													id={'delete_item'}
+													defaultMessage='delete item'
+												/>
+											</ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+												<FormattedMessage
+													id={'delete_confirm'}
+													defaultMessage='delete confirm'
+												/>
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+													<FormattedMessage
+														id={'cancel'}
+														defaultMessage='cancel'
+													/>
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(
+															`/admin/articles/${item.id}/`,
+															refresh
+														);
+													}}
+												>
+													<FormattedMessage
+														id={'delete'}
+														defaultMessage='delete'
+													/>
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 								</Td>
 							</Tr>
 						))}
@@ -289,7 +335,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											defaultMessage='required'
 										/>
 									);
-								
 								}
 								if (!values.keywords) {
 									errors.keywords = (
@@ -422,7 +467,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 															</AccordionButton>
 														</h2>
 														<AccordionPanel pb={4}>
-															<Gridphotot isMulti={true} ></Gridphotot>
+															<Gridphotot isMulti={true}></Gridphotot>
 														</AccordionPanel>
 													</AccordionItem>
 												</Accordion>
@@ -579,7 +624,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 												onChange={handleChange}
 												onTextChange={(e) => setText1(e.htmlValue)}
 											/>
-											
+
 											<Text color={'red'}>
 												{errors.body && touched.body && errors.body}
 											</Text>
@@ -640,7 +685,7 @@ const itemGalleryTemplate = (item) => {
 							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}
 					alt={item.name}
-					style={{ width: '100%', height:'80%', display: 'block' }}
+					style={{ width: '100%', height: '80%', display: 'block' }}
 				/>
 			</CardBody>
 		</Card>

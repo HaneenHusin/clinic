@@ -34,7 +34,7 @@ export  function AppBarAdmin() {
         setCookie("language", lang);
         setAppBarState(localState == "ar" ? "AR" : "EN")
         console.log('langButton      ' + appBarState)
-        setDirState(lang  === "ar"?"rtl":"ltr")
+       setDirState(getCookie("dirState"));
         const {pathname, asPath, query} = router
         router.reload();
         await router.push({pathname, query}, asPath, {locale: localState,shallow: true})
@@ -42,7 +42,7 @@ export  function AppBarAdmin() {
     }
     useState(async () => {
         setLocalState( getCookie("language"));
-        setDirState(localState == "ar" ? "rtl" : "ltr");
+        setDirState(getCookie("dirState"));
         setAppBarState(localState == "ar" ? "AR" : "EN");
         console.log("dirrrrrr2 " + dirState)
         console.log("localState " + localState)
@@ -148,6 +148,7 @@ export function  AppBar() {
 
     async function setDirection(lang: string) {
         setCookie("language", lang);
+        setCookie("dirState", lang  === "ar"?"rtl":"ltr");
         setAppBarState(localState == "ar" ? "AR" : "EN")
         console.log('langButton      ' + appBarState)
         setDirState(lang  === "ar"?"rtl":"ltr")
@@ -158,7 +159,7 @@ export function  AppBar() {
     }
     useState(async () => {
         setLocalState( getCookie("language"));
-        setDirState(localState == "ar" ? "rtl" : "ltr");
+        setDirState(getCookie("dirState"));
         setAppBarState(localState == "ar" ? "AR" : "EN");
         console.log("dirrrrrr2 " + dirState)
         console.log("localState " + localState)
@@ -183,7 +184,7 @@ export function  AppBar() {
                 <Flex h={20} w={'full'} alignItems={'center'} boxShadow={'l'}>
 
                         <HStack display={'flex'} >
-                            <Image src={'/assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>
+                            <Image src={'/assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}} alt=""/>
                             <Text color='brand.blue'>ADHD Center</Text>
                         </HStack>
 
@@ -199,13 +200,13 @@ export function  AppBar() {
                         <Button variant='outline' colorScheme='brand'
                                 display={{base: 'none', md: 'flex'}}
                                 onClick={() => goLoginPage()}
-                                leftIcon={<Image src={'/assets/images/SIGN_IN.svg'}
+                                leftIcon={<Image src={'/assets/images/SIGN_IN.svg'} alt=""
                                                  h={'30px'}></Image>}><FormattedMessage
                             id={'login'} defaultMessage="Login"/></Button>
 
                         <Button variant='primary'  onClick={() => goSignUpPage()}
                                 display={{base: 'none', md: 'flex'}}
-                                leftIcon={<Image src={'/assets/images/SIGN_UP.svg'}
+                                leftIcon={<Image src={'/assets/images/SIGN_UP.svg'}alt=""
                                                  h={'30px'}></Image>}><FormattedMessage
                             id={'join_us'} defaultMessage="Join us"/></Button>
                     </HStack>
@@ -248,12 +249,12 @@ export function  AppBar() {
                         <Stack as={'nav'} spacing={4}>
                             <Button variant='outline' colorScheme='brand' m={"10px"}
                                     onClick={() => goLoginPage()}
-                                    leftIcon={<Image src={'/assets/images/SIGN_IN.svg'}
+                                    leftIcon={<Image src={'/assets/images/SIGN_IN.svg'}alt=""
                                                      h={'30px'}></Image>}><FormattedMessage
                                 id={'login'} defaultMessage="Login"/></Button>
 
                             <Button variant='primary' m={"10px"}
-                                    leftIcon={<Image src={'/assets/images/SIGN_UP.svg'}  onClick={() => goSignUpPage()}     h={'30px'}></Image>}>
+                                    leftIcon={<Image src={'/assets/images/SIGN_UP.svg'} alt=""  onClick={() => goSignUpPage()}     h={'30px'}></Image>}>
                                         <FormattedMessage id={'join_us'} defaultMessage="Join us"/></Button>
                         </Stack>
 

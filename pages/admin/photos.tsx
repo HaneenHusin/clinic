@@ -19,6 +19,7 @@ import {
 	CardBody,
 	SimpleGrid,
 	CardFooter,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -48,6 +49,11 @@ const PhotosAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const router = useRouter();
 	const photosResponse = photosList(pageNum,basicRows);
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -149,19 +155,41 @@ const PhotosAdmin: NextPageWithLayout = () => {
 									>
 										{photosResponse.data?.data.results.map((link) => (
 											<Box key={link.id}>
-												<IconButton
-													aria-label={'edit'}
-													size={'lg'}
-													onClick={() =>
+											
+<IconButton
+										aria-label={'edit'}
+										onClick= { onDeleteOpen }
+										icon={
+											<i
+												className='pi pi-trash'
+												style={{ fontSize: '1em', color: 'red' }}
+											></i>
+										}
+									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
 														DeleteRequest(`/admin/photos/${link.id}/`, refresh)
-													}
-													icon={
-														<i
-															className='pi pi-trash'
-															style={{ fontSize: '1em', color: 'red' }}
-														></i>
-													}
-												></IconButton>
+													}}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 												<Image src={link.datafile} alt={''} />
 											</Box>
 										))}

@@ -23,6 +23,7 @@ import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -63,6 +64,11 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
 	const { quizId } = router.query;
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	let questionResponse = questionsList(pageNum, basicRows, quizId);
 
@@ -190,21 +196,45 @@ const QuestionAdmin: NextPageWithLayout = () => {
 										></IconButton>
 									</Td>
 									<Td>
-										<IconButton
-											aria-label={'delete'}
-											onClick={() =>
-												DeleteRequest(
-													`/admin/quize/${quizId}/questions/${item.id}/`,
-													refresh
-												)
-											}
-											icon={
-												<i
-													className='pi pi-trash'
-													style={{ fontSize: '1em', color: 'red' }}
-												></i>
-											}
-										></IconButton>
+									
+
+<IconButton
+										aria-label={'delete'}
+										onClick= { onDeleteOpen }
+										icon={
+											<i
+												className='pi pi-trash'
+												style={{ fontSize: '1em', color: 'red' }}
+											></i>
+										}
+									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(
+															`/admin/quize/${quizId}/questions/${item.id}/`,
+															refresh
+														)
+													}}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
 									</Td>
 								</Tr>
 							)

@@ -27,6 +27,7 @@ import {
 	AccordionIcon,
 	AccordionButton,
 	AccordionPanel,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -67,6 +68,11 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const slidersResponse = slidersList(pageNum, basicRows);
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -76,7 +82,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${basicRows}`);
 	}
 	function openModal() {
 		onOpen();
@@ -192,10 +198,8 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									</Td>
 									<Td>
 										<IconButton
-											aria-label={'delete'}
-											onClick={() =>
-												DeleteRequest(`/admin/sliders/${item.id}/`, refresh)
-											}
+											aria-label={'edit'}
+											onClick={onDeleteOpen}
 											icon={
 												<i
 													className='pi pi-trash'
@@ -203,6 +207,51 @@ const SlidersAdmin: NextPageWithLayout = () => {
 												></i>
 											}
 										></IconButton>
+
+										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+											<ModalOverlay />
+											<ModalContent>
+												<ModalHeader>
+													<FormattedMessage
+														id={'delete_item'}
+														defaultMessage='delete item'
+													/>
+												</ModalHeader>
+												<ModalCloseButton />
+												<ModalBody>
+													<FormattedMessage
+														id={'delete_confirm'}
+														defaultMessage='delete confirm'
+													/>
+												</ModalBody>
+												<ModalFooter>
+													<Button
+														variant='ghost'
+														mr={3}
+														onClick={onDeleteClose}
+													>
+														<FormattedMessage
+															id={'cancel'}
+															defaultMessage='cancel'
+														/>
+													</Button>
+													<Button
+														colorScheme='red'
+														onClick={() => {
+															DeleteRequest(
+																`/admin/sliders/${item.id}/`,
+																refresh
+															);
+														}}
+													>
+														<FormattedMessage
+															id={'delete'}
+															defaultMessage='delete'
+														/>
+													</Button>
+												</ModalFooter>
+											</ModalContent>
+										</Modal>
 									</Td>
 								</Tr>
 							)
@@ -335,14 +384,20 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							/>
 						</ModalHeader>
 						<Formik
-							initialValues={{ text: slidersResponse.data?.data?.results[index]?.text, photo: '' }}
+							initialValues={{
+								text: slidersResponse.data?.data?.results[index]?.text,
+								photo: '',
+							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
-										photo:imageState==''? slidersResponse.data?.data?.results[index]?.photo:imageState,
-										text:values.text 
+										photo:
+											imageState == ''
+												? slidersResponse.data?.data?.results[index]?.photo
+												: imageState,
+										text: values.text,
 									};
 									UpdateRequest(
 										`/admin/sliders/${id}/`,
@@ -390,35 +445,32 @@ const SlidersAdmin: NextPageWithLayout = () => {
 												{errors.text && touched.text && errors.text}
 											</Text>
 
-
-
 											<Accordion defaultIndex={[0]} allowMultiple>
-													<AccordionItem>
-														<h2>
-															<AccordionButton
-																_expanded={{
-																	bg: 'brand.blue',
-																	color: 'white',
-																	fontsize: 'lg',
-																}}
-															>
-																<Box as='span' flex='1' textAlign='left'>
-																	<FormLabel>
-																		<FormattedMessage
-																			id={'choose_file'}
-																			defaultMessage='choose file'
-																		/>
-																	</FormLabel>
-																</Box>
-																<AccordionIcon />
-															</AccordionButton>
-														</h2>
-														<AccordionPanel pb={4}>
-															<Gridphotot isMulti={false} ></Gridphotot>
-														</AccordionPanel>
-													</AccordionItem>
-												</Accordion>
-
+												<AccordionItem>
+													<h2>
+														<AccordionButton
+															_expanded={{
+																bg: 'brand.blue',
+																color: 'white',
+																fontsize: 'lg',
+															}}
+														>
+															<Box as='span' flex='1' textAlign='left'>
+																<FormLabel>
+																	<FormattedMessage
+																		id={'choose_file'}
+																		defaultMessage='choose file'
+																	/>
+																</FormLabel>
+															</Box>
+															<AccordionIcon />
+														</AccordionButton>
+													</h2>
+													<AccordionPanel pb={4}>
+														<Gridphotot isMulti={false}></Gridphotot>
+													</AccordionPanel>
+												</AccordionItem>
+											</Accordion>
 										</Stack>
 									</ModalBody>
 

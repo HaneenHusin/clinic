@@ -20,6 +20,7 @@ import {
 	SimpleGrid,
 	Tooltip,
 	FormLabel,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -59,6 +60,11 @@ const QuizesAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	let quizeResponse = quizeList(pageNum, basicRows);
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -145,7 +151,8 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<Td>
 										<Link
 											shallow={true}
-											href={`/admin/quizes/${item.id}/questions/`}>
+											href={`/admin/quizes/${item.id}/questions/`}
+										>
 											<Text
 												textDecoration={'underline'}
 												fontSize={['sm', 'md', 'lg', 'xl']}
@@ -188,9 +195,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<Td>
 										<IconButton
 											aria-label={'delete'}
-											onClick={() =>
-												DeleteRequest(`/admin/quize/${item.id}/`, refresh)
-											}
+											onClick={onDeleteOpen}
 											icon={
 												<i
 													className='pi pi-trash'
@@ -198,6 +203,51 @@ const QuizesAdmin: NextPageWithLayout = () => {
 												></i>
 											}
 										></IconButton>
+
+										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+											<ModalOverlay />
+											<ModalContent>
+												<ModalHeader>
+													<FormattedMessage
+														id={'delete_item'}
+														defaultMessage='delete item'
+													/>
+												</ModalHeader>
+												<ModalCloseButton />
+												<ModalBody>
+													<FormattedMessage
+														id={'delete_confirm'}
+														defaultMessage='delete confirm'
+													/>
+												</ModalBody>
+												<ModalFooter>
+													<Button
+														variant='ghost'
+														mr={3}
+														onClick={onDeleteClose}
+													>
+														<FormattedMessage
+															id={'cancel'}
+															defaultMessage='cancel'
+														/>
+													</Button>
+													<Button
+														colorScheme='red'
+														onClick={() => {
+															DeleteRequest(
+																`/admin/quize/${item.id}/`,
+																refresh
+															);
+														}}
+													>
+														<FormattedMessage
+															id={'delete'}
+															defaultMessage='delete'
+														/>
+													</Button>
+												</ModalFooter>
+											</ModalContent>
+										</Modal>
 									</Td>
 								</Tr>
 							)

@@ -30,6 +30,7 @@ import {
 	AccordionButton,
 	AccordionPanel,
 	Accordion,
+	ModalCloseButton,
 } from '@chakra-ui/react';
 import {
 	Modal,
@@ -70,6 +71,11 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	const certificateResponse = certificateList(pageNum, basicRows);
 	const [imageState, setimageState] = useRecoilState(myImagesState);
 	const [isImageModal, setIsImageModal] = useState(false);
+	const {
+		isOpen: isDeleteOpen,
+		onOpen: onDeleteOpen,
+		onClose: onDeleteClose,
+	} = useDisclosure();
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -212,21 +218,45 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										></IconButton>
 									</Td>
 									<Td>
-										<IconButton
-											aria-label={'delete'}
-											onClick={() =>
-												DeleteRequest(
-													`/admin/certificates/${item.id}/`,
-													refresh
-												)
-											}
-											icon={
-												<i
-													className='pi pi-trash'
-													style={{ fontSize: '1em', color: 'red' }}
-												></i>
-											}
-										></IconButton>
+									<IconButton
+										aria-label={'edit'}
+										onClick= { onDeleteOpen }
+										icon={
+											<i
+												className='pi pi-trash'
+												style={{ fontSize: '1em', color: 'red' }}
+											></i>
+										}
+									></IconButton>
+
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+										<ModalOverlay />
+										<ModalContent>
+										<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+											<ModalCloseButton />
+											<ModalBody>
+											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											
+											</ModalBody>
+											<ModalFooter>
+												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
+												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												</Button>
+												<Button
+													colorScheme='red'
+													onClick={() => {
+														DeleteRequest(
+															`/admin/certificates/${item.id}/`,
+															refresh
+														)
+													}}
+												>
+													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												</Button>
+											</ModalFooter>
+										</ModalContent>
+									</Modal>
+										
 									</Td>
 								</Tr>
 							)

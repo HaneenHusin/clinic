@@ -9,7 +9,6 @@ import {Card} from "@chakra-ui/card";
 import {FormattedMessage} from "react-intl";
 import {ProgressBar} from "primereact/progressbar";
 import StepsEnd from "./steps_result";
-import {myDirectionState} from "../Atoms/localAtoms";
 import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { useRouter } from 'next/router';
@@ -17,8 +16,8 @@ import { quizeclient } from '../src/services/api';
 
 const quize: NextPageWithLayout = () => {
    
-  let quizeResponse = quizeclient(1,10);
-console.log("quizeResponse........."+quizeResponse.data?.data?.results)
+  const quizeResponse = quizeclient(1,10);
+console.log("quizeResponse........."+quizeResponse.data?.data.results)
     return (
       
         <Stack
