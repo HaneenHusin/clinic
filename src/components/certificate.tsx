@@ -1,8 +1,8 @@
 import {Box, Image, CardBody, CardHeader, Center, Heading, SimpleGrid, Stack, VStack} from "@chakra-ui/react";
-import {Card} from "@chakra-ui/card";
+import {Card, CardFooter} from "@chakra-ui/card";
 import { certificateList } from "../services/api";
 
-export default function Certificates({certificateCount}: any) {
+export default function Certificates() {
     const certificateResponse = certificateList(1, 10);
     return (
         <SimpleGrid spacing={4} columns={[2, null, 3]}  w= {{ base: '55%', md: '60%', lg: '60%' }}>
@@ -16,21 +16,22 @@ export default function Certificates({certificateCount}: any) {
 				<></>
 			)}
             {certificateResponse.data?.data.results.map((item,index) =>
-                <Card key={index} border={'4px'} borderStyle={'double'} borderColor={'brand.brounz'} h={item.photo_model.height}  >
-                    <CardBody backgroundImage={item.photo_model.datafile} backgroundRepeat={"no-repeat"}>
-                        {/* <Center>
+                <Card key={index} border={'4px'} borderStyle={'double'} borderColor={'brand.brounz'} h={"full"}  >
+                    <CardBody>
+                        <Center>
 
                             <Image
-                                src={item.photo_model.datafile} alt='Green double couch with wooden legs'
+                                src={item.photo_model.datafile} alt=''
                                 borderRadius='lg'
-                                _hover={{transform: "scale(2.05, 2.05)",border:"none"}}
+                                h={"90%"}
+                                _hover={{transform: "scale(2.05, 3.30)",border:"none"}}
                             />
-                        </Center> */}
-                        <Center pt={"sm"}>
-                        <Image src={"/assets/images/decoration.svg"} width={'8%'}   />
-                    </Center>
+                        </Center>
+                      
                     </CardBody>
-                    
+                    <CardFooter>
+                    <Image src={"/assets/images/decoration.svg"}alt="" width={"8"}  />
+                    </CardFooter>
                 </Card>
             )}
 

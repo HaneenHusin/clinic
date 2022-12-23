@@ -1,10 +1,20 @@
 import {Card, CardBody} from "@chakra-ui/card";
-import {Box, CardHeader, Heading, Text, StackDivider, HStack} from "@chakra-ui/react";
+import {Box, CardHeader, Heading, Text, StackDivider, HStack, VStack} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
+import { useRecoilState } from "recoil";
+import { myDirectionState } from "../../Atoms/localAtoms";
 
-export default function Information() {
+export default function Information(info:any) {
+    console.log("infooo...."+info.info)
+    const [dirState] = useRecoilState(myDirectionState);
+     const emailVal = info.info.find((obj:any) => { return obj.name === 'email';})
+     const addressVal = info.info.find((obj:any) => { return obj.name === 'address';})
+     const phoneVal = info.info.find((obj:any) => { return obj.name === 'phone';})
+     const videoVal = info.info.find((obj:any) => { return obj.name === 'video';})
+     const doctorName = info.info.find((obj:any) => { return obj.name === 'doctorName';})
     return(
-        <Card bg={'brand.white'} rounded={'3xl'} align="center" justify="center"border={"1px"} borderColor={"brand.darkGray"} >
+        <Box>
+             <Card bg={'brand.white'} rounded={'3xl'} align="center" justify="center"border={"1px"} borderColor={"brand.darkGray"} >
             <CardBody>
                 <HStack divider={<StackDivider fontWeight={'bold'} /> } spacing={['4', '6', '8', '12']} >
                     <Box align="center" justify="center">
@@ -14,8 +24,9 @@ export default function Information() {
                         <Text pt='2' fontSize='sm'>
                             <FormattedMessage id={'our_email'}/>
                         </Text>
+                     
                         <Text pt='2' fontSize='sm' color={'brand.blue'}>
-                            eeee@gmail.com
+                           {emailVal.value}
                         </Text>
                     </Box>
                     <Box align="center" justify="center">
@@ -25,7 +36,7 @@ export default function Information() {
                         <Text pt='2' fontSize='sm'>
                             <FormattedMessage id={'call_us'}/>
                         </Text> <Text pt='2' fontSize='sm' color={'brand.blue'}>
-                          +9631111121212
+                         {phoneVal.value}
                         </Text>
                     </Box>
                     <Box align="center" justify="center">
@@ -36,13 +47,45 @@ export default function Information() {
                             <FormattedMessage id={'clinic_address'}/>
                         </Text>
                         <Text pt='2' fontSize='sm' color={'brand.blue'}>
-                           Al_Mazzeh street
+                           {addressVal.value}
                         </Text>
                     </Box>
                 </HStack>
             </CardBody>
         </Card>
 
+            <Box pt={'4%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
+            <HStack w={'full'} align="center" justify="center" pt={'4%'} dir={dirState}>
+            <Box
+                as='iframe'
+                rounded={'lg'}
+                border={'2px'}
+                borderColor={'brand.white'}
+                src={videoVal.value}
+                width='50%'
+                sx={{
+                    aspectRatio: '16/9'
+                }}
+            />
+            <VStack dir={dirState}>
+                <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
+                      color={'brand.blue'}><FormattedMessage id={'know_more'}/>
+                </Text>
+                <HStack dir={dirState}>
+                    <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
+                          color={'brand.textGray'}><FormattedMessage id={'doctor'}/>
+                    </Text>
+                    <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}
+                          color={'brand.textGray'}>{doctorName.value}
+                    </Text>
+                </HStack>
+
+
+            </VStack>
+        </HStack>
+					</Box>
+        </Box>
+       
     )
 
 }

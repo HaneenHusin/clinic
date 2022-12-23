@@ -43,27 +43,26 @@ export default function CustomCarousel(galleriaService:any) {
 export function RelatedNewsClinic(item) {
     const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
-    async function goArticlePage(item:any) {
-        router.push({
-            pathname: '/article',
-            query: { item: JSON.stringify(item) },
-         }, undefined, { shallow: true})
+    async function goArticlePage(item:Number) {
+        debugger
+        router.push( `/home/${item}/article`,  undefined, { shallow: true})
          
        
     }
      return (
-        <Card w={'80%'} bg={'brand.blue'} rounded={'xl'} dir={dirState}>
+        <Card w={'80%'} h={'full'} bg={'brand.blue'} rounded={'xl'} dir={dirState}>
             <CardBody  dir={dirState}>
                 <Image
-                    src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-                    alt='Green double couch with wooden legs'
+                    src={item?.photos_list[0]?.datafile}
+                    alt=''
                     borderRadius='lg'
+                    h={"60%"}
                 />
                 <Stack mt='6' spacing='3'  dir={dirState}>
                     <Text>
                     {parse(`${item.body}`)}
                     </Text>
-                    <HStack onClick={() => goArticlePage(item)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
+                    <HStack onClick={() => goArticlePage(item.id)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                               color={'brand.white'}>
                             <FormattedMessage id={'read_article'}/>

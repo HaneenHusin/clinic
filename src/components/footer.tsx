@@ -32,12 +32,12 @@ export default function FooterBar() {
                     dir={dirState}
                     templateColumns={{sm: '1fr 1fr', md: '2fr 1fr 1fr 2fr'}}
                     spacing={8}>
-                    <Stack  spacing={6}>
+                    {/* <Stack  spacing={6}>
 
                         <Text fontSize={'md'}>
                             <FormattedMessage id={'social_media'}/>
                         </Text>
-                        <Stack direction={'row'} spacing={6}>
+                        <Stack direction={'row'} spacing={6}  dir={dirState}>
                             <SocialButton label={'Twitter'} href={'#'} bgColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}>
 
                                 <i className="pi pi-twitter"></i>
@@ -50,13 +50,13 @@ export default function FooterBar() {
                                 <i className="pi pi-instagram"></i>
                             </SocialButton>
                         </Stack>
-                    </Stack>
-                    <Stack align={'flex-start'}>
+                    </Stack> */}
+                    <Stack align={'flex-start'}  dir={dirState}>
 
                         <Link href={'#'}>  <FormattedMessage id={'contact_us_media'}/> </Link>
                         <Link href={'#'}><FormattedMessage id={'login_now'}/></Link>
                     </Stack>
-                    <Stack align={'flex-start'}>
+                    <Stack align={'flex-start'}  dir={dirState}>
                         <Link href={'#'}><FormattedMessage id={'about_us'}/></Link>
                         <Link href={'#'}><FormattedMessage id={'contact_us'}/></Link>
                     </Stack>

@@ -39,6 +39,14 @@ export function articlesList(page:number, pageSize:number){
         isError: error
     }
 }
+export function articlesclient(page:number, pageSize:number){
+    const { data, error } = useSWR<ArticleList, Error>(`/articles/?page=${page}&page_size=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
 
 export function certificateList(page:number, pageSize:number){
     const { data, error } = useSWR<CertificateList, Error>(`/certificates/?page=${page}&pageSize=${pageSize}`, fetcher)

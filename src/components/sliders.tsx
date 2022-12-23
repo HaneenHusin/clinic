@@ -21,7 +21,7 @@ export default function Sliders(galleriaService:any){
 
     return (
         <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
-                  style={{maxWidth: '100%'}}
+                  
                   showThumbnails={false} showIndicators changeItemOnIndicatorHover showIndicatorsOnItem
                   item={itemGalleryTemplate}/>
     );
@@ -30,20 +30,13 @@ const itemGalleryTemplate = (item) => {
 
     return (
 
-        <Card  bg={'brand.white'} w={'full'}  align="center" justify="center" m={'3px'} boxShadow={'l'} rounded={'xl'} >
-            <CardHeader>
-                <Heading align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.photo_model.name}</Heading>
-            </CardHeader>
-            <CardBody>
+       
                 <Image src={item.photo_model.datafile}
                        roundedTop={'full'}
                        border={'2px'}
                        borderColor={'brand.blue'}
                        onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
-                       alt={item.alt} style={{width:item.photo_model.width , display: 'block'}}/>
-
-            </CardBody>
-        </Card>
+                       alt={item.alt} style={{width:'60%' ,height:'60%', display: 'flex'}}/>
 
     );
 }

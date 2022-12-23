@@ -7,22 +7,13 @@ import {
 	Td,
 	TableCaption,
 	TableContainer,
-	Flex,
-	HStack,
 	Text,
-	Box,
-	VStack,
 	Button,
 	Image,
-	Spacer,
 	Stack,
 	IconButton,
 	useDisclosure,
-	Input,
 	Textarea,
-	Card,
-	CardBody,
-	SimpleGrid,
 	Tooltip,
 	FormLabel,
 	Center,
@@ -40,10 +31,8 @@ import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
 import {
-	certificateList,
 	DeleteRequest,
 	informationList,
-	PostRequest,
 	UpdateRequest,
 } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
