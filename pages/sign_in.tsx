@@ -6,6 +6,9 @@ import {
 	HStack,
 	Image,
 	Input,
+	InputGroup,
+	InputLeftElement,
+	InputRightElement,
 	Stack,
 	Text,
 	VStack,
@@ -20,34 +23,27 @@ import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { setCookie } from '../src/services/cookies_file';
 import { SignRequest } from '../src/services/api';
 import { NextPageWithLayout } from './_app';
+import React from 'react';
 
- const SignIn: NextPageWithLayout = () => {
+const SignIn: NextPageWithLayout = () => {
 	const [dirState] = useRecoilState(myDirectionState);
 	const router = useRouter();
-   
-   
+	const [show, setShow] = React.useState(false)
+	const handleClick = () => setShow(!show)
 	async function goSignUpPage() {
 		const { pathname, asPath, query } = router;
 		await router.push('/sign_up', '/sign_up', { shallow: true });
 	}
-	
-	
-async function loginResult(response:any) {
-	debugger
-	await setCookie('cookies',response.access);
-	const { pathname, asPath, query } = router;
-	if(response.role=="A")
-	{
-		await router.push('/admin/article', '/admin/article', { shallow: true });
-	
+	async function loginResult(response: any) {
+		debugger;
+		await setCookie('cookies', response.access);
+		const { pathname, asPath, query } = router;
+		if (response.role == 'A') {
+			await router.push('/admin/article', '/admin/article', { shallow: true });
+		} else {
+			await router.push('/welcome', '/welcome', { shallow: true });
+		}
 	}
-	else
-	{
-		await router.push('/welcome', '/welcome', {shallow: true });
-	}
-	
-	
-   }
 
 	return (
 		//             </HStack>
@@ -86,29 +82,31 @@ async function loginResult(response:any) {
 						/>
 					</Text>
 
-
 					<Formik
-						initialValues={{  password: '',username:'' }}
+						initialValues={{ password: '', username: '' }}
 						validate={(values) => {
 							const errors = {};
 							if (!values.username) {
-								errors.username = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
+								errors.username = (
+									<FormattedMessage id={'required'} defaultMessage='Required' />
+								);
 							}
-                            if (!values.password) {
-                                errors.password =<FormattedMessage  id={'required'} defaultMessage='required' />;
-                            }
+							if (!values.password) {
+								errors.password = (
+									<FormattedMessage id={'required'} defaultMessage='required' />
+								);
+							}
 							return errors;
 						}}
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
 								alert(JSON.stringify(values, null, 2));
-                              
-                            
-                            const dataToRequestAPI = {
-	                        username: values.username,
-	                        password: values.password,
-                                  }
-								  SignRequest('/signin/',dataToRequestAPI,loginResult)
+
+								const dataToRequestAPI = {
+									username: values.username,
+									password: values.password,
+								};
+								SignRequest('/signin/', dataToRequestAPI, loginResult);
 								setSubmitting(false);
 							}, 400);
 						}}
@@ -134,19 +132,35 @@ async function loginResult(response:any) {
 									borderColor={'brand.blue'}
 									value={values.username}
 								/>
-							   <Text color={"red"}>{errors.username && touched.username && errors.username}</Text>	
+								<Text color={'red'}>
+									{errors.username && touched.username && errors.username}
+								</Text>
 								<FormLabel pt={'5%'}>
 									<FormattedMessage id={'password'} defaultMessage='password' />
 								</FormLabel>
-								<Input
-									type='password'
-									name='password'
-									onChange={handleChange}
-									onBlur={handleBlur}
-									borderColor={'brand.blue'}
-									value={values.password}
-								/>
-								 <Text color={"red"}>{errors.password && touched.password && errors.password}</Text>	
+								<InputGroup size='md'>
+									<Input
+									 type={show ? 'text' : 'password'}
+										name='password'
+										onChange={handleChange}
+										onBlur={handleBlur}
+										borderColor={'brand.blue'}
+										value={values.password}
+									/>
+									{dirState=="ltr"? <InputRightElement width='4.5rem'>
+										<Button h='1.75rem' size='sm' onClick={handleClick}>
+											{show ? <i style={{'color':'blue'}} className="pi pi-eye-slash"></i> : <i  style={{'color':'blue'}} className="pi pi-eye"></i>}
+										</Button>
+									</InputRightElement> :<InputLeftElement width='4.5rem'>
+										<Button h='1.75rem' size='sm' onClick={handleClick}>
+										{show ? <i style={{'color':'blue'}} className="pi pi-eye-slash"></i> : <i  style={{'color':'blue'}} className="pi pi-eye"></i>}
+										</Button>
+									</InputLeftElement>
+								 }
+									</InputGroup>
+								<Text color={'red'}>
+									{errors.password && touched.password && errors.password}
+								</Text>
 
 								{/* <label>
 						<FormattedMessage id={'password'} defaultMessage='password' />
@@ -220,13 +234,9 @@ async function loginResult(response:any) {
 			</VStack>
 		</Stack>
 	);
-}
+};
 SignIn.getLayout = function getLayout(page: ReactElement) {
-    return (
-        <LayoutWithoutBar>
-            {page}
-        </LayoutWithoutBar>
-    )
-}
+	return <LayoutWithoutBar>{page}</LayoutWithoutBar>;
+};
 
-export default  SignIn;
+export default SignIn;
