@@ -102,7 +102,9 @@ export default {
     answers:"Answers",
     delete_item:"Delete item",
     delete_confirm:"Do you want to delete this utem ?",
-    cancel:"Cancel"
+    cancel:"Cancel",
+    ended_result:"Final Result",
+    please_contact:"Please contact with us to Know more about this case "
   
    
   

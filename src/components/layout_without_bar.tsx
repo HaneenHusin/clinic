@@ -28,7 +28,7 @@ function LayoutWithoutBar ({children, ...props}: Props)  {
             });
       },  [Router])
     return (
-        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}  backgroundImage="url(/assets/images/Path_1.svg)"   {...props}>
+        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}     {...props}>
             <Skeleton startColor='brand.blueLight' endColor='brand.textBlue' isLoaded={!isLoading}>
                <main>{children}</main> 
             </Skeleton>

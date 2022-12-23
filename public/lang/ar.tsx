@@ -103,6 +103,8 @@ export default {
   answers:"الإجابات",
   delete_item:"حذف العنصر المحدد",
   delete_confirm:"هل تريد حذف العنصر المحدد ؟",
-  cancel:"إلغاء"
+  cancel:"إلغاء",
+  ended_result:"النتيجة النهائية",
+  please_contact:"يرجى التواصل معنا لمرفة المزيد حول هذه الحالة"
 
 }
