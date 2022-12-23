@@ -158,7 +158,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 											<Box key={link.id}>
 											
 <IconButton
-										aria-label={'edit'}
+										aria-label={'delete'}
 										onClick= { onDeleteOpen }
 										icon={
 											<i
@@ -170,7 +170,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>

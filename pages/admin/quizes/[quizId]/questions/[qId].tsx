@@ -145,10 +145,10 @@ const AnswerAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+								<FormattedMessage id={'text'} defaultMessage='text' />
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+								<FormattedMessage id={'points'} defaultMessage='points' />
 							</Th>
 						</Tr>
 					</Thead>
@@ -209,7 +209,7 @@ const AnswerAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>

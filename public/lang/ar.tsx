@@ -105,6 +105,9 @@ export default {
   delete_confirm:"هل تريد حذف العنصر المحدد ؟",
   cancel:"إلغاء",
   ended_result:"النتيجة النهائية",
-  please_contact:"يرجى التواصل معنا لمرفة المزيد حول هذه الحالة"
+  please_contact:"يرجى التواصل معنا لمرفة المزيد حول هذه الحالة",
+  home:"الرئيسية",
+  point:"العلامة",
+  delete:"حذف",
 
 }

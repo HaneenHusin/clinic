@@ -54,7 +54,7 @@ export default function Information(info:any) {
             </CardBody>
         </Card>
 
-            <Box pt={'4%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
+            <Box pt={'4%'} w={{ base: '100%', md: '60%', lg: '70%' }}>
             <HStack w={'full'} align="center" justify="center" pt={'4%'} dir={dirState}>
             <Box
                 as='iframe'

@@ -157,7 +157,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 								<Td>
 									
 									<IconButton
-										aria-label={'edit'}
+										aria-label={'delete'}
 										onClick= { onDeleteOpen }
 										icon={
 											<i
@@ -169,7 +169,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
@@ -203,8 +203,8 @@ const InformationAdmin: NextPageWithLayout = () => {
 					<ModalContent dir={dirState}>
 						<ModalHeader>
 							<FormattedMessage
-								id={'edit_certificate'}
-								defaultMessage='Edit certificate'
+								id={'edit_information'}
+								defaultMessage='Edit information'
 							/>
 						</ModalHeader>
 						<Formik
@@ -224,7 +224,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 												: values.value,
 									};
 									UpdateRequest(
-										`/admin/information/${id}/`,
+										`/admin/information/${infoResponse.data?.data?.results[index]?.id ?? 0}/`,
 										dataToRequestAPI,
 										refresh
 									);

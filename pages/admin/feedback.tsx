@@ -170,7 +170,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 									
 								
 									<IconButton
-										aria-label={'edit'}
+										aria-label={'delete'}
 										onClick= { onDeleteOpen }
 										icon={
 											<i
@@ -182,7 +182,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
@@ -331,7 +331,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							brief: values.brief 
 							
                                   }
-								  UpdateRequest(`/admin/feedback/${id}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/feedback/${feedbackResponse.data?.data?.results[index]?.id ?? 0}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}

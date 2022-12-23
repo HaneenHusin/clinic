@@ -184,7 +184,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 					</Thead>
 					<Tbody>
 						{articlesResponse.data?.data.results.map((item, index) => (
-							<Tr key={item.title}>
+							<Tr key={item.id}>
 								<Td w={'15%'} h={'15%'}>
 									<Galleria
 										value={
@@ -235,7 +235,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								<Td>
 									<IconButton
 										aria-label={'edit'}
-										onClick={() => openEditModal(index, item.id)}
+										onClick={() =>  openEditModal(index, item.id)}
 										icon={
 											<i
 												className='pi pi-pencil'
@@ -246,7 +246,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								</Td>
 								<Td>
 									<IconButton
-										aria-label={'edit'}
+										aria-label={'delete'}
 										onClick={onDeleteOpen}
 										icon={
 											<i
@@ -256,9 +256,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										}
 									></IconButton>
 
-									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose} >
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 											<ModalHeader>
 												<FormattedMessage
 													id={'delete_item'}
@@ -281,11 +281,11 @@ const ArticleAdmin: NextPageWithLayout = () => {
 												</Button>
 												<Button
 													colorScheme='red'
-													onClick={() => {
+													onClick={(e) => {
 														debugger
 
 														DeleteRequest(
-															`/admin/articles/${item.id}/`,
+															`/admin/articles/${articlesResponse.data?.data?.results[index]?.id ?? 0}/`,
 															refresh
 														);
 													}}
@@ -543,10 +543,11 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										keywords: (values.keywords = values.keywords),
 									};
 									UpdateRequest(
-										`/admin/articles/${id}/`,
+										`/admin/articles/${articlesResponse.data?.data?.results[index]?.id ?? 0}/`,
 										dataToRequestAPI,
 										refresh
 									);
+									
 									setSubmitting(false);
 								}, 400);
 							}}

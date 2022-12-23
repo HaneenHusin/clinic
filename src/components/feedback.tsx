@@ -22,7 +22,7 @@ export default function Feedback(galleriaService:any) {
     ];
     const [dirState] = useRecoilState(myDirectionState);
     return (
-        <Card bg={'brand.white'} w= {{ base: '45%', md: '60%', lg: '50%' }} h={{ base: '60%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
+        <Card bg={'brand.white'} w= {{ base: '80%', md: '60%', lg: '50%' }} h={{ base: '65%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
             <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
                      
                       showThumbnails={false} showIndicators changeItemOnIndicatorHover
@@ -35,7 +35,7 @@ export default function Feedback(galleriaService:any) {
 const itemTemplate = (item) => {
     return (
 
-       <HStack p={"2"} justify={'space-between'}>
+       <HStack p={"4"} justify={'space-between'}>
            <VStack    justify={'start'} align={'start'} width={"full"} >
                <Text  fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                      color={'brand.blue'}>

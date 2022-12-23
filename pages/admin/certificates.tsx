@@ -220,7 +220,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									</Td>
 									<Td>
 									<IconButton
-										aria-label={'edit'}
+										aria-label={'delete'}
 										onClick= { onDeleteOpen }
 										icon={
 											<i
@@ -232,7 +232,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent>
+										<ModalContent dir={dirState}>
 										<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
@@ -247,7 +247,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 													colorScheme='red'
 													onClick={() => {
 														DeleteRequest(
-															`/admin/certificates/${item.id}/`,
+															`/admin/certificates/${certificateResponse.data?.data?.results[index]?.id ?? 0}/`,
 															refresh
 														)
 													}}
@@ -435,7 +435,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 										photo: imageState==''?certificateResponse.data?.data.results[index].photo:imageState,
 									};
 									UpdateRequest(
-										`/admin/certificates/${id}/`,
+										`/admin/certificates/${certificateResponse.data?.data?.results[index]?.id ?? 0}/`,
 										dataToRequestAPI,
 										refresh
 									);

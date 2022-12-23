@@ -35,8 +35,10 @@ const itemGalleryTemplate = (item) => {
                        roundedTop={'full'}
                        border={'2px'}
                        borderColor={'brand.blue'}
+                       h="28%"
+                       width="40%"
                        onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
-                       alt={item.alt} style={{width:'60%' ,height:'60%', display: 'flex'}}/>
+                       alt={item.alt} />
 
     );
 }

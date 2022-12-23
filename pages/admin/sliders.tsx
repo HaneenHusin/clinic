@@ -199,7 +199,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									</Td>
 									<Td>
 										<IconButton
-											aria-label={'edit'}
+											aria-label={'delete'}
 											onClick={onDeleteOpen}
 											icon={
 												<i
@@ -211,7 +211,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 											<ModalOverlay />
-											<ModalContent>
+											<ModalContent dir={dirState}>
 												<ModalHeader>
 													<FormattedMessage
 														id={'delete_item'}
@@ -401,7 +401,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 										text: values.text,
 									};
 									UpdateRequest(
-										`/admin/sliders/${id}/`,
+										`/admin/sliders/${slidersResponse.data?.data?.results[index]?.id ?? 0}/`,
 										dataToRequestAPI,
 										refresh
 									);

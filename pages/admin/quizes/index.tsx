@@ -207,7 +207,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 
 										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 											<ModalOverlay />
-											<ModalContent>
+											<ModalContent dir={dirState}>
 												<ModalHeader>
 													<FormattedMessage
 														id={'delete_item'}
@@ -363,7 +363,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 										title: values.title,
 									};
 									UpdateRequest(
-										`/admin/quize/${id}/`,
+										`/admin/quize/${quizeResponse.data?.data?.results[index]?.id ?? 0}/`,
 										dataToRequestAPI,
 										refresh
 									);

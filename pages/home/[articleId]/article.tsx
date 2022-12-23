@@ -120,7 +120,7 @@ export default function Article() {
 						</Text>
 					</Stack>
 				</Flex>
-				<Flex flex={1}>
+				<Flex flex={1} pt="8%">
 					{/* <Image
                     alt={'Login Image'}
                     objectFit={'cover'}
@@ -152,13 +152,11 @@ const itemGalleryTemplate = (item) => {
 	return (
 		<Image
 			src={item.datafile}
-			roundedTop={'full'}
-			border={'2px'}
-			borderColor={'brand.blue'}
 			w={'100%'}
 			h={'100%'}
 			align={'center'}
 			objectFit={'cover'}
+			rounded={"xl"}
 			onError={(e) =>
 				(e.target.src =
 					'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')

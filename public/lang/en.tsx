@@ -104,9 +104,10 @@ export default {
     delete_confirm:"Do you want to delete this utem ?",
     cancel:"Cancel",
     ended_result:"Final Result",
-    please_contact:"Please contact with us to Know more about this case "
-  
-   
+    please_contact:"Please contact with us to Know more about this case ",
+    point:"point",
+    home:"Home",
+    delete:"delete",
   
 
 

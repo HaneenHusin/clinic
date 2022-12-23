@@ -32,7 +32,7 @@ export default function FooterBar() {
                     dir={dirState}
                     templateColumns={{sm: '1fr 1fr', md: '2fr 1fr 1fr 2fr'}}
                     spacing={8}>
-                    {/* <Stack  spacing={6}>
+                    <Stack  spacing={6}>
 
                         <Text fontSize={'md'}>
                             <FormattedMessage id={'social_media'}/>
@@ -50,7 +50,7 @@ export default function FooterBar() {
                                 <i className="pi pi-instagram"></i>
                             </SocialButton>
                         </Stack>
-                    </Stack> */}
+                    </Stack>
                     <Stack align={'flex-start'}  dir={dirState}>
 
                         <Link href={'#'}>  <FormattedMessage id={'contact_us_media'}/> </Link>

@@ -135,7 +135,7 @@ const Welcome: NextPageWithLayout = () => {
 						</Text>
 					</Flex>
 					<TestCard />
-					<Box pt={'10%'} w={{ base: '50%', md: '60%', lg: '50%' }}>
+					<Box pt={'10%'} w={{ base: '70%', md: '60%', lg: '50%' }}>
 					{homeResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
