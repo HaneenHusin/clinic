@@ -66,7 +66,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	};
 
 	
-	async function refresh(response:any)
+	 function refresh(response:any)
 	{
 		onClose();
 		mutate(`/admin/feedback/?page=${pageNum}&page_size=${basicRows}`)

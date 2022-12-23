@@ -64,7 +64,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/information/?page=${pageNum}&page_size=${basicRows}`)
 	}

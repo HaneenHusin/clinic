@@ -83,7 +83,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/certificates/?page=${pageNum}&page_size=${basicRows}`)
 	}

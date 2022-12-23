@@ -72,7 +72,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 		setPageNum(event.page + 1);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/quize/?page=${pageNum}&page_size=${basicRows}`);
 	}

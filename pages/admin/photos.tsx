@@ -67,7 +67,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 		PostRequest('/admin/photos/', formData, refresh);
 	};
 
-	async function refresh(response: any) {
+	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/photos/?page=${pageNum}&page_size=${basicRows}`)
 	}

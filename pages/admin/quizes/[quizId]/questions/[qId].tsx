@@ -77,7 +77,7 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	};
 
 	
-	async function refresh(response:any)
+	 function refresh(response:any)
 	{
 		onClose();
 		 mutate(
