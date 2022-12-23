@@ -86,6 +86,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/certificates/?page=${pageNum}&page_size=${basicRows}`)
+		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();

@@ -70,7 +70,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	{
 		onClose();
 		mutate(`/admin/feedback/?page=${pageNum}&page_size=${basicRows}`)
-	
+		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();

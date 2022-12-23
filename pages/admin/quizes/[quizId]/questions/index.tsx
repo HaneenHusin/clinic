@@ -84,6 +84,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		mutate(
 			`/admin/quize/${quizId}/questions/?page=${pageNum}&page_size=${basicRows}`
 		);
+		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();
