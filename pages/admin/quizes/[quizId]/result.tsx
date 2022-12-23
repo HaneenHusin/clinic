@@ -82,7 +82,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${quizId}/result/?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${quizId}/results/?page=${pageNum}&page_size=${basicRows}`
 		);
 	}
 	function openModal() {

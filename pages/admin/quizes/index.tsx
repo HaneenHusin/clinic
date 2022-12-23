@@ -74,7 +74,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/quizes/?page=${pageNum}&pageSize=${basicRows}`);
+		mutate(`/admin/quize/?page=${pageNum}&page_size=${basicRows}`);
 	}
 	function openModal() {
 		onOpen();

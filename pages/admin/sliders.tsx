@@ -82,7 +82,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${basicRows}`);
+		mutate(`/admin/sliders/?page=${pageNum}&page_size=${basicRows}`);
 	}
 	function openModal() {
 		onOpen();

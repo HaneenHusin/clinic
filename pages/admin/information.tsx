@@ -66,7 +66,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/information/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/information/?page=${pageNum}&page_size=${basicRows}`)
 	}
 	
 	function openEditModal(indexValue: number, idValue: number) {

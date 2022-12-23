@@ -69,7 +69,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/photos/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/photos/?page=${pageNum}&page_size=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();}

@@ -13,6 +13,7 @@ import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { useRouter } from 'next/router';
 import { quizeclient } from '../src/services/api';
+import { myDirectionState } from '../Atoms/localAtoms';
 
 const quize: NextPageWithLayout = () => {
    

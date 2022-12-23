@@ -88,7 +88,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/article/?page=${pageNum}&pageSize=${basicRows}`);
+		mutate(`/admin/articles/?page=${pageNum}&page_size=${basicRows}`);
 		onDeleteClose();
 	}
 
@@ -282,6 +282,8 @@ const ArticleAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														debugger
+
 														DeleteRequest(
 															`/admin/articles/${item.id}/`,
 															refresh
