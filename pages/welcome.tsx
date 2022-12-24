@@ -7,7 +7,6 @@ import {
 	VStack,
 	Image,
 } from '@chakra-ui/react';
-import { galleriaService } from '../src/services/Photos';
 import { FormattedMessage } from 'react-intl';
 import Certificates from '../src/components/certificate';
 import CustomCarousel from '../src/components/carousel';

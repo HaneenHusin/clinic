@@ -75,7 +75,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/quize/?page=${pageNum}&page_size=${basicRows}`);
-		onDeleteClose();
+		
 	}
 	function openModal() {
 		onOpen();
@@ -87,7 +87,11 @@ const QuizesAdmin: NextPageWithLayout = () => {
 		setIndex(indexValue);
 		setId(idValue);
 	}
-
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
 			{quizeResponse.isLoading == true ? (
@@ -195,7 +199,7 @@ const QuizesAdmin: NextPageWithLayout = () => {
 									<Td>
 										<IconButton
 											aria-label={'delete'}
-											onClick={onDeleteOpen}
+											onClick={() => openDeleteModal(index, item.id)}
 											icon={
 												<i
 													className='pi pi-trash'
@@ -234,8 +238,9 @@ const QuizesAdmin: NextPageWithLayout = () => {
 													<Button
 														colorScheme='red'
 														onClick={() => {
+															onDeleteClose();
 															DeleteRequest(
-																`/admin/quize/${item.id}/`,
+																`/admin/quize/${id}/`,
 																refresh
 															);
 														}}
@@ -280,7 +285,6 @@ const QuizesAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										title: values.title,
@@ -356,7 +360,6 @@ const QuizesAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										title: values.title,

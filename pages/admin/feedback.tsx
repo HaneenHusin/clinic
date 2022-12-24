@@ -70,7 +70,6 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	{
 		onClose();
 		mutate(`/admin/feedback/?page_size=${basicRows}&page=${pageNum}`)
-		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();
@@ -197,6 +196,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(`/admin/feedback/${item.id}/`,refresh)
 													}}
 												>
@@ -234,7 +234,6 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 						}}
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
-								alert(JSON.stringify(values, null, 2));
                               
                             
                             const dataToRequestAPI = {
@@ -326,7 +325,6 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
-								alert(JSON.stringify(values, null, 2));
                             
                             const dataToRequestAPI = {
 	                        title:values.title ,

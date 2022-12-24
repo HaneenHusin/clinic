@@ -36,7 +36,7 @@ export  function AppBarAdmin() {
        setDirState(getCookie("dirState"));
         const {pathname, asPath, query} = router
         router.reload();
-        await router.push({pathname, query}, asPath, {locale: localState,shallow: true})
+        await router.push({pathname, query}, asPath, {shallow: true})
 
     }
     useState(async () => {
@@ -48,18 +48,18 @@ export  function AppBarAdmin() {
 
     async function goLoginPage() {
         const {pathname, asPath, query} = router
-        await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim(),shallow: true } );
-        await router.push( '/welcome', '/welcome'  , { locale: localValue.trim(),shallow: true } );
+        await router.push( '/sign_in', '/sign_in'  , { shallow: true } );
+        // await router.push( '/welcome', '/welcome'  , { locale: localValue.trim(),shallow: true } );
         
     }
     async function goSignUpPage() {
         const { pathname, asPath, query } = router;
-		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() ,shallow: true});
+		await router.push('/sign_up', '/sign_up', {  shallow: true});
         
     }
     async function goSite() {
         const {pathname, asPath, query} = router
-        await router.push( '/sign_in','/sign_in',  { locale: localValue.trim(),shallow: true } );
+        await router.push( '/welcome','/welcome',  { shallow: true } );
        
     }
     return (
@@ -69,7 +69,7 @@ export  function AppBarAdmin() {
                 <Flex h={'24'} px={2} w={'full'} alignItems={'center'} boxShadow={'md'}>
 
                         <HStack display={'flex'} >
-                            <Image src={'/assets/images/LOGO.svg'}height={{base: '50px', md: '60px'}}/>
+                            <Image src={'/assets/images/LOGO.svg'} alt=" "height={{base: '50px', md: '60px'}}/>
                             <Text color='brand.blue'>ADHD Center</Text>
                         </HStack>
 
@@ -80,7 +80,7 @@ export  function AppBarAdmin() {
                <Button variant='outline' colorScheme='brand'
                                         display={{base: 'none', md: 'flex'}}
                                         onClick={() => goSite()}
-                                        leftIcon={<Image src={'/assets/images/SIGN_IN.svg'} h={'20px'}></Image>}><FormattedMessage  id={'to_site'} defaultMessage="to site"/></Button>
+                                        leftIcon={<Image src={'/assets/images/SIGN_IN.svg'} alt="" h={'20px'}></Image>}><FormattedMessage  id={'to_site'} defaultMessage="to site"/></Button>
                     
                     <Box p={'5px'}>
                         {/* <Menu>
@@ -114,12 +114,12 @@ export  function AppBarAdmin() {
                         <Stack as={'nav'} spacing={4}>
                             <Button variant='outline' colorScheme='brand' m={"10px"}
                                     onClick={() => goLoginPage()}
-                                    leftIcon={<Image src={'assets/images/SIGN_IN.svg'}
+                                    leftIcon={<Image src={'assets/images/SIGN_IN.svg'} alt=''
                                                      h={'30px'}></Image>}><FormattedMessage
                                 id={'login'} defaultMessage="Login"/></Button>
 
                             <Button variant='primary' m={"10px"} onClick={() => goSignUpPage()}
-                                    leftIcon={<Image src={'assets/images/SIGN_UP.svg'}   h={'30px'}></Image>}>
+                                    leftIcon={<Image src={'assets/images/SIGN_UP.svg'} alt=""  h={'30px'}></Image>}>
                                         <FormattedMessage id={'join_us'} defaultMessage="Join us"/></Button>
                         </Stack>
 
@@ -160,12 +160,12 @@ export function  AppBar() {
 
     async function goLoginPage() {
         const {pathname, asPath, query} = router
-        await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim(),shallow: true } );
+        await router.push( '/sign_in', '/sign_in'  , { shallow: true } );
         
     }
     async function goSignUpPage() {
         const {pathname, asPath, query} = router
-        await router.push('/sign_up', '/sign_up',  { locale: localValue.trim(),shallow: true} );
+        await router.push('/sign_up', '/sign_up',  { shallow: true} );
 
     }
     return (

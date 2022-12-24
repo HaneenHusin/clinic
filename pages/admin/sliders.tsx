@@ -83,7 +83,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/sliders/?page=${pageNum}&page_size=${basicRows}`);
-		onDeleteClose();
+		
 	}
 	function openModal() {
 		onOpen();
@@ -242,6 +242,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 													<Button
 														colorScheme='red'
 														onClick={() => {
+															onDeleteClose();
 															DeleteRequest(
 																`/admin/sliders/${id}/`,
 																refresh
@@ -288,7 +289,6 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										text: values.text,
@@ -394,7 +394,6 @@ const SlidersAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										photo:

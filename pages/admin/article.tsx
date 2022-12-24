@@ -89,7 +89,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	async function refresh(response: any) {
 		onClose();
 		mutate(`/admin/articles/?page=${pageNum}&page_size=${basicRows}`);
-		onDeleteClose();
+		
 	}
 
 	function openModal() {
@@ -284,7 +284,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={(e) => {
-
+														onDeleteClose();
 														DeleteRequest(
 															`/admin/articles/${id}/`,
 															refresh
@@ -351,7 +351,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 									const dataToRequestAPI = {
 										title: values.title,
 										slug: values.sluge,
@@ -535,7 +534,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										title: (values.title = values.title),

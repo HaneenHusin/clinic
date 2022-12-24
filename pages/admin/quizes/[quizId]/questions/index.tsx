@@ -95,7 +95,11 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		setIndex(indexValue);
 		setIdQuuestion(idQuestion);
 	}
-
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setIdQuuestion(idValue);
+	  }
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
 		
@@ -199,7 +203,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 <IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= {()=>  openDeleteModal(index, item.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -223,8 +227,9 @@ const QuestionAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(
-															`/admin/quize/${quizId}/questions/${item.id}/`,
+															`/admin/quize/${quizId}/questions/${idQuestion}/`,
 															refresh
 														)
 													}}
@@ -266,7 +271,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										text: values.text,
@@ -361,7 +365,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										text: values.text,

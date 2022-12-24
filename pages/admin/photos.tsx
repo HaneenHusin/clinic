@@ -71,7 +71,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/photos/?page_size=${basicRows}&page=${pageNum}`)
-		onDeleteClose();
+	
 	}
 	function openModal() {
 		onOpen();}
@@ -187,6 +187,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(`/admin/photos/${id}/`, refresh)
 													}}
 												>

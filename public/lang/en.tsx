@@ -108,7 +108,8 @@ export default {
     point:"point",
     home:"Home",
     delete:"delete",
-  
+    points:"Points",
+    show_result:"سhow result"
 
 
 

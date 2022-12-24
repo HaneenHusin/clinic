@@ -108,6 +108,8 @@ export default {
   please_contact:"يرجى التواصل معنا لمرفة المزيد حول هذه الحالة",
   home:"الرئيسية",
   point:"العلامة",
+  points:"النقاط",
   delete:"حذف",
+  show_result:"إظهار النتيجة"
 
 }

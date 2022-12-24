@@ -249,6 +249,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(
 															`/admin/certificates/${id}/`,
 															refresh
@@ -302,7 +303,6 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										title: values.title,
@@ -429,8 +429,6 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
-
 									const dataToRequestAPI = {
 										title: values.title,
 										text: values.text,

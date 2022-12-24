@@ -84,7 +84,6 @@ const ResultsAdmin: NextPageWithLayout = () => {
 		mutate(
 			`/admin/quize/${quizId}/results/?page=${pageNum}&page_size=${basicRows}`
 		);
-		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();
@@ -92,16 +91,18 @@ const ResultsAdmin: NextPageWithLayout = () => {
 	}
 	function openEditModal(
 		indexValue: number,
-		idResult: number,
-		idQuize: number
+		idResult: number
 	) {
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setIdResult(idResult);
-		setIdQuize(idQuize);
 	}
-
+	function openDeleteModal(indexValue: number, idValue: number ) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setIdResult(idValue);
+	  }
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
 			{resultResponse.isLoading == true ? (
@@ -199,7 +200,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 									<Td>
 										<IconButton
 											aria-label={'edit'}
-											onClick={() => openEditModal(index, item.id, quizId)}
+											onClick={() => openEditModal(index, item.id)}
 											icon={
 												<i
 													className='pi pi-pencil'
@@ -213,7 +214,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 
 <IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= { () => openDeleteModal(index, item.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -237,8 +238,9 @@ const ResultsAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(
-															`/admin/quize/${quizId}/results/${item.id}/`,
+															`/admin/quize/${quizId}/results/${idResult}/`,
 															refresh
 														)
 													}}
@@ -297,7 +299,6 @@ const ResultsAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										text: values.text,
@@ -423,7 +424,6 @@ const ResultsAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										text: values.text,

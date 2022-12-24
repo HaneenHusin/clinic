@@ -12,6 +12,7 @@ import {
 	Flex,
 	Heading,
 	HStack,
+	SimpleGrid,
 	Stack,
 	Text,
 	useDisclosure,
@@ -35,6 +36,7 @@ import {
 } from '@chakra-ui/react';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
+import router from 'next/router';
 
 const quize: NextPageWithLayout = () => {
 	const quizeResponse = quizeclient(1, 10);
@@ -47,7 +49,11 @@ const quize: NextPageWithLayout = () => {
 	const [progressState, setProgressState] = useRecoilState(myProgressState);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	let result;
-
+	async function refresh() {
+		onClose();
+		await router.push( '/quize','/quize',  { shallow: true } );
+		
+	}
 	function activeSteps(val: number, point: number) {
 		setindexState(indexState + 1);
 		setResultState(resultState + point);
@@ -178,15 +184,16 @@ const quize: NextPageWithLayout = () => {
 										align='center'
 										justify='center'
 									>
+										<SimpleGrid columns={2} spacingX='40px' spacingY='20px'>
 										{quizeResponse.data?.data?.results[0]?.questions_list[
 											indexState
 										]?.answers_list.map((item: any, index: number) => (
+											
 											<Card
 												key={item.id}
 												p={'3'}
-												h={'50%'}
+												h="70"
 												rounded={'xl'}
-												width={'full'}
 												border={'2px'}
 												borderColor={'brand.blue'}
 												cursor={'pointer'}
@@ -201,15 +208,19 @@ const quize: NextPageWithLayout = () => {
 													)
 												}
 											>
+												
 												<Text
-													fontSize={['sm', 'md', 'lg', 'xl']}
+													fontSize={['xs', 'md', 'lg', 'xl']}
 													fontWeight={'normal'}
 													color={'brand.blue'}
-												>
+													flexWrap='wrap'
+												> 
 													{item.text}
 												</Text>
 											</Card>
+											
 										))}
+										</SimpleGrid>
 									</HStack>
 									<Center>
 										<Button
@@ -222,7 +233,7 @@ const quize: NextPageWithLayout = () => {
 												fontSize={['sm', 'md', 'lg', 'xl']}
 												fontWeight={'normal'}
 											>
-												<FormattedMessage id={'show result'} />
+												<FormattedMessage id={'show_result'} />
 											</Text>
 										</Button>
 									</Center>
@@ -235,7 +246,7 @@ const quize: NextPageWithLayout = () => {
 						value={progressState}
 						colorScheme='brand.blue'
 					/>
-					<Modal isOpen={isOpen} onClose={onClose} size={'full'}>
+					<Modal isOpen={isOpen} onClose={()=>refresh()} size={'full'}>
 						<ModalOverlay />
 						<ModalContent>
 							<ModalCloseButton />
@@ -254,10 +265,9 @@ const quize: NextPageWithLayout = () => {
 											borderColor={'brand.gray'}
 										>
 											<Text
-												p={'20'}
-												fontSize={'l'}
+											fontSize={['xs', 'sm', 'lg', 'xl']}
 												textColor={'brand.blue'}
-												fontWeight={600}
+												width="500"
 											>
 												{textResult}
 											</Text>

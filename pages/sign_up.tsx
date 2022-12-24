@@ -105,7 +105,6 @@ const SignUp: NextPageWithLayout = () => {
 						}}
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
-								alert(JSON.stringify(values, null, 2));
 								const dataToRequestAPI = {
 									username: values.username,
 									password: values.password,

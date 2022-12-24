@@ -68,7 +68,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(`/admin/information/?page=${pageNum}&page_size=${basicRows}`)
-		onDeleteClose();
+	
 	}
 	
 	function openEditModal(indexValue: number, idValue: number) {
@@ -186,6 +186,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
+														onDeleteClose();
 														DeleteRequest(`/admin/information/${item.id}/`, refresh)
 													}}
 												>
@@ -218,7 +219,6 @@ const InformationAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-									alert(JSON.stringify(values, null, 2));
 
 									const dataToRequestAPI = {
 										name: infoResponse.data?.data.results[index].name,
