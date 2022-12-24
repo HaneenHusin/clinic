@@ -57,7 +57,7 @@ export function RelatedNewsClinic(item) {
                     h={"60%"}
                     width="6xl"
                 />
-                <Stack mt='6' spacing='3'  dir={dirState}>
+                <Stack mt='6' spacing='3'  dir={dirState}color={"brand.gray"} fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
                     <Text>
                     {parse(`${item.title}`)}
                     </Text>

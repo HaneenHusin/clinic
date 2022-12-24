@@ -69,7 +69,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	 function refresh(response:any)
 	{
 		onClose();
-		mutate(`/admin/feedback/?page_size=${basicRows}&page=${pageNum}`)
+		mutate(`/admin/feedback/?page=${pageNum}&pageSize=${basicRows}`)
 	}
 	function openModal() {
 		onOpen();
@@ -197,7 +197,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 													colorScheme='red'
 													onClick={() => {
 														onDeleteClose();
-														DeleteRequest(`/admin/feedback/${item.id}/`,refresh)
+														DeleteRequest(`/admin/feedback/${id}/`,refresh)
 													}}
 												>
 													<FormattedMessage id={'delete'} defaultMessage='delete' />

@@ -70,7 +70,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/photos/?page_size=${basicRows}&page=${pageNum}`)
+		mutate(`/admin/photos/?pageSize=${basicRows}&page=${pageNum}`)
 	
 	}
 	function openModal() {
@@ -259,7 +259,6 @@ const PhotosAdmin: NextPageWithLayout = () => {
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={photosResponse.data?.data.count}
-				rowsPerPageOptions={[10, 20, 30]}
 				onPageChange={onBasicPageChange}
 			></Paginator>
 		</Stack>

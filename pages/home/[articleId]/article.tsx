@@ -46,6 +46,16 @@ export default function Article() {
 	});
 	return (
 		<Box dir={dirState}>
+					{articleResult.isLoading == true ? (
+				<div id='globalLoader'>
+					<Image
+						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
+						alt=''
+					/>
+				</div>
+			) : (
+				<></>
+			)}
 			<Box
 				width={'full'}
 				p={'4'}

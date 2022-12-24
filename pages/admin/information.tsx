@@ -67,7 +67,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/information/?page=${pageNum}&page_size=${basicRows}`)
+		mutate(`/admin/information/?page=${pageNum}&pageSize=${basicRows}`)
 	
 	}
 	
@@ -187,7 +187,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 													colorScheme='red'
 													onClick={() => {
 														onDeleteClose();
-														DeleteRequest(`/admin/information/${item.id}/`, refresh)
+														DeleteRequest(`/admin/information/${id}/`, refresh)
 													}}
 												>
 													<FormattedMessage id={'delete'} defaultMessage='delete' />

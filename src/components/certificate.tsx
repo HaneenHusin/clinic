@@ -1,9 +1,9 @@
 import {Box, Image, CardBody, CardHeader, Center, Heading, SimpleGrid, Stack, VStack} from "@chakra-ui/react";
 import {Card, CardFooter} from "@chakra-ui/card";
-import { certificateList } from "../services/api";
+import { certificateclient } from "../services/api";
 
 export default function Certificates() {
-    const certificateResponse = certificateList(1, 10);
+    const certificateResponse = certificateclient(1, 10);
     return (
         <SimpleGrid spacing={14} columns={[2, null,3]}  w= {{ base: '70%', md: '70%', lg: '60%' }} m={"4"}>
             {certificateResponse.isLoading == true ? (

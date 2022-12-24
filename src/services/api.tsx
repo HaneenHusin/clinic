@@ -12,6 +12,7 @@ import { FeedbackList } from "../types/feedback";
 import { QuizeList } from "../types/quize";
 import { QuestionList } from "../types/question";
 import { AnswerList } from "../types/answer";
+import { ResultsListAdmin } from "../types/result";
 
 
 axios.defaults.baseURL = "https://adhd.nasayimhalab.net/api";
@@ -49,6 +50,14 @@ export function articlesclient(page:number, pageSize:number){
 }
 
 export function certificateList(page:number, pageSize:number){
+    const { data, error } = useSWR<CertificateList, Error>(`/admin/certificates/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
+export function certificateclient(page:number, pageSize:number){
     const { data, error } = useSWR<CertificateList, Error>(`/certificates/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
@@ -186,6 +195,7 @@ export function SignRequest(
   ) {
    axios.delete(`${endpoint}`)
    .then((response) => {
+    onSuccess(response.data.data)
        ToastSuccessShow("نجحت العملية")
    })
    .catch(error => {
