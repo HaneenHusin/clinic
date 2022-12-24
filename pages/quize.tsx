@@ -51,6 +51,7 @@ const quize: NextPageWithLayout = () => {
 	let result;
 	async function refresh() {
 		onClose();
+		setProgressState(0);
 		await router.push( '/quize','/quize',  { shallow: true } );
 		
 	}
@@ -68,6 +69,7 @@ const quize: NextPageWithLayout = () => {
 				);
 			}
 			setTextResult(result?.text || '');
+			
 		}
 	}
 	return (
@@ -246,9 +248,9 @@ const quize: NextPageWithLayout = () => {
 						value={progressState}
 						colorScheme='brand.blue'
 					/>
-					<Modal isOpen={isOpen} onClose={()=>refresh()} size={'full'}>
+					<Modal isOpen={isOpen} onClose={()=>refresh()} size={'full'} >
 						<ModalOverlay />
-						<ModalContent>
+						<ModalContent 	bg={'brand.blueLight'} dir={dirState}>
 							<ModalCloseButton />
 							<ModalBody>
 								<Box textAlign='center' py={10} px={6}>
@@ -263,11 +265,14 @@ const quize: NextPageWithLayout = () => {
 											rounded={'2xl'}
 											border={'2px'}
 											borderColor={'brand.gray'}
+											h="100"
+											justifyContent={"center"}
+											align={"center"}
 										>
 											<Text
 											fontSize={['xs', 'sm', 'lg', 'xl']}
 												textColor={'brand.blue'}
-												width="500"
+												fontWeight={"bold"}
 											>
 												{textResult}
 											</Text>

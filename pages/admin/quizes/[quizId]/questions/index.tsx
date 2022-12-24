@@ -81,7 +81,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${quizId}/questions/?page=${pageNum}&page_size=${basicRows}`
+			`/admin/quize/${quizId}/questions/?page=${pageNum}&pageSize=${basicRows}`
 		);
 		onDeleteClose();
 	}

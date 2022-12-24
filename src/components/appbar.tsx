@@ -221,12 +221,12 @@ export function  AppBar() {
                                         borderRadius='full'
                                         src='/assets/images/AR.svg'
                                         alt='language'
-                                        mr='12px'
+                                        m='12px'
                                     />
                                     <span color={'brand.textGray'}>AR</span>
                                 </MenuItem>
                                 <MenuItem minH='40px' onClick={() => setDirection("en")}>
-                                    <i className="pi pi-globe" style={{'fontSize': '2em', 'marginRight': '12px'}}></i>
+                                    <i className="pi pi-globe" style={{'fontSize': '2em', 'margin': '12px'}}></i>
                                     <span className={'ml-12'} color={'brand.textGray'}>EN</span>
                                 </MenuItem>
                             </MenuList>
