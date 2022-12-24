@@ -36,3 +36,8 @@ img.flag {
   align-items: center;
   display: flex;
 }
+
+.ui-galleria-item {
+  width: 100%;
+  height: 100%;
+}

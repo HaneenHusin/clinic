@@ -19,6 +19,8 @@ import { articlesclient } from '../../../src/services/api';
 import { Galleria } from 'primereact/galleria';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
+import { useRecoilState } from 'recoil';
+import { myDirectionState } from '../../../Atoms/localAtoms';
 
 export default function Article() {
 	const responsiveOptions = [
@@ -35,7 +37,7 @@ export default function Article() {
 			numVisible: 1,
 		},
 	];
-
+	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const router = useRouter();
 	const { articleId } = router.query;
 	let articleResult = articlesclient(1, 10);
@@ -43,7 +45,7 @@ export default function Article() {
 		return obj.id === Number(articleId);
 	});
 	return (
-		<Box>
+		<Box dir={dirState}>
 			<Box
 				width={'full'}
 				p={'4'}
@@ -108,7 +110,7 @@ export default function Article() {
 									zIndex: -1,
 								}}
 							>
-								Freelance
+								ADHD Center
 							</Text>
 							<br />
 							<Text color={'blue.400'} as={'span'}>
@@ -152,8 +154,6 @@ const itemGalleryTemplate = (item) => {
 	return (
 		<Image
 			src={item.datafile}
-			w={'100%'}
-			h={'100%'}
 			align={'center'}
 			objectFit={'cover'}
 			rounded={"xl"}
@@ -162,7 +162,7 @@ const itemGalleryTemplate = (item) => {
 					'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 			}
 			alt={''}
-			style={{ width: '60%', height: '60%', display: 'flex' }}
+			style={{ width: '100%', height: '100%', display: 'block' }}
 		/>
 	);
 };

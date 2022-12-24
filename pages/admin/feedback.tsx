@@ -69,22 +69,24 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	 function refresh(response:any)
 	{
 		onClose();
-		mutate(`/admin/feedback/?page=${pageNum}&page_size=${basicRows}`)
+		mutate(`/admin/feedback/?page_size=${basicRows}&page=${pageNum}`)
 		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('feedbackResponse' + feedbackResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
-		console.log("index...."+indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setId(idValue)
 	}
-	
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
 			{feedbackResponse.isLoading == true ? (
@@ -171,7 +173,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 								
 									<IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= { () => openDeleteModal(index, item.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -320,7 +322,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 								defaultMessage='Edit feedback'
 							/>
 						</ModalHeader>
-						<Formik initialValues={{  title:  feedbackResponse.data?.data.results[index].title,brief: feedbackResponse.data?.data.results[index].brief }}
+						<Formik initialValues={{  title:  feedbackResponse.data?.data?.results[index]?.title,brief: feedbackResponse.data?.data?.results[index]?.brief }}
 						
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
@@ -331,7 +333,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							brief: values.brief 
 							
                                   }
-								  UpdateRequest(`/admin/feedback/${feedbackResponse.data?.data?.results[index]?.id ?? 0}/`,dataToRequestAPI,refresh)
+								  UpdateRequest(`/admin/feedback/${id}/`,dataToRequestAPI,refresh)
 								setSubmitting(false);
 							}, 400);
 						}}

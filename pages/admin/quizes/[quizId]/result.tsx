@@ -95,7 +95,6 @@ const ResultsAdmin: NextPageWithLayout = () => {
 		idResult: number,
 		idQuize: number
 	) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);

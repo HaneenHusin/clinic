@@ -29,7 +29,6 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 		setBasicRows(event.rows);
 	};
 	function onImageSelect(e: any, id: number) {
-		debugger;
 		if (isMulti == true) {
 			let array = [...listImageState];
 			if (e.target.checked == true) {
@@ -41,14 +40,13 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 			}
 		} else {
 			if (e.target.checked == true) {
+				setimageState("");
 				setimageState(id);
 			} else {
-				setimageState(id);
+				setimageState("");
 			}
 		}
 
-		// setimageState(imageState=> [...imageState, id]);
-		console.log('imageState' + imageState);
 	}
 	return (
 		<Box>

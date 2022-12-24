@@ -96,8 +96,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		onOpen();
 		setIsEdit(true);
 		setIsImageModal(true);
-		console.log('articlesResponse' + articlesResponse.data);
-		console.log('index..' + index);
 	}
 
 	function openEditModal(indexValue: number, idValue: number) {
@@ -109,7 +107,11 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const dialogFuncMap = {
 		displayMaximizable: setDisplayMaximizable,
 	};
-
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -247,7 +249,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								<Td>
 									<IconButton
 										aria-label={'delete'}
-										onClick={onDeleteOpen}
+										onClick={() => openDeleteModal(index, item.id)}
 										icon={
 											<i
 												className='pi pi-trash'
@@ -282,10 +284,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={(e) => {
-														debugger
 
 														DeleteRequest(
-															`/admin/articles/${articlesResponse.data?.data?.results[index]?.id ?? 0}/`,
+															`/admin/articles/${id}/`,
 															refresh
 														);
 													}}
@@ -543,7 +544,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										keywords: (values.keywords = values.keywords),
 									};
 									UpdateRequest(
-										`/admin/articles/${articlesResponse.data?.data?.results[index]?.id ?? 0}/`,
+										`/admin/articles/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);

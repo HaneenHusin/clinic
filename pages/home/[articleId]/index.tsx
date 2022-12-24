@@ -44,9 +44,6 @@ const Welcome: NextPageWithLayout = () => {
 	useState(async () => {
 		setLocalState(getCookie('language'));
 		setDirState(localState == 'ar' ? 'rtl' : 'ltr');
-		console.log("welcome dirr " + dirState)
-		console.log("welcome localState " + localState)
-		console.log("homeResponse"+homeResponse.data?.data)
 		
 	});
 

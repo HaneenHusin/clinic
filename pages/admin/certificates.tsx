@@ -92,15 +92,18 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 		onOpen();
 		setIsEdit(true);
 		setIsImageModal(true);
-		console.log('articlesResponse' + certificateResponse.data);
 	}
 	function openEditModal(indexValue: number, idValue: number) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setId(idValue);
 	}
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -221,7 +224,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									<Td>
 									<IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= { () => openDeleteModal(index, item.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -247,7 +250,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 													colorScheme='red'
 													onClick={() => {
 														DeleteRequest(
-															`/admin/certificates/${certificateResponse.data?.data?.results[index]?.id ?? 0}/`,
+															`/admin/certificates/${id}/`,
 															refresh
 														)
 													}}
@@ -300,7 +303,6 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 									alert(JSON.stringify(values, null, 2));
-									debugger;
 
 									const dataToRequestAPI = {
 										title: values.title,
@@ -421,8 +423,8 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								title: certificateResponse.data?.data.results[index].title,
-								text: certificateResponse.data?.data.results[index].text,
+								title: certificateResponse.data?.data?.results[index]?.title,
+								text: certificateResponse.data?.data?.results[index]?.text,
 								photo:  '',
 							}}
 							onSubmit={(values, { setSubmitting }) => {
@@ -432,10 +434,10 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									const dataToRequestAPI = {
 										title: values.title,
 										text: values.text,
-										photo: imageState==''?certificateResponse.data?.data.results[index].photo:imageState,
+										photo: imageState==''?certificateResponse.data?.data?.results[index]?.photo:imageState,
 									};
 									UpdateRequest(
-										`/admin/certificates/${certificateResponse.data?.data?.results[index]?.id ?? 0}/`,
+										`/admin/certificates/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);

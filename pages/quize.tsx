@@ -17,30 +17,22 @@ import {
 	useDisclosure,
 	VStack,
 } from '@chakra-ui/react';
-import { Carousel } from 'primereact/carousel';
-import { galleriaService } from '../src/services/Photos';
 import { myProgressState } from '../Atoms/progressAtom';
 import { Card } from '@chakra-ui/card';
 import { FormattedMessage } from 'react-intl';
 import { ProgressBar } from 'primereact/progressbar';
-import StepsEnd from './result';
 import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
-import router, { useRouter } from 'next/router';
 import { quizeclient } from '../src/services/api';
-import { Steps } from 'primereact/steps';
 import { myDirectionState } from '../Atoms/localAtoms';
 import { myStepsResultState } from '../Atoms/stepsResultAtom';
 import {
 	Modal,
 	ModalOverlay,
 	ModalContent,
-	ModalHeader,
-	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
 } from '@chakra-ui/react';
-import StepsResult from './result';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 
@@ -59,13 +51,9 @@ const quize: NextPageWithLayout = () => {
 	function activeSteps(val: number, point: number) {
 		setindexState(indexState + 1);
 		setResultState(resultState + point);
-		console.log('point...........' + resultState);
-		console.log('progressState...........' + progressState);
 		setProgressState(progressState + val);
 		if (progressState == 90) {
 			setDisableButton(true);
-			debugger;
-			console.log('StepsEnd  ' + resultState);
 			{
 				result = quizeResponse.data?.data?.results[0]?.results_list.find(
 					(obj: any) => {
@@ -73,17 +61,13 @@ const quize: NextPageWithLayout = () => {
 					}
 				);
 			}
-			console.log('result....' + result?.text);
 			setTextResult(result?.text || '');
 		}
 	}
 	return (
 		<Stack
 			dir={dirState}
-			w={'full'}
-			h={'full'}
-			bg={'brand.white'}
-			backgroundSize={'cover'}
+			backgroundImage="url(/assets/images/Path_1.svg)"  
 		>
 			{quizeResponse.isLoading ? (
 				<div id='globalLoader'>
@@ -142,7 +126,7 @@ const quize: NextPageWithLayout = () => {
 						</HStack>
 					</Box>
 					<VStack>
-						<Image src={'/assets/images/Clinic.svg'} alt=''></Image>
+						<Image src={'/assets/images/quize.png'} width={"400px"} alt=''></Image>
 
 						<Card
 							w={['50%', '78%', '90%', '70%']}

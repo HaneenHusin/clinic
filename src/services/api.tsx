@@ -137,14 +137,12 @@ export function SignRequest(
   ) {
    axios.post(`${endpoint}`, Data)
    .then((response) => {
-       console.log(response.data);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.access}`
        onSuccess(response.data.data)
-       ToastSuccessShow("Success !")
+       ToastSuccessShow("نجحت العملية ")
    })
    .catch(error => {
-    ToastErrorShow("Please try agin ,Faild process")
-       console.log(error)
+    ToastErrorShow("فشلت العملية , الرجاء المحاولة مجدداً")
    })
 
   }
@@ -158,13 +156,11 @@ export function SignRequest(
   ) {
    axios.post(`${endpoint}`, Data )
    .then((response) => {
-       console.log(response.data);
        onSuccess(response.data.data)
-       ToastSuccessShow("Success !")
+       ToastSuccessShow("نجحت العملية")
    })
    .catch(error => {
-    ToastErrorShow("Please try agin ,Faild process")
-       console.log(error)
+    ToastErrorShow("فشلت العملية , الرجاء المحاولة مجدداً")
    })
 
   }
@@ -175,13 +171,11 @@ export function SignRequest(
   ) {
    axios.put(`${endpoint}`, Data)
    .then((response) => {
-       console.log(response.data);
        onSuccess(response.data.data)
-       ToastSuccessShow("Success !")
+       ToastSuccessShow("نجحت العملية")
    })
    .catch(error => {
-    ToastErrorShow("Please try agin ,Faild process")
-       console.log(error)
+    ToastErrorShow("فشلت العملية , الرجاء المحاولة مجدداً")
    })
 
   }
@@ -192,13 +186,10 @@ export function SignRequest(
   ) {
    axios.delete(`${endpoint}`)
    .then((response) => {
-       console.log(response.data);
-       onSuccess(response.data.data)
-       ToastSuccessShow("Success !")
+       ToastSuccessShow("نجحت العملية")
    })
    .catch(error => {
-    ToastErrorShow("Please try agin ,Faild process")
-       console.log(error)
+    ToastErrorShow("فشلت العملية , الرجاء المحاولة مجدداً")
    })
 
   }

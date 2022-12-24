@@ -73,7 +73,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	let questionResponse = questionsList(pageNum, basicRows, quizId);
 
 	const onBasicPageChange = (event) => {
-		debugger;
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		setPageNum(event.page + 1);
@@ -91,7 +90,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		setIsEdit(true);
 	}
 	function openEditModal(indexValue: number, idQuestion: number) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);

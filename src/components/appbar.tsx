@@ -33,7 +33,6 @@ export  function AppBarAdmin() {
     async function setDirection(lang: string) {
         setCookie("language", lang);
         setAppBarState(localState == "ar" ? "AR" : "EN")
-        console.log('langButton      ' + appBarState)
        setDirState(getCookie("dirState"));
         const {pathname, asPath, query} = router
         router.reload();
@@ -44,20 +43,16 @@ export  function AppBarAdmin() {
         setLocalState( getCookie("language"));
         setDirState(getCookie("dirState"));
         setAppBarState(localState == "ar" ? "AR" : "EN");
-        console.log("dirrrrrr2 " + dirState)
-        console.log("localState " + localState)
 
     })
 
     async function goLoginPage() {
-        debugger
         const {pathname, asPath, query} = router
         await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim(),shallow: true } );
         await router.push( '/welcome', '/welcome'  , { locale: localValue.trim(),shallow: true } );
         
     }
     async function goSignUpPage() {
-        debugger
         const { pathname, asPath, query } = router;
 		await router.push('/sign_up', '/sign_up', { locale: localValue.trim() ,shallow: true});
         
@@ -150,7 +145,6 @@ export function  AppBar() {
         setCookie("language", lang);
         setCookie("dirState", lang  === "ar"?"rtl":"ltr");
         setAppBarState(localState == "ar" ? "AR" : "EN")
-        console.log('langButton      ' + appBarState)
         setDirState(lang  === "ar"?"rtl":"ltr")
         const {pathname, asPath, query} = router
         router.reload();
@@ -161,13 +155,10 @@ export function  AppBar() {
         setLocalState( getCookie("language"));
         setDirState(getCookie("dirState"));
         setAppBarState(localState == "ar" ? "AR" : "EN");
-        console.log("dirrrrrr2 " + dirState)
-        console.log("localState " + localState)
 
     })
 
     async function goLoginPage() {
-        debugger
         const {pathname, asPath, query} = router
         await router.push( '/sign_in', '/sign_in'  , { locale: localValue.trim(),shallow: true } );
         

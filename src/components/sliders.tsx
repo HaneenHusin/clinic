@@ -1,7 +1,7 @@
 
 import {Galleria} from "primereact/galleria";
 import {Card, CardBody, CardHeader} from "@chakra-ui/card";
-import {Heading, Image} from "@chakra-ui/react";
+import {Box, Text, Image, Heading} from "@chakra-ui/react";
 
 export default function Sliders(galleriaService:any){
     const responsiveOptions = [
@@ -20,9 +20,11 @@ export default function Sliders(galleriaService:any){
     ];
 
     return (
+       
         <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
                   
-                  showThumbnails={false} showIndicators changeItemOnIndicatorHover showIndicatorsOnItem
+        style={{ maxWidth: '100%' ,height:'60%'}}
+        showThumbnails={false} showIndicators 
                   item={itemGalleryTemplate}/>
     );
 }
@@ -30,15 +32,32 @@ const itemGalleryTemplate = (item) => {
 
     return (
 
-       
-                <Image src={item.photo_model.datafile}
-                       roundedTop={'full'}
-                       border={'2px'}
-                       borderColor={'brand.blue'}
-                       h="28%"
-                       width="40%"
-                       onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
-                       alt={item.alt} />
+//        <Box>
+//         <Text>
+//        { item.photo_model.Text}
+//         </Text>
+//  <Image src={item.photo_model.datafile}
+//                        roundedTop={'full'}
+//                        border={'2px'}
+//                        borderColor={'brand.blue'}
+//                       style={{ width: '100%',height:'60%', display: 'block' }}
+//                        onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
+//                        alt={item.alt} />
+//        </Box>
+<Box  bg={'brand.white'} w={'100%'}  align="center" justify="center" p={'3px'} boxShadow={'l'} roundedTop={'xl'} >
+
+    <Heading  p={"10"} align="center" justify="center"   color={'brand.textGray'} fontSize={['sm', 'md', '2xl', '3xl']}> {item.text}</Heading>
+
+    <Image src={item.photo_model.datafile}
+           roundedTop={'full'}
+           border={'2px'}
+           borderColor={'brand.blue'}
+          
+           onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}
+           alt={item.alt} style={{width: '100%', display: 'block'}}/>
+
+</Box>
+               
 
     );
 }

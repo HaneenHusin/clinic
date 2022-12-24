@@ -62,7 +62,6 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	const { quizId } = router.query;
 	
 	let answerResponse = answerList(pageNum, basicRows,quizId,qId,);
-	console.log(" router.query"+ qId)
 	
 	const {
 		isOpen: isDeleteOpen,
@@ -88,10 +87,8 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('answerResponse' + answerResponse.data);
 	}
 	function openEditModal(indexValue:number,idValue:number) {
-		console.log("index...."+indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);

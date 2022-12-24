@@ -1,7 +1,7 @@
 import {Carousel} from "primereact/carousel";
 import {galleriaService} from "../services/Photos";
 import {Card} from "@chakra-ui/card";
-import {CardBody, Stack, Image, Text, Button, IconButton, HStack} from "@chakra-ui/react";
+import {CardBody, Stack, Image, Text, Button, IconButton, HStack, Flex, Box} from "@chakra-ui/react";
 import {FormattedMessage} from "react-intl";
 import {useRecoilState} from "recoil";
 import { myDirectionState } from "../../Atoms/localAtoms";
@@ -28,7 +28,6 @@ const responsiveOptions = [
 
 export default function CustomCarousel(galleriaService:any) {
     const [dirState] = useRecoilState(myDirectionState);  
-    console.log("galleriaService.galleriaService"+galleriaService.galleriaService)
         return (
           
             <div className="card">
@@ -44,23 +43,23 @@ export function RelatedNewsClinic(item) {
     const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
     async function goArticlePage(item:Number) {
-        debugger
         router.push( `/home/${item}/article`,  undefined, { shallow: true})
          
        
     }
      return (
-        <Card w={'80%'} h={'full'} bg={'brand.blue'} rounded={'xl'} dir={dirState}>
+        <Card w={'70%'}  bg={'brand.blue'} rounded={'3xl'} dir={dirState}>
             <CardBody  dir={dirState}>
                 <Image
                     src={item?.photos_list[0]?.datafile}
                     alt=''
                     borderRadius='lg'
                     h={"60%"}
+                    width="6xl"
                 />
                 <Stack mt='6' spacing='3'  dir={dirState}>
                     <Text>
-                    {parse(`${item.body}`)}
+                    {parse(`${item.title}`)}
                     </Text>
                     <HStack onClick={() => goArticlePage(item.id)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
@@ -80,6 +79,7 @@ export function RelatedNewsClinic(item) {
                 </Stack>
             </CardBody>
         </Card>
+      
 
     )
 

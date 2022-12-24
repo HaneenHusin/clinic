@@ -56,7 +56,6 @@ export default function TestCard(){
             <Modal isOpen={isOpen} onClose={onClose} >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Modal Title</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <VStack dir={dirState}>
@@ -71,7 +70,7 @@ export default function TestCard(){
 
                     <ModalFooter>
                         <Button variant='outline' mr={3} onClick={onClose}>
-                            Close
+                        <FormattedMessage id={'cancel'}/>
                         </Button>
                         <Button variant='primary' onClick={()=> router.push('/quize', '/quize', { shallow: true })}> <FormattedMessage id={'lets_go'}/></Button>
                     </ModalFooter>

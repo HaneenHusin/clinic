@@ -35,7 +35,6 @@ const SignIn: NextPageWithLayout = () => {
 		await router.push('/sign_up', '/sign_up', { shallow: true });
 	}
 	async function loginResult(response: any) {
-		debugger;
 		await setCookie('cookies', response.access);
 		const { pathname, asPath, query } = router;
 		if (response.role == 'A') {

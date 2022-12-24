@@ -12,17 +12,15 @@ import { FormattedMessage } from 'react-intl';
 import Certificates from '../src/components/certificate';
 import CustomCarousel from '../src/components/carousel';
 import TestCard from '../src/components/test_card_part';
-import VideoPart from '../src/components/video_part';
 import React, { ReactElement, useState } from 'react';
 import { getCookie } from '../src/services/cookies_file';
 import { myDirectionState, myLocalState } from '../Atoms/localAtoms';
 import Layout from '../src/components/layout';
 import { NextPageWithLayout } from './_app';
-import {  home, quizeClientList } from '../src/services/api';
+import {  home } from '../src/services/api';
 import Feedback from '../src/components/feedback';
 import Sliders from '../src/components/sliders';
 import Information from '../src/components/information';
-import { myQuizeState } from '../Atoms/quizAtom';
 
 
 const Welcome: NextPageWithLayout = () => {
@@ -48,9 +46,6 @@ const Welcome: NextPageWithLayout = () => {
 	useState(async () => {
 		setLocalState(getCookie('language'));
 		setDirState(getCookie("dirState"));
-		console.log("welcome dirr " + dirState)
-		console.log("welcome localState " + localState)
-		console.log("homeResponse"+homeResponse.data?.data)
 		
 	});
 
@@ -147,7 +142,7 @@ const Welcome: NextPageWithLayout = () => {
 					</Box>
 					
 					<Flex pt={'10%'} align='center' justify='center' w={'80%'}>
-						<Certificates certificateCount={galleriaService} />
+						<Certificates />
 					</Flex>
 					<Flex pt={'5%'} align='center' justify='center' w={'100%'}>
 						

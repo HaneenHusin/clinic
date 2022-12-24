@@ -82,7 +82,6 @@ const QuizesAdmin: NextPageWithLayout = () => {
 		setIsEdit(true);
 	}
 	function openEditModal(indexValue: number, idValue: number) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);

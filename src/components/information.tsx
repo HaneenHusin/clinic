@@ -5,7 +5,6 @@ import { useRecoilState } from "recoil";
 import { myDirectionState } from "../../Atoms/localAtoms";
 
 export default function Information(info:any) {
-    console.log("infooo...."+info.info)
     const [dirState] = useRecoilState(myDirectionState);
      const emailVal = info.info.find((obj:any) => { return obj.name === 'email';})
      const addressVal = info.info.find((obj:any) => { return obj.name === 'address';})

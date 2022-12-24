@@ -88,15 +88,18 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	function openModal() {
 		onOpen();
 		setIsEdit(true);
-		console.log('articlesResponse' + slidersResponse.data);
 	}
 	function openEditModal(indexValue: number, idValue: number) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIsEdit(false);
 		setIndex(indexValue);
 		setId(idValue);
 	}
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	const responsiveOptions = [
 		{
 			breakpoint: '1024px',
@@ -229,7 +232,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 													<Button
 														variant='ghost'
 														mr={3}
-														onClick={onDeleteClose}
+														onClick={() => openDeleteModal(index,item.id)}
 													>
 														<FormattedMessage
 															id={'cancel'}
@@ -240,7 +243,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 														colorScheme='red'
 														onClick={() => {
 															DeleteRequest(
-																`/admin/sliders/${item.id}/`,
+																`/admin/sliders/${id}/`,
 																refresh
 															);
 														}}
@@ -401,10 +404,11 @@ const SlidersAdmin: NextPageWithLayout = () => {
 										text: values.text,
 									};
 									UpdateRequest(
-										`/admin/sliders/${slidersResponse.data?.data?.results[index]?.id ?? 0}/`,
+										`/admin/sliders/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);
+									setimageState("");
 									setSubmitting(false);
 								}, 400);
 							}}

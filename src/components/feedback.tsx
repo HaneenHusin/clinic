@@ -35,7 +35,7 @@ export default function Feedback(galleriaService:any) {
 const itemTemplate = (item) => {
     return (
 
-       <HStack p={"4"} justify={'space-between'}>
+       <HStack p={"8"} justify={'space-between'}>
            <VStack    justify={'start'} align={'start'} width={"full"} >
                <Text  fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                      color={'brand.blue'}>

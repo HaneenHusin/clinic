@@ -61,6 +61,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
+		
 		setPageNum(event.page + 1);
 	};
 
@@ -71,12 +72,15 @@ const InformationAdmin: NextPageWithLayout = () => {
 	}
 	
 	function openEditModal(indexValue: number, idValue: number) {
-		console.log('index....' + indexValue);
 		onOpen();
 		setIndex(indexValue);
 		setId(idValue);
 	}
-
+	function openDeleteModal(indexValue: number, idValue: number) {
+		onDeleteOpen();
+		setIndex(indexValue);
+		setId(idValue);
+	  }
 	return (
 		<Stack p={'10px'} margin={'2%'} dir={dirState}>
 			{infoResponse.isLoading == true ? (
@@ -158,7 +162,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									
 									<IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= { () => openDeleteModal(index, item.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -224,7 +228,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 												: values.value,
 									};
 									UpdateRequest(
-										`/admin/information/${infoResponse.data?.data?.results[index]?.id ?? 0}/`,
+										`/admin/information/${id}/`,
 										dataToRequestAPI,
 										refresh
 									);

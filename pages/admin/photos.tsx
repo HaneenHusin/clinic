@@ -47,6 +47,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
+	const [id, setId] = useState(0);
 	const router = useRouter();
 	const photosResponse = photosList(pageNum,basicRows);
 	const {
@@ -69,13 +70,16 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/photos/?page=${pageNum}&page_size=${basicRows}`)
+		mutate(`/admin/photos/?page_size=${basicRows}&page=${pageNum}`)
 		onDeleteClose();
 	}
 	function openModal() {
 		onOpen();}
 
-
+		function openDeleteModal( idValue: number) {
+			onDeleteOpen();
+			setId(idValue);
+		  }
 
 	const responsiveOptions = [
 		{
@@ -159,7 +163,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 											
 <IconButton
 										aria-label={'delete'}
-										onClick= { onDeleteOpen }
+										onClick= { () => openDeleteModal(link.id) }
 										icon={
 											<i
 												className='pi pi-trash'
@@ -183,7 +187,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 												<Button
 													colorScheme='red'
 													onClick={() => {
-														DeleteRequest(`/admin/photos/${link.id}/`, refresh)
+														DeleteRequest(`/admin/photos/${id}/`, refresh)
 													}}
 												>
 													<FormattedMessage id={'delete'} defaultMessage='delete' />
@@ -265,52 +269,4 @@ PhotosAdmin.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default PhotosAdmin;
-async function refresh(response: any) {
-	router.push('/admin/photos', '/admin/photos', {
-		shallow: true,
-	});
-}
-const itemGalleryTemplate = (item) => {
-	return (
-		<Card
-			bg={'brand.white'}
-			w={'full'}
-			align='center'
-			justify='center'
-			m={'3px'}
-			boxShadow={'l'}
-			rounded={'xl'}
-			border={'2px'}
-			borderColor={'brand.blue'}
-		>
-			<CardBody>
-				<Image
-					src={item.datafile}
-					onError={(e) =>
-						(e.target.src =
-							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
-					}
-					alt={item.name}
-					roundedTop={'full'}
-					width={item.width}
-					height={item.height}
-					border={'1px'}
-					borderColor={'brand.blue'}
-				/>
-			</CardBody>
-			<CardFooter>
-				<IconButton
-					aria-label={'edit'}
-					size={'lg'}
-					onClick={() => DeleteRequest(`/admin/photos/${item.id}/`, refresh)}
-					icon={
-						<i
-							className='pi pi-trash'
-							style={{ fontSize: '1em', color: 'red' }}
-						></i>
-					}
-				></IconButton>
-			</CardFooter>
-		</Card>
-	);
-};
+
