@@ -96,7 +96,7 @@ export default function Information(info: any) {
                 rounded={'lg'}
                 border={'2px'}
                 borderColor={'brand.white'}
-                src='http://www.youtube.com/embed?v=DbeeWRcHgN0'
+                src={videoVal.value}
                 width="420"  
                 allow='autoplay'
                
