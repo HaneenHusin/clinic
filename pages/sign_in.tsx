@@ -136,7 +136,7 @@ const SignIn: NextPageWithLayout = () => {
 								<FormLabel pt={'5%'}>
 									<FormattedMessage id={'password'} defaultMessage='password' />
 								</FormLabel>
-								<InputGroup size='md'>
+								<InputGroup size='md' dir={dirState}>
 									<Input
 									 type={show ? 'text' : 'password'}
 										name='password'
@@ -198,7 +198,7 @@ const SignIn: NextPageWithLayout = () => {
 									pt={'10%'}
 								>
 									<Button
-										w={'400px'}
+										w={ 'full' }
 										variant='primary'
 										type='submit'
 										disabled={isSubmitting}
