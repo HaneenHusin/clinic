@@ -78,7 +78,7 @@ export  function AppBarAdmin() {
 
                     <Spacer w='calc(5vh)'/>
                <Button variant='outline' colorScheme='brand'
-                                        display={{base: 'none', md: 'flex'}}
+                                        display={ 'flex'}
                                         onClick={() => goSite()}
                                         leftIcon={<Image src={'/assets/images/SIGN_IN.svg'} alt="" h={'20px'}></Image>}><FormattedMessage  id={'to_site'} defaultMessage="to site"/></Button>
                     

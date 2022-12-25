@@ -30,9 +30,9 @@ export default function TestCard(){
 
         >
 
-            <VStack dir={dirState}  >
+            <VStack dir={dirState}   >
                 <img src={"/assets/images/TEST_LOGO.svg"} width={'40%'}/>
-                <HStack p={'8px'}>
+                <HStack p={'3px'} >
                     <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                           color={'brand.textGray'}>
                         <FormattedMessage id={'start_test'}/>
@@ -53,7 +53,7 @@ export default function TestCard(){
             {/*    trips!*/}
             {/*</p>*/}
             </VStack>
-            <Modal isOpen={isOpen} onClose={onClose} >
+            <Modal isOpen={isOpen} onClose={onClose} size={['xs', 'sm', 'md', 'lg']}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalCloseButton />

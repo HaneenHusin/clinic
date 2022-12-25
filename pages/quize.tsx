@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useRef, ReactElement } from 'react';
 import { Image } from 'primereact/image';
 import { useRecoilState } from 'recoil';
@@ -99,7 +100,7 @@ const quize: NextPageWithLayout = () => {
 							<Image
 								src={'/assets/images/LOGO.svg'}
 								alt=''
-								height={{ base: '50px', md: '60px' }}
+								height={{ base: '10px', md: '60px' }}
 							/>
 							<Text color='brand.blue'>ADHD Center</Text>
 							<Breadcrumb fontWeight='medium' fontSize='sm'>
@@ -134,10 +135,10 @@ const quize: NextPageWithLayout = () => {
 						</HStack>
 					</Box>
 					<VStack>
-						<Image src={'/assets/images/quize.png'} width={"400px"} alt=''></Image>
+						<Image src={'/assets/images/quize.png'}  alt=''></Image>
 
 						<Card
-							w={['50%', '78%', '90%', '70%']}
+							w={{ base: 'full', md: '70%' }}
 							bg={'brand.white'}
 							border={'2px'}
 							borderColor={'brand.gray'}
@@ -154,9 +155,9 @@ const quize: NextPageWithLayout = () => {
 									{quizeResponse.data?.data?.results[0]?.title}
 								</Text>
 								<Center>
-									<Card
+								{!disableButton ?<Card
 										w={['50%', '90%', '70%']}
-										p={['2%', '5%', '4%', '2%']}
+										p={'4%'}
 										bg={'brand.white'}
 										rounded={'full'}
 										border={'2px'}
@@ -177,6 +178,7 @@ const quize: NextPageWithLayout = () => {
 											}
 										</Text>
 									</Card>
+									:<></>}
 								</Center>
 
 								<Stack mt='6' spacing='3'>

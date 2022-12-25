@@ -29,7 +29,7 @@ function LayoutAdmin ({children, ...props}: Props)  {
       },  [Router]);
     return (
         <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}   {...props}>
-            <Skeleton startColor='brand.blueLight' endColor='brand.textBlue' isLoaded={!isLoading}>
+            <Skeleton startColor='brand.blueLight' h={"full"}endColor='brand.textBlue' isLoaded={!isLoading}>
                 <AppBarAdmin/>
                <main>{children}</main> 
             </Skeleton>

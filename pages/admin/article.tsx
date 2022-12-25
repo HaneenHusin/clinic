@@ -194,7 +194,6 @@ const ArticleAdmin: NextPageWithLayout = () => {
 										}
 										responsiveOptions={responsiveOptions}
 										numVisible={5}
-										style={{ maxWidth: '100%' }}
 										showThumbnails={false}
 										showIndicators
 										changeItemOnIndicatorHover
@@ -668,18 +667,7 @@ export default ArticleAdmin;
 
 const itemGalleryTemplate = (item) => {
 	return (
-		<Card
-			bg={'brand.white'}
-			w={'full'}
-			align='center'
-			justify='center'
-			m={'3px'}
-			boxShadow={'l'}
-			rounded={'xl'}
-			border={'2px'}
-			borderColor={'brand.blue'}
-		>
-			<CardBody>
+	
 				<Image
 					src={item.datafile}
 					onError={(e) =>
@@ -687,9 +675,7 @@ const itemGalleryTemplate = (item) => {
 							'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
 					}
 					alt={item.name}
-					style={{ width: '100%', height: '80%', display: 'block' }}
+					style={{ width: '100%', height: '100%', display: 'block' }}
 				/>
-			</CardBody>
-		</Card>
 	);
 };

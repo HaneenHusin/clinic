@@ -74,7 +74,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 		onClose: onDeleteClose,
 	} = useDisclosure();
 
-	const onBasicPageChange = (event) => {
+	const onBasicPageChange = (event:any) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		setPageNum(event.page + 1);
@@ -431,7 +431,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 												w='full%'
 											>
 												{imgsSrc.map((link) => (
-													<Image key={index} src={link} />
+													<Image key={index} alt="" src={link} />
 												))}
 											</SimpleGrid>
 
@@ -512,20 +512,3 @@ SlidersAdmin.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default SlidersAdmin;
-const itemGalleryTemplate = (item) => {
-	return (
-		<Card
-			bg={'brand.white'}
-			w={'full'}
-			align='center'
-			justify='center'
-			m={'3px'}
-			boxShadow={'l'}
-			rounded={'xl'}
-			border={'2px'}
-			borderColor={'brand.blue'}
-		>
-			<CardBody></CardBody>
-		</Card>
-	);
-};

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 
 import axios from "axios";
 import useSWR from "swr";
@@ -84,6 +85,7 @@ export function informationList(page:number, pageSize:number){
     }
 }
 export function photosList(page:number, pageSize:number){
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error } = useSWR<photosList, Error>(`/admin/photos/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,
@@ -92,6 +94,7 @@ export function photosList(page:number, pageSize:number){
     }
 }
 export function feedbackList(page:number, pageSize:number){
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error } = useSWR<FeedbackList, Error>(`/admin/feedback/?page=${page}&pageSize=${pageSize}`, fetcher)
     return {
         data: data,

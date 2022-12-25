@@ -292,7 +292,7 @@ const SignUp: NextPageWithLayout = () => {
 									pt={'8%'}
 								>
 									<Button
-										w={'400px'}
+										w={ 'full' }
 										variant='primary'
 										type='submit'
 										disabled={isSubmitting}

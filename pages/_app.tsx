@@ -44,7 +44,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
 	useEffect(() => {
 		let temp = getCookie('language');
-		setSession(temp);
+		if(temp==undefined){
+			setSession("ar");
+
+		}
+		else
+		{setSession(temp);}
+		
 
 		Router.events.on("routeChangeStart", (url)=>{
 			setIsLoading(true)

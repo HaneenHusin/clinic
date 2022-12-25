@@ -59,7 +59,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 		onClose: onDeleteClose,
 	} = useDisclosure();
 
-	const onBasicPageChange = (event) => {
+	const onBasicPageChange = (event:any) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		setPageNum(event.page + 1);
@@ -290,7 +290,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 										templateColumns='repeat(3, 1fr)'
 										w='full%'
 									>
-										{imgsSrc.map((link) => (<Image key={index} src={link} />))}
+										{imgsSrc.map((link) => (<Image key={index} alt=""src={link} />))}
 									</SimpleGrid>
 								</div>
 					

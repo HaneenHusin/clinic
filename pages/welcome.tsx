@@ -44,7 +44,9 @@ const Welcome: NextPageWithLayout = () => {
 
 	useState(async () => {
 		setLocalState(getCookie('language'));
-		setDirState(getCookie("dirState"));
+		let dir=getCookie("dirState")
+		if (dir==undefined){	setDirState("rtl");}else{setDirState(dir)}
+	
 		
 	});
 
@@ -63,7 +65,7 @@ const Welcome: NextPageWithLayout = () => {
 			<Center>
 				<VStack>
 					<VStack
-						width={{ base: '70%', md: '80%', lg: '100%' }}
+						width={'full' }
 						bg={'brand.blueLight'}
 					>
 						<Text
@@ -87,7 +89,7 @@ const Welcome: NextPageWithLayout = () => {
 						/>
 					</VStack>
 					<VStack
-						width={{ base: '70%', md: '80%', lg: '100%' }}
+						width={'full' }
 						bg={'brand.blueLight'}
 					>
 						<Text

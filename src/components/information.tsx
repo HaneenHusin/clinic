@@ -8,6 +8,8 @@ import {
 	HStack,
 	VStack,
 	AspectRatio,
+	Flex,
+	Stack,
 } from '@chakra-ui/react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
@@ -83,34 +85,21 @@ export default function Information(info: any) {
 				</CardBody>
 			</Card>
 
-			<Box pt={'4%'} w={{ base: '100%', md: '60%', lg: '70%' }}>
-				<HStack
-					w={'full'}
-					align='center'
-					justify='center'
-					pt={'4%'}
-					dir={dirState}
-				>
+			<Stack minH={'50vh'} direction={{ base: 'column', md: 'row' }}>
+				<Flex flex={1} align={'center'} justify={'center'}>
+			
 					<Box
                 as='iframe'
                 rounded={'lg'}
                 border={'2px'}
                 borderColor={'brand.white'}
                 src={videoVal.value}
-                width="420"  
                 allow='autoplay'
+				m={"4"}
                
             />
-					{/* <AspectRatio width='100%'   rounded={'lg'}  border={'2px'}
-                borderColor={'brand.white'} ratio={1}>
-						<iframe
-							title='video'
-                            width="420" height="315" 
-							src='https://www.youtube.com/watch?v=w8JnDhp83gA'
-							allowFullScreen
-						/>
-					</AspectRatio> */}
-					<VStack dir={dirState}>
+				
+				<Stack spacing={1} w={'full'} maxW={'lg'} p={'4'}>
 						<Text
 							fontSize={['sm', 'md', 'lg', 'xl']}
 							fontWeight={'semibold'}
@@ -118,7 +107,6 @@ export default function Information(info: any) {
 						>
 							<FormattedMessage id={'know_more'} />
 						</Text>
-						<HStack dir={dirState}>
 							<Text
 								fontSize={['sm', 'md', 'lg', 'xl']}
 								fontWeight={'normal'}
@@ -133,10 +121,9 @@ export default function Information(info: any) {
 							>
 								{doctorName.value}
 							</Text>
-						</HStack>
-					</VStack>
-				</HStack>
-			</Box>
+							</Stack>
+				</Flex>
+			</Stack>
 		</Box>
 	);
 }

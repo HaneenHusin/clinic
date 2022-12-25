@@ -1,3 +1,4 @@
+
 import type { NextPage } from 'next'
 import { ReactElement } from 'react';
 import { useRecoilState } from 'recoil';
@@ -27,4 +28,3 @@ Home.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default Home
-
