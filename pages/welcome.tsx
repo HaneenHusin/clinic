@@ -42,10 +42,14 @@ const Welcome: NextPageWithLayout = () => {
 
 	const homeResponse = home();
 
-	useState(async () => {
+	useState( () => {
 		setLocalState(getCookie('language'));
 		let dir=getCookie("dirState")
-		if (dir==undefined){	setDirState("rtl");}else{setDirState(dir)}
+		if (dir==undefined){	
+			setDirState("rtl");}
+			else{
+				setDirState(dir)
+			}
 	
 		
 	});

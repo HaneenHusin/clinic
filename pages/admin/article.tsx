@@ -73,6 +73,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const [dirState] = useRecoilState(myDirectionState);
 	const [imageState, setimageState] = useRecoilState(myListImagesState);
 	const [text1, setText1] = useState<string>('');
+	console.log("dir state....."+dirState)
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -96,6 +97,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		onOpen();
 		setIsEdit(true);
 		setIsImageModal(true);
+		setText1("");
 	}
 
 	function openEditModal(indexValue: number, idValue: number) {
@@ -103,6 +105,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		setIsEdit(false);
 		setIndex(indexValue);
 		setId(idValue);
+		setText1("");
 	}
 	const dialogFuncMap = {
 		displayMaximizable: setDisplayMaximizable,
@@ -111,6 +114,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 		onDeleteOpen();
 		setIndex(indexValue);
 		setId(idValue);
+		setText1("");
 	  }
 	const responsiveOptions = [
 		{
@@ -533,12 +537,11 @@ const ArticleAdmin: NextPageWithLayout = () => {
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
-
 									const dataToRequestAPI = {
-										title: (values.title = values.title),
-										slug: (values.sluge = values.sluge),
-										body: (values.body = text1),
-										keywords: (values.keywords = values.keywords),
+										title: values.title ,
+										slug: values.sluge ,
+										body: ( text1==""? values.body:text1),
+										keywords: values.keywords,
 									};
 									UpdateRequest(
 										`/admin/articles/${id}/`,

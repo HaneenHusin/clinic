@@ -55,10 +55,8 @@ import Link from 'next/link';
 
 const ResultsAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [imgsSrc, setImgsSrc] = useState([]);
 	const [isEdit, setIsEdit] = useState(false);
 	const [index, setIndex] = useState(0);
-	const [idQuize, setIdQuize] = useState(0);
 	const [idResult, setIdResult] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
@@ -155,7 +153,10 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								<FormattedMessage id={'title'} defaultMessage='title' />
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+								<FormattedMessage id={'min_point'} defaultMessage='text' />
+							</Th>
+							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
+								<FormattedMessage id={'max_point'} defaultMessage='text' />
 							</Th>
 						</Tr>
 					</Thead>
@@ -324,7 +325,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								isSubmitting,
 							}) => (
 								<form onSubmit={handleSubmit}>
-									<ModalBody>
+									<ModalBody dir={dirState}>
 										<Stack spacing={3}>
 											<FormLabel>
 												<FormattedMessage id={'text'} defaultMessage='text' />
@@ -449,7 +450,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								isSubmitting,
 							}) => (
 								<form onSubmit={handleSubmit}>
-									<ModalBody>
+									<ModalBody dir={dirState}>
 										<Stack spacing={3}>
 											<FormLabel>
 												<FormattedMessage id={'text'} defaultMessage='text' />

@@ -1,12 +1,10 @@
 import { Card, CardBody } from '@chakra-ui/card';
 import {
 	Box,
-	CardHeader,
 	Heading,
 	Text,
 	StackDivider,
 	HStack,
-	VStack,
 	AspectRatio,
 	Flex,
 	Stack,
@@ -107,13 +105,13 @@ export default function Information(info: any) {
 						>
 							<FormattedMessage id={'know_more'} />
 						</Text>
-							<Text
+							{/* <Text
 								fontSize={['sm', 'md', 'lg', 'xl']}
 								fontWeight={'normal'}
 								color={'brand.textGray'}
 							>
 								<FormattedMessage id={'doctor'} />
-							</Text>
+							</Text> */}
 							<Text
 								fontSize={['sm', 'md', 'lg', 'xl']}
 								fontWeight={'bold'}

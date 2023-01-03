@@ -54,7 +54,7 @@ export default function FooterBar() {
                     <Stack align={'flex-start'}  dir={dirState}>
 
                         <Link href={'#'}>  <FormattedMessage id={'contact_us_media'}/> </Link>
-                        <Link href={'#'}><FormattedMessage id={'login_now'}/></Link>
+                        <Link href='/sign_in'><FormattedMessage id={'login_now'}/></Link>
                     </Stack>
                     <Stack align={'flex-start'}  dir={dirState}>
                         <Link href={'#'}><FormattedMessage id={'about_us'}/></Link>

@@ -95,7 +95,7 @@ export default function Article() {
 										id={'home'}
 										defaultMessage='home'
 									></FormattedMessage>
-								</Text>{' '}
+								</Text>
 							</Link>
 						</BreadcrumbItem>
 					</Breadcrumb>

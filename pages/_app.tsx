@@ -11,7 +11,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from '../theme';
 import '../styles/globals.css';
 import Fonts from '../font';
-import { getCookie } from '../src/services/cookies_file';
+import { getCookie, setCookie } from '../src/services/cookies_file';
 import { useEffect, useRef, useState } from 'react';
 import ar from '../public/lang/ar';
 import en from '../public/lang/en';
@@ -46,10 +46,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 		let temp = getCookie('language');
 		if(temp==undefined){
 			setSession("ar");
-
+			setCookie("dirState", "rtl");
 		}
 		else
-		{setSession(temp);}
+		{
+			setSession(temp);
+			setCookie("dirState", "ltr");
+		}
 		
 
 		Router.events.on("routeChangeStart", (url)=>{

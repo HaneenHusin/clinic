@@ -33,7 +33,7 @@ export  function AppBarAdmin() {
     async function setDirection(lang: string) {
         setCookie("language", lang);
         setAppBarState(localState == "ar" ? "AR" : "EN")
-       setDirState(getCookie("dirState"));
+         setDirState(getCookie("dirState"));
         const {pathname, asPath, query} = router
         router.reload();
         await router.push({pathname, query}, asPath, {shallow: true})
