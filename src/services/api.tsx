@@ -84,6 +84,14 @@ export function informationList(page:number, pageSize:number){
         isError: error
     }
 }
+export function informationclient(page:number, pageSize:number){
+    const { data, error } = useSWR<InformationList, Error>(`/information/?page=${page}&pageSize=${pageSize}`, fetcher)
+    return {
+        data: data,
+        isLoading: !error && !data,
+        isError: error
+    }
+}
 export function photosList(page:number, pageSize:number){
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error } = useSWR<photosList, Error>(`/admin/photos/?page=${page}&pageSize=${pageSize}`, fetcher)

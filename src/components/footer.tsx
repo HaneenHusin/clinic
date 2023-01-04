@@ -34,7 +34,7 @@ export default function FooterBar() {
                     spacing={8}>
                     <Stack  spacing={6}>
 
-                        <Text fontSize={'md'}>
+                        <Text fontSize={'lg'}>
                             <FormattedMessage id={'social_media'}/>
                         </Text>
                         <Stack direction={'row'} spacing={6}  dir={dirState}>
@@ -53,12 +53,12 @@ export default function FooterBar() {
                     </Stack>
                     <Stack align={'flex-start'}  dir={dirState}>
 
-                        <Link href={'#'}>  <FormattedMessage id={'contact_us_media'}/> </Link>
+                        <Text fontSize={'lg'}>  <FormattedMessage id={'contact_us_media'}/> </Text>
                         <Link href='/sign_in'><FormattedMessage id={'login_now'}/></Link>
                     </Stack>
                     <Stack align={'flex-start'}  dir={dirState}>
-                        <Link href={'#'}><FormattedMessage id={'about_us'}/></Link>
-                        <Link href={'#'}><FormattedMessage id={'contact_us'}/></Link>
+                        <Text fontSize={'lg'} ><FormattedMessage id={'about_us'}/></Text>
+                        <Link href={'/contact_us'}><FormattedMessage id={'contact_us'}/></Link>
                     </Stack>
 
                 </SimpleGrid>

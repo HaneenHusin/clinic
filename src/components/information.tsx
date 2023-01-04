@@ -9,6 +9,7 @@ import {
 	Flex,
 	Stack,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState } from 'recoil';
 import { myDirectionState } from '../../Atoms/localAtoms';
@@ -30,6 +31,10 @@ export default function Information(info: any) {
 	const doctorName = info.info.find((obj: any) => {
 		return obj.name === 'doctorName';
 	});
+	const router = useRouter();
+	async function goContact(){
+		await router.push('/contact_us', '/contact_us', { shallow: true });
+	}
 	return (
 		<Box>
 			<Card
@@ -57,13 +62,13 @@ export default function Information(info: any) {
 								{emailVal.value}
 							</Text>
 						</Box>
-						<Box align='center' justify='center'>
+						<Box align='center' justify='center' cursor={"pointer"} onClick={()=>goContact()}>
 							<Heading size='xs' textTransform='uppercase'>
 								<i className='pi pi-phone'></i>
 							</Heading>
 							<Text pt='2' fontSize='sm'>
 								<FormattedMessage id={'call_us'} />
-							</Text>{' '}
+							</Text>
 							<Text pt='2' fontSize='sm' color={'brand.blue'}>
 								{phoneVal.value}
 							</Text>

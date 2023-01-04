@@ -109,7 +109,8 @@ export default {
     home:"Home",
     delete:"delete",
     points:"Points",
-    show_result:"سhow result"
+    show_result:"show result",
+    fill_up_form:"Fill up the form below to contact",
 
 
 
