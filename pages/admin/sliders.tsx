@@ -67,7 +67,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const slidersResponse = slidersList(pageNum, basicRows);
+	const slidersResponse = slidersList(pageNum, -1);
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -82,7 +82,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${basicRows}`);
+		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${-1}`);
 		
 	}
 	function openModal() {
@@ -496,13 +496,13 @@ const SlidersAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={slidersResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

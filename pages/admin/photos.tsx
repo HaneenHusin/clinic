@@ -49,7 +49,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [id, setId] = useState(0);
 	const router = useRouter();
-	const photosResponse = photosList(pageNum,basicRows);
+	const photosResponse = photosList(pageNum,-1);
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -70,7 +70,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/photos/?pageSize=${basicRows}&page=${pageNum}`)
+		mutate(`/admin/photos/?page=${pageNum}&page_size=${-1}`)
 	
 	}
 	function openModal() {
@@ -255,12 +255,12 @@ const PhotosAdmin: NextPageWithLayout = () => {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-			<Paginator
+			{/* <Paginator
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={photosResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

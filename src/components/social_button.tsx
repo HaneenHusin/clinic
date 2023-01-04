@@ -1,5 +1,6 @@
 import {ReactNode} from "react";
 import {chakra, useColorModeValue, VisuallyHidden} from "@chakra-ui/react";
+import { ToastErrorShow } from "./toast";
 
 export  default function  SocialButton  ({
                           children,
@@ -21,6 +22,7 @@ export  default function  SocialButton  ({
             cursor={'pointer'}
             as={'a'}
             href={href}
+            onClick={()=>  ToastErrorShow("قريباً !!!!!")}
             display={'inline-flex'}
             alignItems={'center'}
             justifyContent={'center'}

@@ -66,7 +66,7 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	const { qId } = router.query;
 	const { quizId } = router.query;
 
-	let answerResponse = answerList(pageNum, basicRows, quizId, qId);
+	let answerResponse = answerList(pageNum, -1, quizId, qId);
 
 	const {
 		isOpen: isDeleteOpen,
@@ -83,7 +83,7 @@ const AnswerAdmin: NextPageWithLayout = () => {
 	function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${quizId}/questions/${qId}/answers?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${quizId}/questions/${qId}/answers?page=${pageNum}&pageSize=${-1}`
 		);
 	}
 	function openModal() {
@@ -495,13 +495,13 @@ const AnswerAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={answerResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

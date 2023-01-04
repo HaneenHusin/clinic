@@ -23,7 +23,7 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 	const [listImageState, setListImageState] = useRecoilState(myListImagesState);
 	const [basicFirst, setBasicFirst] = useState(1);
 	const [basicRows, setBasicRows] = useState(10);
-	const photosResponse = photosList(basicFirst, basicRows);
+	const photosResponse = photosList(basicFirst, -1);
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.page + 1);
 		setBasicRows(event.rows);
@@ -83,12 +83,12 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 					</VStack>
 				))}
 			</SimpleGrid>
-			<Paginator
+			{/* <Paginator
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={photosResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Box>
 	);
 }

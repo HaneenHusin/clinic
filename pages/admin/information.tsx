@@ -51,7 +51,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const infoResponse = informationList(pageNum, basicRows);
+	const infoResponse = informationList(pageNum, -1);
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -67,7 +67,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/information/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/information/?page=${pageNum}&pageSize=${-1}`)
 	
 	}
 	
@@ -284,13 +284,13 @@ const InformationAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={infoResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

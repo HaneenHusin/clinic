@@ -32,7 +32,7 @@ export default function Information(info: any) {
 		return obj.name === 'doctorName';
 	});
 	const router = useRouter();
-	async function goContact(){
+	async function goContact() {
 		await router.push('/contact_us', '/contact_us', { shallow: true });
 	}
 	return (
@@ -62,7 +62,12 @@ export default function Information(info: any) {
 								{emailVal.value}
 							</Text>
 						</Box>
-						<Box align='center' justify='center' cursor={"pointer"} onClick={()=>goContact()}>
+						<Box
+							align='center'
+							justify='center'
+							cursor={'pointer'}
+							onClick={() => goContact()}
+						>
 							<Heading size='xs' textTransform='uppercase'>
 								<i className='pi pi-phone'></i>
 							</Heading>
@@ -91,18 +96,23 @@ export default function Information(info: any) {
 			<Stack minH={'50vh'} direction={{ base: 'column', md: 'row' }}>
 				<Flex flex={1} align={'center'} justify={'center'}>
 			
+
 					<Box
-                as='iframe'
-                rounded={'lg'}
-                border={'2px'}
-                borderColor={'brand.white'}
-                src={videoVal.value}
-                allow='autoplay'
-				m={"4"}
-               
-            />
-				
-				<Stack spacing={1} w={'full'} maxW={'lg'} p={'4'}>
+						rounded={'lg'}
+						border={'2px'}
+						borderColor={'brand.white'}
+						m={'4'}
+					>
+						<iframe
+							src={`https://www.youtube.com/embed/${videoVal.value}`}
+							frameBorder='0'
+							allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+							allowFullScreen
+							title='Embedded youtube'
+						/>
+					</Box>
+
+					<Stack spacing={1} w={'full'} maxW={'lg'} p={'4'}>
 						<Text
 							fontSize={['sm', 'md', 'lg', 'xl']}
 							fontWeight={'semibold'}
@@ -110,21 +120,21 @@ export default function Information(info: any) {
 						>
 							<FormattedMessage id={'know_more'} />
 						</Text>
-							{/* <Text
+						{/* <Text
 								fontSize={['sm', 'md', 'lg', 'xl']}
 								fontWeight={'normal'}
 								color={'brand.textGray'}
 							>
 								<FormattedMessage id={'doctor'} />
 							</Text> */}
-							<Text
-								fontSize={['sm', 'md', 'lg', 'xl']}
-								fontWeight={'bold'}
-								color={'brand.textGray'}
-							>
-								{doctorName.value}
-							</Text>
-							</Stack>
+						<Text
+							fontSize={['sm', 'md', 'lg', 'xl']}
+							fontWeight={'bold'}
+							color={'brand.textGray'}
+						>
+							{doctorName.value}
+						</Text>
+					</Stack>
 				</Flex>
 			</Stack>
 		</Box>

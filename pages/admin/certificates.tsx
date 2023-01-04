@@ -68,7 +68,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
-	const certificateResponse = certificateList(pageNum, basicRows);
+	const certificateResponse = certificateList(pageNum, -1);
 	const [imageState, setimageState] = useRecoilState(myImagesState);
 	const [isImageModal, setIsImageModal] = useState(false);
 	const {
@@ -85,7 +85,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 	 function refresh(response: any) {
 		onClose();
-		mutate(`/admin/certificates/?page=${pageNum}&pageSize=${basicRows}`)
+		mutate(`/admin/certificates/?page=${pageNum}&pageSize=${-1}`)
 		onDeleteClose();
 	}
 	function openModal() {
@@ -532,13 +532,13 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={certificateResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

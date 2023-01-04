@@ -94,7 +94,7 @@ export function informationclient(page:number, pageSize:number){
 }
 export function photosList(page:number, pageSize:number){
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error } = useSWR<photosList, Error>(`/admin/photos/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<photosList, Error>(`/admin/photos/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,

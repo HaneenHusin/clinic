@@ -70,7 +70,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		onClose: onDeleteClose,
 	} = useDisclosure();
 
-	let questionResponse = questionsList(pageNum, basicRows, quizId);
+	let questionResponse = questionsList(pageNum, -1, quizId);
 
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
@@ -81,7 +81,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${quizId}/questions/?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${quizId}/questions/?page=${pageNum}&pageSize=${-1}`
 		);
 		onDeleteClose();
 	}
@@ -426,13 +426,13 @@ const QuestionAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={questionResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

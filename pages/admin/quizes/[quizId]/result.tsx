@@ -70,7 +70,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 		onClose: onDeleteClose,
 	} = useDisclosure();
 
-	let resultResponse = resultList(pageNum, basicRows, quizId);
+	let resultResponse = resultList(pageNum, -1, quizId);
 	const onBasicPageChange = (event) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
@@ -80,7 +80,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 	 function refresh(response: any) {
 		onClose();
 		mutate(
-			`/admin/quize/${quizId}/results/?page=${pageNum}&pageSize=${basicRows}`
+			`/admin/quize/${quizId}/results/?page=${pageNum}&pageSize=${-1}`
 		);
 	}
 	function openModal() {
@@ -513,13 +513,13 @@ const ResultsAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={resultResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

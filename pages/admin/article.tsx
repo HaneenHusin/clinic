@@ -69,7 +69,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(1);
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
-	const articlesResponse = articlesList(pageNum, basicRows);
+	const articlesResponse = articlesList(pageNum, -1);
 	const [dirState] = useRecoilState(myDirectionState);
 	const [imageState, setimageState] = useRecoilState(myListImagesState);
 	const [text1, setText1] = useState<string>('');
@@ -89,7 +89,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 	async function refresh(response: any) {
 		onClose();
-		mutate(`/admin/articles/?page=${pageNum}&page_size=${basicRows}`);
+		mutate(`/admin/articles/?page=${pageNum}&page_size=${-1}`);
 		
 	}
 
@@ -653,12 +653,12 @@ const ArticleAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={articlesResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
 		</Stack>
 	);
 };

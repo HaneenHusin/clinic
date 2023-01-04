@@ -39,7 +39,8 @@ import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router from 'next/router';
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
 import { mutate } from 'swr';
 
 const FeedbackAdmin: NextPageWithLayout = () => {
@@ -52,7 +53,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
-	const feedbackResponse = feedbackList(pageNum,basicRows);
+	const feedbackResponse = feedbackList(pageNum,-1);
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -69,7 +70,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	 function refresh(response:any)
 	{
 		onClose();
-		mutate(`/admin/feedback/?page=${pageNum}&page_size=${basicRows}`)
+		mutate(`/admin/feedback/?page=${pageNum}&page_size=${-1}`)
 	}
 	function openModal() {
 		onOpen();
@@ -86,6 +87,14 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 		setIndex(indexValue);
 		setId(idValue);
 	  }
+	  const actionBodyTemplate = (rowData) => {
+		return (
+			<React.Fragment>
+				<Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => console.log(rowData)} />
+				<Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => console.log(rowData)} />
+			</React.Fragment>
+		);
+	}
 	return (
 		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
 			{feedbackResponse.isLoading == true ? (
@@ -394,13 +403,25 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 					</ModalContent>
 				</Modal>
 			)}
-			<Paginator
+			{/* <Paginator
 			p-paginator-page
 				first={basicFirst}
 				rows={basicRows}
 				totalRecords={feedbackResponse.data?.data.count}
 				onPageChange={onBasicPageChange}
-			></Paginator>
+			></Paginator> */}
+
+{/* <div className="card">
+				<DataTable dir={dirState}   value={feedbackResponse.data?.data.results}  responsiveLayout="scroll" dataKey="id"  
+				  paginator first={basicFirst} rows={10} totalRecords={feedbackResponse.data?.data.count} onPage={onBasicPageChange}
+				  loading={feedbackResponse.isLoading}  >
+					<Column field="title" align={"right"} alignHeader={'left'}  header={<FormattedMessage id={'title'} defaultMessage='title' />}/>
+					<Column field="brief" align={"right"}  alignHeader={'left'}header={<FormattedMessage id={'text'} defaultMessage='text' />} />
+					<Column body={actionBodyTemplate}    alignHeader={'left'}  exportable={false}  bodyStyle={{ textAlign: 'center', overflow: 'hidden' }} ></Column>
+			
+				</DataTable>
+			</div> */}
+
 		</Stack>
 	);
 }

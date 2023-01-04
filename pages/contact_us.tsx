@@ -1,21 +1,10 @@
 import {
-	Container,
-	Flex,
 	Box,
 	Heading,
 	Text,
 	Image,
-	Button,
 	VStack,
 	HStack,
-	Wrap,
-	WrapItem,
-	FormControl,
-	FormLabel,
-	Input,
-	InputGroup,
-	InputLeftElement,
-	Textarea,
 	BreadcrumbItem,
 	Breadcrumb,
 	BreadcrumbLink,
@@ -159,7 +148,6 @@ export default function contact() {
 									<Box
 										align='center'
 										justify='center'
-										cursor={'pointer'}
 									>
 										<Heading size='xs' textTransform='uppercase'>
 											<i className='pi pi-phone'></i>
