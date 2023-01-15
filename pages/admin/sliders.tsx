@@ -37,7 +37,6 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
@@ -49,12 +48,12 @@ import {
 } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
-import router from 'next/router';
 import Gridphotot from '../../src/components/grid_photo';
 import { myImagesState } from '../../Atoms/imagesAtom';
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const SlidersAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,9 +64,9 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	const [imageState, setimageState] = useRecoilState(myImagesState);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const slidersResponse = slidersList(pageNum, -1);
+	const { t } = useTranslation("")
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -115,20 +114,20 @@ const SlidersAdmin: NextPageWithLayout = () => {
 		},
 	];
 	return (
-		<Stack p={'10px'} margin={'2%'} dir={dirState}>
-			{slidersResponse.isLoading == true ? (
-				<div id='globalLoader'>
-					<Image
-						src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
-						alt=''
-					/>
-				</div>
-			) : (
-				<></>
-			)}
+		<Stack p={'10px'} margin={'2%'}>
+		{slidersResponse.isLoading == true ? (
+			<div id='globalLoader'>
+				<Image
+					src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
+					alt=''
+				/>
+			</div>
+		) : (
+			<></>
+		)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'slider'} defaultMessage='slider' />
+				{t('slider')} 
 				</Text>
 				<Button
 					variant='outline'
@@ -140,7 +139,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')} 
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -154,10 +153,10 @@ const SlidersAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'images'} defaultMessage='images' />
+							{t('images')}
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+							{t('text')} 
 							</Th>
 						</Tr>
 					</Thead>
@@ -214,19 +213,13 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 											<ModalOverlay />
-											<ModalContent dir={dirState}>
+											<ModalContent>
 												<ModalHeader>
-													<FormattedMessage
-														id={'delete_item'}
-														defaultMessage='delete item'
-													/>
+												{t('delete_item')}
 												</ModalHeader>
 												<ModalCloseButton />
 												<ModalBody>
-													<FormattedMessage
-														id={'delete_confirm'}
-														defaultMessage='delete confirm'
-													/>
+												{t('delete_confirm')}
 												</ModalBody>
 												<ModalFooter>
 													<Button
@@ -234,10 +227,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 														mr={3}
 														onClick={() => openDeleteModal(index,item.id)}
 													>
-														<FormattedMessage
-															id={'cancel'}
-															defaultMessage='cancel'
-														/>
+														{t('cancel')}
 													</Button>
 													<Button
 														colorScheme='red'
@@ -249,10 +239,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 															);
 														}}
 													>
-														<FormattedMessage
-															id={'delete'}
-															defaultMessage='delete'
-														/>
+														{t('delete')}
 													</Button>
 												</ModalFooter>
 											</ModalContent>
@@ -268,9 +255,9 @@ const SlidersAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage id={'add_slider'} />
+						{t('add_slider')} 
 						</ModalHeader>
 						<Formik
 							initialValues={{ text: '', photo: '' }}
@@ -278,10 +265,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.text) {
 									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
 									);
 								}
 
@@ -313,7 +297,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')} 
 											</FormLabel>
 											<Textarea
 												onChange={handleChange}
@@ -338,10 +322,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 														>
 															<Box as='span' flex='1' textAlign='left'>
 																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
+																{t('choose_file')}
 																</FormLabel>
 															</Box>
 															<AccordionIcon />
@@ -357,7 +338,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
@@ -365,10 +346,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 											disabled={isSubmitting}
 										>
 											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
+											t('upload')
 											}
 										</Button>
 									</ModalFooter>
@@ -380,12 +358,9 @@ const SlidersAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_slider'}
-								defaultMessage='Edit slider'
-							/>
+						{t('edit_slider')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -436,7 +411,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 											</SimpleGrid>
 
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')}
 											</FormLabel>
 											<Textarea
 												onChange={handleChange}
@@ -461,10 +436,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 														>
 															<Box as='span' flex='1' textAlign='left'>
 																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
+																{t('choose_file')}
 																</FormLabel>
 															</Box>
 															<AccordionIcon />
@@ -480,14 +452,14 @@ const SlidersAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')} 
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+										{t('edit')} 
 										</Button>
 									</ModalFooter>
 								</form>
@@ -511,4 +483,9 @@ SlidersAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default SlidersAdmin;

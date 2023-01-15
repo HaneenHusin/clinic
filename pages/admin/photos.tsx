@@ -29,27 +29,27 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { FileUpload } from 'primereact/fileupload';
 import { DeleteRequest, photosList, PostRequest } from '../../src/services/api';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { NextPageWithLayout } from '../_app';
 import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../../Atoms/localAtoms';
 import router, { useRouter } from 'next/router';
 import { Paginator } from 'primereact/paginator';
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const PhotosAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [pageNum, setPageNum] = useState(1);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [id, setId] = useState(0);
 	const router = useRouter();
 	const photosResponse = photosList(pageNum,-1);
+	const { t } = useTranslation('');
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -99,7 +99,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 	const uploadOptions = {icon: 'pi pi-upload p-8 m-8', className: 'p-button-success p-8 m-8'};
 	const cancelOptions = { icon: 'pi pi-times p-8 m-8', className: 'p-button-danger p-8 m-8'};
 	return (
-		<Stack p={'10px'} dir={dirState} margin={'2%'}>
+		<Stack p={'10px'}  margin={'2%'}>
 			{photosResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -112,7 +112,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'} >
-					<FormattedMessage id={'photos'} defaultMessage='photos' />
+				{t('photos')} 
 				</Text>
 				
 				<Button
@@ -125,7 +125,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')} 
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -174,15 +174,15 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent >
+											<ModalHeader>{t('delete_item')}</ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')}
 												</Button>
 												<Button
 													colorScheme='red'
@@ -191,7 +191,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 														DeleteRequest(`/admin/photos/${id}/`, refresh)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+													{t('delete')}
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -209,9 +209,9 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 			<Modal isOpen={isOpen} onClose={onClose} size={"5xl"}>
 				<ModalOverlay />
-				<ModalContent dir={dirState}>
+				<ModalContent>
 					<ModalHeader>
-						<FormattedMessage id={'photos_add'} />
+					{t('photos_add')}
 					</ModalHeader>
 
 					<ModalBody>
@@ -224,25 +224,16 @@ const PhotosAdmin: NextPageWithLayout = () => {
 							maxFileSize={1000000}
 							chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}
 							emptyTemplate={
-								<p className='m-0'><FormattedMessage id={'drag_file'} /></p>
+								<p className='m-0'>{t('drag_file')}</p>
 							}
 							chooseLabel={
-								<FormattedMessage
-									id={'choose_files'}
-									defaultMessage='choose file'
-								/>
+								t('choose_files')
 							}
 							uploadLabel={
-								<FormattedMessage
-									id={'upload'}
-									defaultMessage='upload file'
-								/>
-							}
+								t('upload')	
+								}
 							cancelLabel={
-								<FormattedMessage
-									id={'close'}
-									defaultMessage='close '
-								/>
+								t('close')
 							}
 							
 						/>
@@ -250,7 +241,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 
 					<ModalFooter>
 						<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-							{<FormattedMessage id={'close'} defaultMessage='close' />}
+						{t('close')}
 						</Button>
 					</ModalFooter>
 				</ModalContent>
@@ -267,6 +258,9 @@ const PhotosAdmin: NextPageWithLayout = () => {
 PhotosAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
-
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default PhotosAdmin;
-

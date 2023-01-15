@@ -10,6 +10,7 @@ import {
 	AlertTitle,
 	AlertDescription,
 } from '@chakra-ui/react';
+import { useTranslation } from 'next-i18next';
 import { Galleria } from 'primereact/galleria';
 import { Paginator } from 'primereact/paginator';
 import { useState } from 'react';
@@ -48,6 +49,7 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 		}
 
 	}
+	const { t } = useTranslation('common');
 	return (
 		<Box>
 			{isMulti !=true ?
@@ -55,10 +57,7 @@ export default function Gridphotot({isMulti}:{isMulti: boolean}) {
 	<Alert status='warning'>
 					<AlertIcon />
 					<AlertDescription>
-					<FormattedMessage
-											id={'select_one_item'}
-											defaultMessage='select one item'
-										/>
+					{t('select_one_item')}
 					
 					</AlertDescription>
 				</Alert> 

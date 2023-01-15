@@ -33,7 +33,6 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../../../_app';
 import LayoutAdmin from '../../../../src/components/layout_admin';
@@ -46,12 +45,11 @@ import {
 } from '../../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../../../Atoms/localAtoms';
-import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
-import quize from '../../../quize';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const ResultsAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,9 +58,9 @@ const ResultsAdmin: NextPageWithLayout = () => {
 	const [idResult, setIdResult] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
+	const { t } = useTranslation("")
 	const { quizId } = router.query;
 	const {
 		isOpen: isDeleteOpen,
@@ -102,7 +100,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 		setIdResult(idValue);
 	  }
 	return (
-		<Stack p={'10px'} margin={'2%'} dir={dirState}>
+		<Stack p={'10px'} margin={'2%'} >
 			{resultResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -116,15 +114,15 @@ const ResultsAdmin: NextPageWithLayout = () => {
 			<HStack justify={'space-between'} m={'10px'}>
 			<Breadcrumb fontWeight='medium' fontSize='sm'>
 				<BreadcrumbItem>
-					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
+					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}>{t('quizes')}</Text> </Link>
 				</BreadcrumbItem>
 
 				<BreadcrumbItem>
-					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'results'} defaultMessage='results' /></Text></BreadcrumbLink>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}>{t('results')}</Text></BreadcrumbLink>
 				</BreadcrumbItem>
 			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'results'} defaultMessage='result' />
+				{t('results')}
 				</Text>
 				<Button
 					variant='outline'
@@ -136,7 +134,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')}
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -150,13 +148,13 @@ const ResultsAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+							{t('title')}
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'min_point'} defaultMessage='text' />
+							{t('min_point')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'max_point'} defaultMessage='text' />
+								{t('max_point')}
 							</Th>
 						</Tr>
 					</Thead>
@@ -226,15 +224,15 @@ const ResultsAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent>
+											<ModalHeader>{t('delete_item')}</ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')}
 												</Button>
 												<Button
 													colorScheme='red'
@@ -246,7 +244,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 														)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+													{t('delete')}
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -262,9 +260,9 @@ const ResultsAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage id={'add_result'} />
+						{t('add_result')}
 						</ModalHeader>
 						<Formik
 							initialValues={{ text: '', min_point: 0, max_point: 0 }}
@@ -272,27 +270,18 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.text) {
 									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
+										t('required')
 									);
 								}
 
 								if (!values.min_point) {
 									errors.min_point = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
 									);
 								}
 								if (!values.max_point) {
 									errors.max_point = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
 									);
 								}
 
@@ -325,10 +314,10 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								isSubmitting,
 							}) => (
 								<form onSubmit={handleSubmit}>
-									<ModalBody dir={dirState}>
+									<ModalBody >
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')} 
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -344,10 +333,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage
-													id={'min_point'}
-													defaultMessage='min point'
-												/>
+											{t('min_point')}
 											</FormLabel>
 											<Input
 												onChange={handleChange}
@@ -364,10 +350,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
+											{t('max_point')}
 											</FormLabel>
 											<Input
 												onChange={handleChange}
@@ -387,19 +370,16 @@ const ResultsAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
-											}
+											
+												{t('upload')}
+											
 										</Button>
 									</ModalFooter>
 								</form>
@@ -410,12 +390,9 @@ const ResultsAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_result'}
-								defaultMessage='Edit result'
-							/>
+						{t('edit_result')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -450,10 +427,10 @@ const ResultsAdmin: NextPageWithLayout = () => {
 								isSubmitting,
 							}) => (
 								<form onSubmit={handleSubmit}>
-									<ModalBody dir={dirState}>
+									<ModalBody >
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -465,10 +442,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 												value={values.text}
 											/>
 											<FormLabel>
-												<FormattedMessage
-													id={'min_point'}
-													defaultMessage='min point'
-												/>
+											{t('min_point')}
 											</FormLabel>
 											<Input
 												onChange={handleChange}
@@ -479,10 +453,7 @@ const ResultsAdmin: NextPageWithLayout = () => {
 												value={values.min_point}
 											/>
 											<FormLabel>
-												<FormattedMessage
-													id={'max_point'}
-													defaultMessage='max point'
-												/>
+											{t('max_point')}
 											</FormLabel>
 											<Input
 												onChange={handleChange}
@@ -497,14 +468,14 @@ const ResultsAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+										{t('edit')}
 										</Button>
 									</ModalFooter>
 								</form>

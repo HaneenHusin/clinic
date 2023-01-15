@@ -30,18 +30,18 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { DeleteRequest, feedbackList, PostRequest, UpdateRequest } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const FeedbackAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,9 +51,9 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const feedbackResponse = feedbackList(pageNum,-1);
+	const { t } = useTranslation('common')
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -96,7 +96,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 		);
 	}
 	return (
-		<Stack p={'10px'} margin={"2%"}  dir={dirState}>
+		<Stack p={'10px'} margin={"2%"}  >
 			{feedbackResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'
@@ -108,14 +108,14 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'feedback'} defaultMessage='feedback' />
+				{t('feedback')}
 				</Text>
 				<Button variant='outline' colorScheme='brand' onClick={openModal} fontSize={['sm', 'md', 'lg', 'xl']} >
 					<i
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px',marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+				{t('import')} 
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -129,10 +129,10 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+							{t('title')}
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+							{t('text')} 
 							</Th>
 						</Tr>
 					</Thead>
@@ -192,15 +192,15 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent>
+											<ModalHeader>{t('delete_item')} </ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')} 
 												</Button>
 												<Button
 													colorScheme='red'
@@ -209,7 +209,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 														DeleteRequest(`/admin/feedback/${id}/`,refresh)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+													{t('delete')}
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -224,19 +224,19 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent  dir={dirState}>
+					<ModalContent  >
 						<ModalHeader>
-							<FormattedMessage id={'add_feedback'} />
+						{t('add_feedback')}
 						</ModalHeader>
 						<Formik 	initialValues={{  title: '',brief:'' }}
 						validate={(values) => {
 							const errors = {};
 							if (!values.title) {
-								errors.title = <FormattedMessage  id={'required'} defaultMessage='Required'  />;
+								errors.title = t('required')
 							}
                            
 							if (!values.brief) {
-                                errors.brief =<FormattedMessage  id={'required'} defaultMessage='required' />;
+                                errors.brief =t('required')
                             }
 							
 							return errors;
@@ -269,7 +269,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							<Stack spacing={3}>
 
 						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
+									   {t('title')}
 									</FormLabel>
 									<Input variant='outline'
 										type='text'
@@ -281,7 +281,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 									 <Text color={"red"}>{errors.title && touched.title && errors.title}</Text>	
 									
 									<FormLabel>
-										<FormattedMessage id={'text'} defaultMessage='text' />
+									{t('text')} 
 									</FormLabel>
 									<Textarea 	
 									onChange={handleChange}
@@ -308,11 +308,11 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 
 						<ModalFooter>
 							<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-								{<FormattedMessage id={'close'} defaultMessage='close' />}
+							{t('close')} 
 							</Button>
 							<Button variant='primary'type='submit'
 										disabled={isSubmitting}>
-								{<FormattedMessage id={'upload'} defaultMessage='upload'  />}
+								{t('upload')}
 							</Button>
 						</ModalFooter>
 						</form>
@@ -323,12 +323,9 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent  dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_feedback'}
-								defaultMessage='Edit feedback'
-							/>
+						{t('edit_feedback')}
 						</ModalHeader>
 						<Formik initialValues={{  title:  feedbackResponse.data?.data?.results[index]?.title,brief: feedbackResponse.data?.data?.results[index]?.brief }}
 						
@@ -359,7 +356,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 							<Stack spacing={3}>
 
 						               <FormLabel>
-										<FormattedMessage id={'title'} defaultMessage='title' />
+									   {t('title')}
 									</FormLabel>
 									<Input
 									 variant='outline'
@@ -373,7 +370,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 									 
 									
 									<FormLabel>
-										<FormattedMessage id={'text'} defaultMessage='text' />
+									{t('text')} 
 									</FormLabel>
 									<Textarea 	
 									name='brief'
@@ -390,11 +387,11 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 
 						<ModalFooter>
 							<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-								{<FormattedMessage id={'close'} defaultMessage='close' />}
+								{t('close')}
 							</Button>
 							<Button variant='primary'type='submit'
 										disabled={isSubmitting}>
-								{<FormattedMessage id={'edit'} defaultMessage='edit'  />}
+								{t('edit')}
 							</Button>
 						</ModalFooter>
 						</form>
@@ -412,7 +409,7 @@ const FeedbackAdmin: NextPageWithLayout = () => {
 			></Paginator> */}
 
 {/* <div className="card">
-				<DataTable dir={dirState}   value={feedbackResponse.data?.data.results}  responsiveLayout="scroll" dataKey="id"  
+				<DataTable    value={feedbackResponse.data?.data.results}  responsiveLayout="scroll" dataKey="id"  
 				  paginator first={basicFirst} rows={10} totalRecords={feedbackResponse.data?.data.count} onPage={onBasicPageChange}
 				  loading={feedbackResponse.isLoading}  >
 					<Column field="title" align={"right"} alignHeader={'left'}  header={<FormattedMessage id={'title'} defaultMessage='title' />}/>
@@ -433,5 +430,10 @@ FeedbackAdmin.getLayout = function getLayout(page: ReactElement) {
         </LayoutAdmin>
     )
 }
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 
 export default  FeedbackAdmin;

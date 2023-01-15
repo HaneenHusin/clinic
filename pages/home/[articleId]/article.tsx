@@ -18,9 +18,8 @@ import parse from 'html-react-parser';
 import { articlesclient } from '../../../src/services/api';
 import { Galleria } from 'primereact/galleria';
 import Link from 'next/link';
-import { FormattedMessage } from 'react-intl';
-import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../../../Atoms/localAtoms';
+import { useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 
 export default function Article() {
 	const responsiveOptions = [
@@ -37,15 +36,24 @@ export default function Article() {
 			numVisible: 1,
 		},
 	];
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const router = useRouter();
 	const { articleId } = router.query;
 	let articleResult = articlesclient(1, 10);
+	const { t } = useTranslation('');
+	
 	const result = articleResult.data?.data.results.find((obj) => {
 		return obj.id === Number(articleId);
 	});
+	useEffect(() => {
+		let dir = router.locale == "ar" ? "rtl" : "ltr";
+		let lang = router.locale == "ar" ? "ar" : "en";
+		debugger
+		document.querySelector("html")?.setAttribute("dir", dir);
+		document.querySelector("html")?.setAttribute("lang", lang);
+	  }, [router.locale]);
+	  
 	return (
-		<Box dir={dirState}>
+		<Box>
 					{articleResult.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -78,23 +86,20 @@ export default function Article() {
 						<BreadcrumbItem>
 							<BreadcrumbLink href='#'>
 								<Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} color={"brand.textGray"}>
-									<FormattedMessage id={'article'} defaultMessage='article' />
+								{t('article')}
 								</Text>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
 
 						<BreadcrumbItem>
-							<Link href='/welcome' shallow={true}>
+							<Link href='../' shallow={true}>
 								<Text
 									fontSize={['sm', 'sm', 'md', 'lg']}
 									fontWeight={'bold'}
 									textDecoration={'underline'}
 									color={"brand.textGray"}
 								>
-									<FormattedMessage
-										id={'home'}
-										defaultMessage='home'
-									></FormattedMessage>
+								{t('home')}
 								</Text>
 							</Link>
 						</BreadcrumbItem>

@@ -33,7 +33,6 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../../../../_app';
 import {
@@ -44,13 +43,13 @@ import {
 } from '../../../../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../../../../Atoms/localAtoms';
-import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 import LayoutAdmin from '../../../../../src/components/layout_admin';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const QuestionAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,10 +59,10 @@ const QuestionAdmin: NextPageWithLayout = () => {
 	const [idQuestion, setIdQuuestion] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const router = useRouter();
 	const { quizId } = router.query;
+	const { t } = useTranslation("")
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -101,7 +100,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 		setIdQuuestion(idValue);
 	  }
 	return (
-		<Stack p={'10px'} margin={'2%'} dir={dirState}>
+		<Stack p={'10px'} margin={'2%'} >
 		
 			{questionResponse.isLoading == true ? (
 				<div id='globalLoader'>
@@ -116,15 +115,15 @@ const QuestionAdmin: NextPageWithLayout = () => {
 			<HStack justify={'space-between'} m={'10px'}>
 			<Breadcrumb fontWeight='medium' fontSize='sm'>
 				<BreadcrumbItem>
-					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}><FormattedMessage id={'quizes'} defaultMessage='quizes' ></FormattedMessage></Text> </Link>
+					<Link href="/admin/quizes" shallow={true} ><Text  fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'} textDecoration={"underline"}>{t('quizes')}</Text> </Link>
 				</BreadcrumbItem>
 
 				<BreadcrumbItem>
-					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}><FormattedMessage id={'questions'} defaultMessage='questions' /></Text></BreadcrumbLink>
+					<BreadcrumbLink href='#'><Text fontSize={['sm', 'sm', 'md', 'lg']} fontWeight={'bold'}>{t('questions')}</Text></BreadcrumbLink>
 				</BreadcrumbItem>
 			</Breadcrumb>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'questions'} defaultMessage='questions' />
+				{t('questions')}
 				</Text>
 				<Button
 					variant='outline'
@@ -136,7 +135,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')}
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -150,7 +149,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+							{t('text')}
 							</Th>
 						</Tr>
 					</Thead>
@@ -178,10 +177,8 @@ const QuestionAdmin: NextPageWithLayout = () => {
 												textDecoration={'underline'}
 												fontSize={['sm', 'md', 'lg', 'xl']}
 											>
-												<FormattedMessage
-													id={'answer'}
-													defaultMessage='answer'
-												/>
+												{t('answer')}
+													
 											</Text>
 										</Link>
 									</Td>
@@ -214,15 +211,15 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent >
+											<ModalHeader>{t('delete_item')}</ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')}
 												</Button>
 												<Button
 													colorScheme='red'
@@ -234,7 +231,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 														)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+													{t('delete')}
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -250,9 +247,9 @@ const QuestionAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage id={'add_question'} />
+						{t('add_question')}
 						</ModalHeader>
 						<Formik
 							initialValues={{ text: '' }}
@@ -260,10 +257,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.text) {
 									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
+										t('required')
 									);
 								}
 
@@ -297,7 +291,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -316,19 +310,16 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
-											}
+											
+												{t('upload')}
+											
 										</Button>
 									</ModalFooter>
 								</form>
@@ -339,12 +330,9 @@ const QuestionAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_question'}
-								defaultMessage='Edit question'
-							/>
+						{t('edit_question')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -354,10 +342,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.text) {
 									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
+										t('required')
 									);
 								}
 
@@ -391,7 +376,7 @@ const QuestionAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -410,14 +395,14 @@ const QuestionAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+											{t('edit')}
 										</Button>
 									</ModalFooter>
 								</form>
@@ -440,5 +425,6 @@ const QuestionAdmin: NextPageWithLayout = () => {
 QuestionAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
+
 
 export default QuestionAdmin;

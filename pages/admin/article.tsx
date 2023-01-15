@@ -37,7 +37,6 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
 import React, { ReactElement, useMemo, useRef, useState } from 'react';
 import { Galleria } from 'primereact/galleria';
 import {
@@ -51,13 +50,14 @@ import { Formik } from 'formik';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { NextPageWithLayout } from '../_app';
 import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRouter } from 'next/router';
 import Gridphotot from '../../src/components/grid_photo';
 import { myImagesState, myListImagesState } from '../../Atoms/imagesAtom';
 import { Editor } from 'primereact/editor';
 import parse from 'html-react-parser';
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const ArticleAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -70,10 +70,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
 	const articlesResponse = articlesList(pageNum, -1);
-	const [dirState] = useRecoilState(myDirectionState);
 	const [imageState, setimageState] = useRecoilState(myListImagesState);
 	const [text1, setText1] = useState<string>('');
-	console.log("dir state....."+dirState)
+	const { t } = useTranslation('common')
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -132,7 +131,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 	];
 
 	return (
-		<Stack p={'10px'} dir={dirState} margin={'2%'}>
+		<Stack p={'10px'} margin={'2%'}>
 			{articlesResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -146,7 +145,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'article'} defaultMessage='article' />
+				{t('article')}
 				</Text>
 				<Button
 					variant='outline'
@@ -158,7 +157,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')} 
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -173,16 +172,16 @@ const ArticleAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'images'} defaultMessage='images' />
+							{t('images')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+							{t('title')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'sluge'} defaultMessage='sluge' />
+							{t('sluge')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'body'} defaultMessage='body' />
+							{t('body')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}></Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}></Th>
@@ -263,26 +262,18 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose} >
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
+										<ModalContent >
 											<ModalHeader>
-												<FormattedMessage
-													id={'delete_item'}
-													defaultMessage='delete item'
-												/>
+											{t('delete_item')}
+													
 											</ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-												<FormattedMessage
-													id={'delete_confirm'}
-													defaultMessage='delete confirm'
-												/>
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-													<FormattedMessage
-														id={'cancel'}
-														defaultMessage='cancel'
-													/>
+												{t('cancel')}
 												</Button>
 												<Button
 													colorScheme='red'
@@ -294,10 +285,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 														);
 													}}
 												>
-													<FormattedMessage
-														id={'delete'}
-														defaultMessage='delete'
-													/>
+													{t('delete')}
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -312,9 +300,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose} size={'5xl'}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage id={'add_article'} />
+						{t('add_article')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -328,26 +316,17 @@ const ArticleAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.title) {
 									errors.title = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
+										t('required')
 									);
 								}
 								if (!values.sluge) {
 									errors.sluge = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
 									);
 								}
 								if (!values.keywords) {
 									errors.keywords = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
 									);
 								}
 								return errors;
@@ -380,7 +359,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+											{t('title')} 
 											</FormLabel>
 
 											<Input
@@ -398,7 +377,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage id={'sluge'} defaultMessage='slug' />
+											{t('sluge')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -414,10 +393,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage
-													id={'Key_words'}
-													defaultMessage='key words'
-												/>
+											{t('Key_words')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -433,7 +409,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage id={'body'} defaultMessage='body' />
+											{t('body')} 
 											</FormLabel>
 											<Editor
 												style={{ height: '220px' }}
@@ -462,10 +438,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 															>
 																<Box as='span' flex='1' textAlign='left'>
 																	<FormLabel>
-																		<FormattedMessage
-																			id={'choose_file'}
-																			defaultMessage='choose file'
-																		/>
+																	{t('choose_file')}
 																	</FormLabel>
 																</Box>
 																<AccordionIcon />
@@ -497,19 +470,16 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
-											}
+											
+											{t('upload')}
+											
 										</Button>
 									</ModalFooter>
 								</form>
@@ -520,12 +490,9 @@ const ArticleAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_article'}
-								defaultMessage='Edit article'
-							/>
+						{t('edit_article')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -566,7 +533,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+											{t('title')}
 											</FormLabel>
 
 											<Input
@@ -584,7 +551,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage id={'sluge'} defaultMessage='sluge' />
+											{t('sluge')} 
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -600,10 +567,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage
-													id={'Key_words'}
-													defaultMessage='key words'
-												/>
+											{t('Key_words')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -619,7 +583,7 @@ const ArticleAdmin: NextPageWithLayout = () => {
 											</Text>
 
 											<FormLabel>
-												<FormattedMessage id={'body'} defaultMessage='body' />
+											{t('body')}
 											</FormLabel>
 											<Editor
 												style={{ height: '220px' }}
@@ -637,14 +601,14 @@ const ArticleAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')}
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+											{t('edit')} 
 										</Button>
 									</ModalFooter>
 								</form>
@@ -668,6 +632,11 @@ ArticleAdmin.getLayout = function getLayout(page: ReactElement) {
 
 export default ArticleAdmin;
 
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 const itemGalleryTemplate = (item) => {
 	return (
 	

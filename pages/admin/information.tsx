@@ -27,7 +27,7 @@ import {
 	ModalFooter,
 	ModalBody,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { ReactElement, useState } from 'react';
 import { NextPageWithLayout } from '../_app';
 import LayoutAdmin from '../../src/components/layout_admin';
@@ -38,10 +38,9 @@ import {
 } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
-import { useRecoilState } from 'recoil';
 import router from 'next/router';
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
 
 const InformationAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -49,9 +48,10 @@ const InformationAdmin: NextPageWithLayout = () => {
 	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const [pageNum, setPageNum] = useState(1);
 	const infoResponse = informationList(pageNum, -1);
+	const { t } = useTranslation("");
+
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -82,7 +82,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 		setId(idValue);
 	  }
 	return (
-		<Stack p={'10px'} margin={'2%'} dir={dirState}>
+		<Stack p={'10px'} margin={'2%'}>
 			{infoResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -96,7 +96,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 			
 			<Center>
 			<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'information'} defaultMessage='information' />
+			{t( 'information')}
 				</Text>
 			</Center>
 				
@@ -113,10 +113,10 @@ const InformationAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'name'} defaultMessage='name' />
+							{t('name')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'value'} defaultMessage='value' />
+							{t('value')}
 							</Th>
 						</Tr>
 					</Thead>
@@ -173,15 +173,15 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-											<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent>
+											<ModalHeader>{t('delete_item')} </ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')}
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')} 
 												</Button>
 												<Button
 													colorScheme='red'
@@ -190,7 +190,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 														DeleteRequest(`/admin/information/${id}/`, refresh)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												{t('delete')} 
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -205,12 +205,9 @@ const InformationAdmin: NextPageWithLayout = () => {
 		
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_information'}
-								defaultMessage='Edit information'
-							/>
+						{t('edit_information')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -268,14 +265,14 @@ const InformationAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')} 
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+											{t('edit')}
 										</Button>
 									</ModalFooter>
 								</form>
@@ -299,4 +296,9 @@ InformationAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default InformationAdmin;

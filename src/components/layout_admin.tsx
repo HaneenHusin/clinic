@@ -2,15 +2,12 @@ import {ReactElement, useEffect, useState} from 'react'
 import { Flex, Skeleton, Spinner} from '@chakra-ui/react'
 import { AppBarAdmin } from './appbar';
 import { Router, useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../../Atoms/localAtoms';
 
 type Props = {
     children: ReactElement | ReactElement[]
 }
 
 function LayoutAdmin ({children, ...props}: Props)  {
-    const [dirState, setDirState] = useRecoilState(myDirectionState);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
       useEffect(() => {
@@ -28,7 +25,7 @@ function LayoutAdmin ({children, ...props}: Props)  {
             });
       },  [Router]);
     return (
-        <Flex direction="column" dir={dirState} maxW={{xl: '1700px'}}   {...props}>
+        <Flex direction="column" maxW={{xl: '1700px'}}   {...props}>
             <Skeleton startColor='brand.blueLight' h={"full"}endColor='brand.textBlue' isLoaded={!isLoading}>
                 <AppBarAdmin/>
                <main>{children}</main> 

@@ -1,12 +1,9 @@
 import {Carousel} from "primereact/carousel";
-import {galleriaService} from "../services/Photos";
 import {Card} from "@chakra-ui/card";
 import {CardBody, Stack, Image, Text, Button, IconButton, HStack, Flex, Box} from "@chakra-ui/react";
-import {FormattedMessage} from "react-intl";
-import {useRecoilState} from "recoil";
-import { myDirectionState } from "../../Atoms/localAtoms";
 import {useRouter} from "next/router";
 import parse from 'html-react-parser';
+import { useTranslation } from "next-i18next";
 
 const responsiveOptions = [
     {
@@ -27,11 +24,10 @@ const responsiveOptions = [
 ];
 
 export default function CustomCarousel(galleriaService:any) {
-    const [dirState] = useRecoilState(myDirectionState);  
         return (
           
             <div className="card">
-                <Carousel dir={dirState} value={galleriaService.galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions}
+                <Carousel value={galleriaService.galleriaService} itemTemplate={RelatedNewsClinic} numVisible={3} numScroll={1} responsiveOptions={responsiveOptions}
                           showIndicators={false} ></Carousel>
             </div>
 
@@ -40,16 +36,17 @@ export default function CustomCarousel(galleriaService:any) {
 
 
 export function RelatedNewsClinic(item) {
-    const [dirState] = useRecoilState(myDirectionState);
     const router = useRouter()
+    const { t } = useTranslation('');
+    
     async function goArticlePage(item:Number) {
         router.push( `/home/${item}/article`,  undefined, { shallow: true})
          
        
     }
      return (
-        <Card w={'70%'}  bg={'brand.blue'} rounded={'3xl'} dir={dirState}>
-            <CardBody  dir={dirState}>
+        <Card w={'70%'}  bg={'brand.blue'} rounded={'3xl'}>
+            <CardBody  >
                 <Image
                     src={item?.photos_list[0]?.datafile}
                     alt=''
@@ -57,16 +54,16 @@ export function RelatedNewsClinic(item) {
                     h={"60%"}
                     width="6xl"
                 />
-                <Stack mt='6' spacing='3'  dir={dirState}color={"brand.gray"} fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
+                <Stack mt='6' spacing='3' color={"brand.gray"} fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'bold'}>
                     <Text>
                     {parse(`${item.title}`)}
                     </Text>
                     <HStack onClick={() => goArticlePage(item.id)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                               color={'brand.white'}>
-                            <FormattedMessage id={'read_article'}/>
+                            {t('read_article')}
                         </Text>
-                        {dirState=="rtl" ?
+                        {router.locale=="ar" ?
                             <IconButton colorScheme='brand.blue' aria-label={"more"}  >
                             <i className="pi pi-arrow-left" style={{'fontSize': '1em'}}></i>
                         </IconButton>

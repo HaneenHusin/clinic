@@ -21,13 +21,12 @@ import {
 } from '@chakra-ui/react';
 import { myProgressState } from '../Atoms/progressAtom';
 import { Card } from '@chakra-ui/card';
-import { FormattedMessage } from 'react-intl';
 import { ProgressBar } from 'primereact/progressbar';
 import { NextPageWithLayout } from './_app';
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { quizeclient } from '../src/services/api';
-import { myDirectionState } from '../Atoms/localAtoms';
 import { myStepsResultState } from '../Atoms/stepsResultAtom';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
 	Modal,
 	ModalOverlay,
@@ -38,6 +37,7 @@ import {
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const quize: NextPageWithLayout = () => {
 	const quizeResponse = quizeclient(1, 10);
@@ -46,9 +46,9 @@ const quize: NextPageWithLayout = () => {
 	const [indexState, setindexState] = useState(0);
 	const [disableButton, setDisableButton] = useState(false);
 	const [resultState, setResultState] = useRecoilState(myStepsResultState);
-	const [dirState] = useRecoilState(myDirectionState);
 	const [progressState, setProgressState] = useRecoilState(myProgressState);
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { t } = useTranslation('common')
 	let result;
 	async function refresh() {
 		onClose();
@@ -57,6 +57,7 @@ const quize: NextPageWithLayout = () => {
 		
 	}
 	function activeSteps(val: number, point: number) {
+		debugger
 		setindexState(indexState + 1);
 		setResultState(resultState + point);
 		setProgressState(progressState + val);
@@ -75,7 +76,6 @@ const quize: NextPageWithLayout = () => {
 	}
 	return (
 		<Stack
-			dir={dirState}
 			backgroundImage="url(/assets/images/Path_1.svg)"  
 		>
 			{quizeResponse.isLoading ? (
@@ -111,23 +111,21 @@ const quize: NextPageWithLayout = () => {
 											fontWeight={'bold'}
 											color={'brand.textGray'}
 										>
-											<FormattedMessage id={'quizes'} defaultMessage='quizes' />
+											{t('quizes')} 
 										</Text>
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 
 								<BreadcrumbItem>
-									<Link href='/welcome' shallow={true}>
+									<Link href='./' shallow={true}>
 										<Text
 											fontSize={['sm', 'sm', 'md', 'lg']}
 											fontWeight={'bold'}
 											textDecoration={'underline'}
 											color={'brand.textGray'}
 										>
-											<FormattedMessage
-												id={'home'}
-												defaultMessage='home'
-											></FormattedMessage>
+										{t('home')}
+												
 										</Text>
 									</Link>
 								</BreadcrumbItem>
@@ -144,7 +142,7 @@ const quize: NextPageWithLayout = () => {
 							borderColor={'brand.gray'}
 							rounded={'xl'}
 							boxShadow={'xl'}
-							dir={dirState}
+							
 						>
 							<CardBody>
 								<Text
@@ -237,7 +235,7 @@ const quize: NextPageWithLayout = () => {
 												fontSize={['sm', 'md', 'lg', 'xl']}
 												fontWeight={'normal'}
 											>
-												<FormattedMessage id={'show_result'} />
+												{t('show_result')} 
 											</Text>
 										</Button>
 									</Center>
@@ -252,13 +250,13 @@ const quize: NextPageWithLayout = () => {
 					/>
 					<Modal isOpen={isOpen} onClose={()=>refresh()} size={'full'} >
 						<ModalOverlay />
-						<ModalContent 	bg={'brand.blueLight'} dir={dirState}>
+						<ModalContent 	bg={'brand.blueLight'} >
 							<ModalCloseButton />
 							<ModalBody>
 								<Box textAlign='center' py={10} px={6}>
 									<CheckCircleIcon boxSize={'50px'} color={'green.500'} />
 									<Heading as='h2' size='xl' mt={6} mb={2}>
-										<FormattedMessage id={'ended_result'}></FormattedMessage>
+									{t('ended_result')}
 									</Heading>
 									<Center mt={'8'}>
 										<Card
@@ -282,7 +280,7 @@ const quize: NextPageWithLayout = () => {
 									</Center>
 
 									<Text mt={'8'} color={'gray.500'}>
-										<FormattedMessage id={'please_contact'}></FormattedMessage>
+									{t('please_contact')}
 									</Text>
 								</Box>
 							</ModalBody>
@@ -298,4 +296,9 @@ quize.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutWithoutBar>{page}</LayoutWithoutBar>;
 };
 
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default quize;

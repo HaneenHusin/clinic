@@ -1,6 +1,5 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { IntlProvider } from 'react-intl';
 import Head from 'next/head';
 import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -13,11 +12,10 @@ import '../styles/globals.css';
 import Fonts from '../font';
 import { getCookie, setCookie } from '../src/services/cookies_file';
 import { useEffect, useRef, useState } from 'react';
-import ar from '../public/lang/ar';
-import en from '../public/lang/en';
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import { ProgressBar } from 'primereact/progressbar';
+import { appWithTranslation } from 'next-i18next';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page:  ReactElement) => ReactNode;
@@ -26,35 +24,19 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
 Component: NextPageWithLayout};
 
-const messages = {
-	ar,
-	en,
-};
-function getDirection(locale: string) {
-	if (locale === 'ar') {
-		return 'rtl';
-	}
 
-	return 'ltr';
-}
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page)
 	const [session, setSession] = useState('ar');
 	const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 	useEffect(() => {
-		let temp = getCookie('language');
-		if(temp==undefined){
-			setSession("ar");
-			setCookie("dirState", "rtl");
-		}
-		else
-		{
-			setSession(temp);
-			setCookie("dirState", "ltr");
-		}
+		// let temp = getCookie('language');
+		// if(temp!=undefined){
+		// 	router.locale=temp;
+			
+		// };
 		
-
 		Router.events.on("routeChangeStart", (url)=>{
 			setIsLoading(true)
 		  });
@@ -67,7 +49,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 			setIsLoading(false)
 			
 		  });
-	}, [session]);
+	});
 
 
 	return (
@@ -75,7 +57,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 			<ChakraProvider theme={theme}>
 				<Fonts />
 				
-				<IntlProvider locale={session} messages={messages[session]}>
 					<Head>
 						<link rel='icon' href='/favicon.ico' />
 						<title>ADHD</title>
@@ -91,14 +72,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 						<meta name='theme-color' content='#000000' />
 					</Head>
 					{isLoading &&<ProgressBar mode="indeterminate" style={{ height: '6px' }}></ProgressBar>}
-					{getLayout (  <Component {...pageProps} dir={getDirection(session)} />
+					{getLayout (  <Component {...pageProps}  />
 					
 					)}
-				</IntlProvider>
+				
 				
 			</ChakraProvider>
 		</RecoilRoot>
 	);
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp) 

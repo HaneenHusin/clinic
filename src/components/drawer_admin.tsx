@@ -14,15 +14,13 @@ import {
 	Link,
 } from '@chakra-ui/react';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../../Atoms/localAtoms';
+import { useTranslation } from 'next-i18next';
 export function DrawerAdmin() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [dirState] = useRecoilState(myDirectionState);
 	const btnRef = React.useRef();
 	const router = useRouter();
+	const { t } = useTranslation("")
 	return (
 		<>
 			<Button
@@ -36,7 +34,7 @@ export function DrawerAdmin() {
 			</Button>
 			<Drawer
 				isOpen={isOpen}
-				placement={dirState=="rtl"?"left":"right"}
+				placement={router.locale=="ar"?"left":"right"}
 				onClose={onClose}
 				finalFocusRef={btnRef}
 			>
@@ -44,7 +42,7 @@ export function DrawerAdmin() {
 				<DrawerContent>
 					<DrawerCloseButton />
 					<DrawerHeader>
-						<FormattedMessage id={'mange_your_clinic'} defaultMessage='mange your clinic' />
+					{t('mange_your_clinic')}
 					</DrawerHeader>
 
 					<DrawerBody >
@@ -56,7 +54,7 @@ export function DrawerAdmin() {
 							_hover={{transform: "scale(1.05,1.05)"}}
 							onClick={ ()=> router.push('/admin/article', '/admin/article', { shallow: true })}>
 							<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-								<FormattedMessage id={'article'} defaultMessage='article' />
+							{t('article')}
 							</Text>
 							<i className='pi pi-book' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 						</HStack>
@@ -72,10 +70,7 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/certificates', '/admin/certificates', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'certificate'}
-										defaultMessage='certificate'
-									/>
+								{t('certificate')}
 								</Text>
 								<i className='pi pi-bookmark' style={{ fontSize: '2em',color: 'lightblue'  }}></i>
 							</HStack>
@@ -89,10 +84,7 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/sliders', '/admin/sliders', {shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'slider'}
-										defaultMessage='slider'
-									/>
+								{t('slider')}
 								</Text>
 								<i className='pi pi-images' style={{ fontSize: '2em',color: 'lightblue'  }}></i>
 							</HStack>
@@ -107,10 +99,7 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/information', '/admin/information', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'information'}
-										defaultMessage='information'
-									/>
+								{t('information')}
 								</Text>
 								<i className='pi pi-user' style={{ fontSize: '2em',color: 'lightblue' }}></i>
 							</HStack>
@@ -125,10 +114,7 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/feedback', '/admin/feedback', { shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'feedback'}
-										defaultMessage='feedback'
-									/>
+								{t('feedback')}
 								</Text>
 								<i className='pi pi-star' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
@@ -142,10 +128,7 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/photos', '/admin/photos',{ shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'photos'}
-										defaultMessage='photos'
-									/>
+								{t('photos')}
 								</Text>
 								<i className='pi pi-paperclip' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
@@ -160,17 +143,14 @@ export function DrawerAdmin() {
 								onClick={ ()=> router.push('/admin/quizes', '/admin/quizes',{ shallow: true })}>
 							
 								<Text fontSize={['sm', 'md', 'lg', 'xl']}>
-									<FormattedMessage
-										id={'quizes'}
-										defaultMessage='quizes'
-									/>
+								{t('quizes')}
 								</Text>
 								<i className='pi pi-verified' style={{ fontSize: '2em' ,color: 'lightblue' }}></i>
 							</HStack>
 
 					</DrawerBody>
 
-					<DrawerFooter dir={dirState}>
+					<DrawerFooter >
 						<Button variant='outline' mr={3} onClick={onClose}>
 							Cancel
 						</Button>

@@ -12,24 +12,22 @@ import {
 	VStack,
 } from '@chakra-ui/react';
 import { Formik } from 'formik';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { ReactElement, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../Atoms/localAtoms';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import LayoutWithoutBar from '../src/components/layout_without_bar';
 import { SignRequest } from '../src/services/api';
 import { NextPageWithLayout } from './_app';
 
 const SignUp: NextPageWithLayout = () => {
 	const router = useRouter();
-	const [dirState] = useRecoilState(myDirectionState);
 	const [show, setShow] = React.useState(false);
 	const [showConfirm, setShowConfirm] = React.useState(false);
 	const handleClick = () => setShow(!show);
 	const handleconfirmClick = () => setShowConfirm(!showConfirm);
-
+	const { t } = useTranslation('common')
 	async function Register(response: any) {
 		const { pathname, asPath, query } = router;
 		await router.push('/sign_in', '/sign_in', { shallow: true });
@@ -37,7 +35,7 @@ const SignUp: NextPageWithLayout = () => {
 
 	return (
 		<Stack
-			dir={dirState}
+			
 			minH={'100vh'}
 			direction={{ base: 'column', md: 'row' }}
 			bg={'brand.white'}
@@ -51,10 +49,8 @@ const SignUp: NextPageWithLayout = () => {
 						color={'brand.blue'}
 						fontWeight={'semibold'}
 					>
-						<FormattedMessage
-							id={'welcome_our_clinic'}
-							defaultMessage='welcome our clinic'
-						/>
+					{t('welcome_our_clinic')}
+							
 					</Text>
 
 					<Formik
@@ -70,7 +66,7 @@ const SignUp: NextPageWithLayout = () => {
 							const errors = {};
 							if (!values.username) {
 								errors.username = (
-									<FormattedMessage id={'required'} defaultMessage='Required' />
+									t('required')
 								);
 							}
 							if (
@@ -78,27 +74,23 @@ const SignUp: NextPageWithLayout = () => {
 								!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
 							) {
 								errors.email = (
-									<FormattedMessage
-										id={'invalid_email'}
-										defaultMessage='Invalid email address'
-									/>
+									t('invalid_email')
+										
 								);
 							}
 							if (!values.confirm_password) {
 								errors.confirm_password = (
-									<FormattedMessage id={'required'} defaultMessage='required' />
+									t('required')
 								);
 							} else if (values.confirm_password != values.password) {
 								errors.confirm_password = (
-									<FormattedMessage
-										id={'dosnt_match'}
-										defaultMessage='password dosnt match'
-									/>
+									t('dosnt_match')
+										
 								);
 							}
 							if (!values.password) {
 								errors.password = (
-									<FormattedMessage id={'required'} defaultMessage='required' />
+									t('required')
 								);
 							}
 							return errors;
@@ -129,7 +121,7 @@ const SignUp: NextPageWithLayout = () => {
 						}) => (
 							<form onSubmit={handleSubmit}>
 								<FormLabel>
-									<FormattedMessage id={'username'} defaultMessage='username' />
+								{t('username')}
 								</FormLabel>
 								<Input
 									type='text'
@@ -141,10 +133,7 @@ const SignUp: NextPageWithLayout = () => {
 								/>{' '}
 								<Text color={'red'}>{errors.username}</Text>
 								<FormLabel pt={'3%'}>
-									<FormattedMessage
-										id={'firstname'}
-										defaultMessage='firstname'
-									/>
+								{t('firstname')}
 								</FormLabel>
 								<Input
 									type='text'
@@ -155,7 +144,7 @@ const SignUp: NextPageWithLayout = () => {
 									value={values.firstname}
 								/>
 								<FormLabel pt={'3%'}>
-									<FormattedMessage id={'lastname'} defaultMessage='lastname' />
+								{t('lastname')}
 								</FormLabel>
 								<Input
 									type='text'
@@ -166,7 +155,7 @@ const SignUp: NextPageWithLayout = () => {
 									value={values.lastname}
 								/>
 								<FormLabel pt={'3%'}>
-									<FormattedMessage id={'email'} defaultMessage='email' />
+								{t('email')} 
 								</FormLabel>
 								<Input
 									type='email'
@@ -180,7 +169,7 @@ const SignUp: NextPageWithLayout = () => {
 									{errors.email && touched.email && errors.email}
 								</Text>
 								<FormLabel pt={'3%'}>
-									<FormattedMessage id={'password'} defaultMessage='password' />
+								{t('password')} 
 								</FormLabel>
 								<InputGroup size='md'>
 									<Input
@@ -191,7 +180,7 @@ const SignUp: NextPageWithLayout = () => {
 										borderColor={'brand.blue'}
 										value={values.password}
 									/>
-									{dirState == 'ltr' ? (
+									{router.locale == 'en' ? (
 										<InputRightElement width='4.5rem'>
 											<Button h='1.75rem' size='sm' onClick={handleClick}>
 												{show ? (
@@ -229,10 +218,8 @@ const SignUp: NextPageWithLayout = () => {
 									{errors.password && touched.password && errors.password}
 								</Text>
 								<FormLabel pt={'3%'}>
-									<FormattedMessage
-										id={'confirm_pass'}
-										defaultMessage='password'
-									/>
+								{t('confirm_pass')}
+										
 								</FormLabel>
 								<InputGroup size='md'>
 									<Input
@@ -243,7 +230,7 @@ const SignUp: NextPageWithLayout = () => {
 										borderColor={'brand.blue'}
 										value={values.confirm_password}
 									/>
-									{dirState == 'ltr' ? (
+									{router.locale == 'en' ? (
 										<InputRightElement width='4.5rem'>
 											<Button
 												h='1.75rem'
@@ -297,10 +284,8 @@ const SignUp: NextPageWithLayout = () => {
 										type='submit'
 										disabled={isSubmitting}
 									>
-										<FormattedMessage
-											id={'register'}
-											defaultMessage='Register'
-										/>
+										{t('register')}
+											
 									</Button>
 								</Stack>
 							</form>
@@ -333,5 +318,9 @@ const SignUp: NextPageWithLayout = () => {
 SignUp.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutWithoutBar>{page}</LayoutWithoutBar>;
 };
-
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default SignUp;

@@ -52,12 +52,13 @@ import {
 } from '../../src/services/api';
 import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import { myDirectionState } from '../../Atoms/localAtoms';
 import { useRecoilState } from 'recoil';
 import router from 'next/router';
 import { myImagesState } from '../../Atoms/imagesAtom';
 import Gridphotot from '../../src/components/grid_photo';
 import { mutate } from 'swr';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const CertificatesAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,10 +68,10 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
 	const certificateResponse = certificateList(pageNum, -1);
 	const [imageState, setimageState] = useRecoilState(myImagesState);
 	const [isImageModal, setIsImageModal] = useState(false);
+	const { t } = useTranslation('common');
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
@@ -119,7 +120,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 		},
 	];
 	return (
-		<Stack p={'10px'} margin={'2%'} dir={dirState}>
+		<Stack p={'10px'} margin={'2%'}>
 			{certificateResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -132,7 +133,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			)}
 			<HStack justify={'space-between'} m={'10px'}>
 				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-					<FormattedMessage id={'certificate'} defaultMessage='certificate' />
+				{t('certificate')} 
 				</Text>
 				<Button
 					variant='outline'
@@ -144,7 +145,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 						className='pi pi-plus'
 						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
 					></i>
-					<FormattedMessage id={'import'} defaultMessage='import' />
+					{t('import')}
 				</Button>
 			</HStack>
 			<TableContainer w={'full'}>
@@ -159,13 +160,13 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 					<Thead>
 						<Tr>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'images'} defaultMessage='images' />
+							{t('images')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'title'} defaultMessage='title' />
+							{t('title')} 
 							</Th>
 							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-								<FormattedMessage id={'text'} defaultMessage='text' />
+								{t('text')} 
 							</Th>
 						</Tr>
 					</Thead>
@@ -235,16 +236,16 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
-										<ModalContent dir={dirState}>
-										<ModalHeader><FormattedMessage id={'delete_item'} defaultMessage='delete item' /></ModalHeader>
+										<ModalContent >
+										<ModalHeader>{t('delete_item')}</ModalHeader>
 											<ModalCloseButton />
 											<ModalBody>
-											<FormattedMessage id={'delete_confirm'} defaultMessage='delete confirm' />
+											{t('delete_confirm')} 
 											
 											</ModalBody>
 											<ModalFooter>
 												<Button variant='ghost' mr={3} onClick={onDeleteClose}>
-												<FormattedMessage id={'cancel'} defaultMessage='cancel' />
+												{t('cancel')} 
 												</Button>
 												<Button
 													colorScheme='red'
@@ -256,7 +257,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 														)
 													}}
 												>
-													<FormattedMessage id={'delete'} defaultMessage='delete' />
+												{t('delete')} 
 												</Button>
 											</ModalFooter>
 										</ModalContent>
@@ -273,9 +274,9 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			{isEdit == true ? (
 				<Modal isOpen={isOpen} onClose={onClose} size={'5xl'}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent >
 						<ModalHeader>
-							<FormattedMessage id={'add_certificate'} />
+						{t('add_certificate')} 
 						</ModalHeader>
 						<Formik
 							initialValues={{ title: '', text: '', photo: '' }}
@@ -283,19 +284,15 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 								const errors = {};
 								if (!values.title) {
 									errors.title = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='Required'
-										/>
+										t('required')
+											
 									);
 								}
 
 								if (!values.text) {
 									errors.text = (
-										<FormattedMessage
-											id={'required'}
-											defaultMessage='required'
-										/>
+										t('required')
+											
 									);
 								}
 
@@ -332,7 +329,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+											{t('title')} 
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -347,7 +344,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 												{errors.title && touched.title && errors.title}
 											</Text>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')} 
 											</FormLabel>
 											<Textarea
 												onChange={handleChange}
@@ -371,10 +368,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 														>
 															<Box as='span' flex='1' textAlign='left'>
 																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
+																{t('choose_file')}
 																</FormLabel>
 															</Box>
 															<AccordionIcon />
@@ -391,19 +385,16 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')} 
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{
-												<FormattedMessage
-													id={'upload'}
-													defaultMessage='upload'
-												/>
-											}
+											
+											{t('upload')}
+											
 										</Button>
 									</ModalFooter>
 								</form>
@@ -414,12 +405,9 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 			) : (
 				<Modal isOpen={isOpen} onClose={onClose}>
 					<ModalOverlay />
-					<ModalContent dir={dirState}>
+					<ModalContent>
 						<ModalHeader>
-							<FormattedMessage
-								id={'edit_certificate'}
-								defaultMessage='Edit certificate'
-							/>
+						{t('edit_certificate')}
 						</ModalHeader>
 						<Formik
 							initialValues={{
@@ -457,7 +445,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												<FormattedMessage id={'title'} defaultMessage='title' />
+											{t('title')}
 											</FormLabel>
 											<Input
 												variant='outline'
@@ -472,7 +460,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 												{errors.title && touched.title && errors.title}
 											</Text>
 											<FormLabel>
-												<FormattedMessage id={'text'} defaultMessage='text' />
+											{t('text')} 
 											</FormLabel>
 											<Textarea
 												onChange={handleChange}
@@ -496,10 +484,7 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 														>
 															<Box as='span' flex='1' textAlign='left'>
 																<FormLabel>
-																	<FormattedMessage
-																		id={'choose_file'}
-																		defaultMessage='choose file'
-																	/>
+																{t('choose_file')}
 																</FormLabel>
 															</Box>
 															<AccordionIcon />
@@ -516,14 +501,14 @@ const CertificatesAdmin: NextPageWithLayout = () => {
 
 									<ModalFooter>
 										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
-											{<FormattedMessage id={'close'} defaultMessage='close' />}
+										{t('close')} 
 										</Button>
 										<Button
 											variant='primary'
 											type='submit'
 											disabled={isSubmitting}
 										>
-											{<FormattedMessage id={'edit'} defaultMessage='edit' />}
+										{t('edit')}
 										</Button>
 									</ModalFooter>
 								</form>
@@ -547,6 +532,11 @@ CertificatesAdmin.getLayout = function getLayout(page: ReactElement) {
 	return <LayoutAdmin>{page}</LayoutAdmin>;
 };
 
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 export default CertificatesAdmin;
 const itemGalleryTemplate = (item) => {
 	return (

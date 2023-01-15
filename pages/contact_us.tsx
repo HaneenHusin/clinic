@@ -13,14 +13,15 @@ import {
 	Card,
   Center,
 } from '@chakra-ui/react';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { FormattedMessage } from 'react-intl';
-import { useRecoilState } from 'recoil';
-import { myDirectionState } from '../Atoms/localAtoms';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { informationclient } from '../src/services/api';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-export default function contact() {
-	const [dirState] = useRecoilState(myDirectionState);
+
+export default function Contact() {
 	let info = informationclient(1, 10);
 	const emailVal = info.data?.data.results.find((obj: any) => {
 		return obj.name === 'email';
@@ -37,8 +38,17 @@ export default function contact() {
 	const doctorName = info.data?.data.results.find((obj: any) => {
 		return obj.name === 'doctorName';
 	});
+	const { t } = useTranslation('');
+	const router = useRouter();
+	useEffect(() => {
+		let dir = router.locale == "ar" ? "rtl" : "ltr";
+		let lang = router.locale == "ar" ? "ar" : "en";
+		debugger
+		document.querySelector("html")?.setAttribute("dir", dir);
+		document.querySelector("html")?.setAttribute("lang", lang);
+	  }, [router.locale]);
 	return (
-		<Box dir={dirState}>
+		<Box >
 			{info.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image
@@ -73,26 +83,21 @@ export default function contact() {
 									fontWeight={'bold'}
 									color={'brand.textGray'}
 								>
-									<FormattedMessage
-										id={'contact_us'}
-										defaultMessage='contact_us'
-									/>
+									{t('contact_us')}
+										
 								</Text>
 							</BreadcrumbLink>
 						</BreadcrumbItem>
 
 						<BreadcrumbItem>
-							<Link href='/welcome' shallow={true}>
+							<Link href='./' shallow={true}>
 								<Text
 									fontSize={['sm', 'sm', 'md', 'lg']}
 									fontWeight={'bold'}
 									textDecoration={'underline'}
 									color={'brand.textGray'}
 								>
-									<FormattedMessage
-										id={'home'}
-										defaultMessage='home'
-									></FormattedMessage>
+									{t('home')}
 								</Text>
 							</Link>
 						</BreadcrumbItem>
@@ -108,7 +113,7 @@ export default function contact() {
 				<Box>
 					<Center p={4}>
 						<Heading>
-							<FormattedMessage id={'contact_us'} defaultMessage='contact us' />
+						{t('contact_us')}
 						</Heading>
 						
 					</Center>
@@ -128,17 +133,14 @@ export default function contact() {
 									spacing={['4', '6', '8', '12']}
 								>
                   <Text  fontSize={['lg', 'xl', '2xl', '3xl']} color='gray.500'>
-                <FormattedMessage
-                  id={'contact_us_media'}
-                  defaultMessage='contact us media'
-                />
+				  {t('contact_us_media')}
               </Text>
 									<Box align='center' justify='center'>
 										<Heading size='xs' textTransform='uppercase'>
 											<i className='pi pi-envelope'></i>
 										</Heading>
 										<Text pt='2' fontSize='sm'>
-											<FormattedMessage id={'our_email'} />
+											{t('our_email')}
 										</Text>
 
 										<Text pt='2' fontSize='sm' color={'brand.blue'}>
@@ -153,7 +155,7 @@ export default function contact() {
 											<i className='pi pi-phone'></i>
 										</Heading>
 										<Text pt='2' fontSize='sm'>
-											<FormattedMessage id={'call_us'} />
+										{t('call_us')} 
 										</Text>
 										<Text pt='2' fontSize='sm' color={'brand.blue'}>
 											{phoneVal?.value}
@@ -164,7 +166,7 @@ export default function contact() {
 											<i className='pi pi-map-marker'></i>
 										</Heading>
 										<Text pt='2' fontSize='sm'>
-											<FormattedMessage id={'clinic_address'} />
+										{t('clinic_address')}
 										</Text>
 										<Text pt='2' fontSize='sm' color={'brand.blue'}>
 											{addressVal?.value}
@@ -184,3 +186,8 @@ export default function contact() {
 		</Box>
 	);
 }
+export const getStaticProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })

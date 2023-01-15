@@ -1,9 +1,7 @@
 import {Card} from "@chakra-ui/card";
 import {Avatar, Box, HStack, Spacer, Text, VStack} from "@chakra-ui/react";
+import { useTranslation } from "next-i18next";
 import {Galleria} from "primereact/galleria";
-import {FormattedMessage} from "react-intl";
-import {useRecoilState} from "recoil";
-import { myDirectionState } from "../../Atoms/localAtoms";
 
 export default function Feedback(galleriaService:any) {
     const responsiveOptions = [
@@ -20,9 +18,8 @@ export default function Feedback(galleriaService:any) {
             numVisible: 1
         }
     ];
-    const [dirState] = useRecoilState(myDirectionState);
     return (
-        <Card bg={'brand.white'} w= {{ base: '80%', md: '60%', lg: '50%' }} h={{ base: '65%', md: '70%', lg: '30%' }} rounded={'full'}  dir={dirState}>
+        <Card bg={'brand.white'} w= {{ base: '80%', md: '60%', lg: '50%' }} h={{ base: '65%', md: '70%', lg: '30%' }} rounded={'full'} >
             <Galleria value={galleriaService.galleriaService} responsiveOptions={responsiveOptions} numVisible={5}
                      
                       showThumbnails={false} showIndicators changeItemOnIndicatorHover
@@ -32,18 +29,20 @@ export default function Feedback(galleriaService:any) {
 
     )
 }
+
 const itemTemplate = (item) => {
+    const { t } = useTranslation('common');
     return (
 
-       <HStack p={"8"} justify={'space-between'}>
+       <HStack p={"12"} justify={'space-between'}>
            <VStack    justify={'start'} align={'start'} width={"full"} >
                <Text  fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'semibold'}
                      color={'brand.blue'}>
-                   <FormattedMessage id={'featured_recommendations'}/>
+                 {t('featured_recommendations')}
                </Text>
                <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                      color={'brand.textGray'}>
-                   <FormattedMessage id={'parents_comment'}/>
+                  {t('parents_comment')}
                </Text>
            </VStack>
            <VStack width={"full"}>

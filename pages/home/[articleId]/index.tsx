@@ -7,10 +7,8 @@ import {
 	VStack,
 	Image,
 } from '@chakra-ui/react';
-import { FormattedMessage } from 'react-intl';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { NextPageWithLayout } from '../../_app';
-import { myDirectionState, myLocalState } from '../../../Atoms/localAtoms';
 import { getCookie } from '../../../src/services/cookies_file';
 import TestCard from '../../../src/components/test_card_part';
 import { home } from '../../../src/services/api';
@@ -20,6 +18,8 @@ import Certificates from '../../../src/components/certificate';
 import Feedback from '../../../src/components/feedback';
 import CustomCarousel from '../../../src/components/carousel';
 import Layout from '../../../src/components/layout';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 const Welcome: NextPageWithLayout = () => {
 	const responsiveOptions = [
@@ -36,19 +36,20 @@ const Welcome: NextPageWithLayout = () => {
 			numVisible: 1,
 		},
 	];
-	const [localState, setLocalState] = useRecoilState(myLocalState);
-	const [dirState, setDirState] = useRecoilState(myDirectionState);
-
+	const { t } = useTranslation('common')
 	const homeResponse = home();
-
-	useState(async () => {
-		setLocalState(getCookie('language'));
-		setDirState(localState == 'ar' ? 'rtl' : 'ltr');
-		
-	});
+	const router = useRouter()
+	useEffect(() => {
+		let dir = router.locale == "ar" ? "rtl" : "ltr";
+		let lang = router.locale == "ar" ? "ar" : "en";
+		debugger
+		document.querySelector("html")?.setAttribute("dir", dir);
+		document.querySelector("html")?.setAttribute("lang", lang);
+	  }, [router.locale]);
+	
 
 	return (
-		<Box dir={dirState} pt={"10px"}>
+		<Box  pt={"10px"}>
 			{homeResponse.isLoading == true ? (
 				<div id='globalLoader'>
 					<Image src='https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif'alt=''
@@ -72,7 +73,7 @@ const Welcome: NextPageWithLayout = () => {
 							color={'brand.textGray'}
 							p={'4%'}
 						>
-							<FormattedMessage id={'first_caption'} />
+							{t('first_caption')}
 						</Text>
 						<Image
 							src={'/assets/images/test1.png'}
@@ -96,7 +97,7 @@ const Welcome: NextPageWithLayout = () => {
 							color={'brand.textGray'}
 							p={'4%'}
 						>
-							<FormattedMessage id={'second_caption'} />
+						{t('second_caption')}
 						</Text>
 						<Image
 							src={'/assets/images/test2.png'}
@@ -124,7 +125,7 @@ const Welcome: NextPageWithLayout = () => {
 							color={'brand.blue'}
 							p={'3%'}
 						>
-							<FormattedMessage id={'Spend_minutes_caption'} />
+							{t('Spend_minutes_caption')}
 						</Text>
 					</Flex>
 					<TestCard />
@@ -163,7 +164,7 @@ const Welcome: NextPageWithLayout = () => {
 								color={'brand.blue'}
 								p={'0.5%'}
 							>
-								<FormattedMessage id={'related_news'} />
+							{t('related_news')}
 							</Text>
 							{homeResponse.isLoading == true ? (
 				<div id='globalLoader'>

@@ -28,3 +28,7 @@ export function deleteCookie(name: string) {
     // Set it
     document.cookie = name+"=; expires="+date.toUTCString()+"; path=/";
 }
+
+export const seti18Cookie = (locale:string) => {
+    document.cookie = `NEXT_LOCALE=${locale}; max-age=31536000; path=/`
+}
