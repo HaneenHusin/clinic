@@ -19,3 +19,13 @@ export interface FeedbackList {
     active: boolean
     id: number
   }
+
+
+
+  export interface FeedbackItem {
+    created: string
+    title: string
+    brief: string
+    active: boolean
+    id: number
+  }

@@ -42,3 +42,11 @@ export interface ResultsList {
   max_point: number
   id: number
 }
+
+export interface QuizeItem {
+  created: string
+  title: string
+  questions_list: QuestionsList[]
+  results_list: ResultsList[]
+  id: number
+}

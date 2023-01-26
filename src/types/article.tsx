@@ -33,3 +33,14 @@ export interface ArticleList {
     id: number
   }
   
+  export interface ArticleItem {
+    created: string
+    title: string
+    keywords: string
+    slug: string
+    body: string
+    photos: number[]
+    photos_list: PhotosList[]
+    active: boolean
+    id: number
+  }

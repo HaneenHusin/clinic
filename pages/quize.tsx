@@ -57,7 +57,6 @@ const quize: NextPageWithLayout = () => {
 		
 	}
 	function activeSteps(val: number, point: number) {
-		debugger
 		setindexState(indexState + 1);
 		setResultState(resultState + point);
 		setProgressState(progressState + val);

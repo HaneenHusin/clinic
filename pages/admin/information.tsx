@@ -1,12 +1,4 @@
 import {
-	Table,
-	Thead,
-	Tbody,
-	Tr,
-	Th,
-	Td,
-	TableCaption,
-	TableContainer,
 	Text,
 	Button,
 	Image,
@@ -36,29 +28,27 @@ import {
 	informationList,
 	UpdateRequest,
 } from '../../src/services/api';
-import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import { useTranslation } from 'next-i18next';
+import { InformationItem } from '../../src/types/information';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const InformationAdmin: NextPageWithLayout = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [index, setIndex] = useState(0);
 	const [id, setId] = useState(0);
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
-	const infoResponse = informationList(pageNum, -1);
+	const infoResponse = informationList(pageNum, basicRows);
+	const [rowData, setRowData] = useState<InformationItem>();
 	const { t } = useTranslation("");
+	const router = useRouter();
+	const { isOpen: isEditOpen , onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+	const {isOpen: isDeleteOpen,onOpen: onDeleteOpen,onClose: onDeleteClose,} = useDisclosure();
 
-	const {
-		isOpen: isDeleteOpen,
-		onOpen: onDeleteOpen,
-		onClose: onDeleteClose,
-	} = useDisclosure();
-
-	const onBasicPageChange = (event) => {
+	const onBasicPageChange = (event:any) => {
 		setBasicFirst(event.first);
 		setBasicRows(event.rows);
 		
@@ -66,21 +56,69 @@ const InformationAdmin: NextPageWithLayout = () => {
 	};
 
 	 function refresh(response: any) {
-		onClose();
-		mutate(`/admin/information/?page=${pageNum}&pageSize=${-1}`)
+		onDeleteClose();
+		onEditClose();
+		mutate(`/admin/information/?page=${pageNum}&page_size=${basicRows}`)
 	
 	}
 	
-	function openEditModal(indexValue: number, idValue: number) {
-		onOpen();
-		setIndex(indexValue);
-		setId(idValue);
+	function openEditModal( rowData:InformationItem) {
+		onEditOpen();
+		setId(rowData.id);
+		setRowData(rowData);
 	}
-	function openDeleteModal(indexValue: number, idValue: number) {
+	function openDeleteModal(rowData: InformationItem) {
 		onDeleteOpen();
-		setIndex(indexValue);
-		setId(idValue);
+		setId(rowData.id);
 	  }
+	  const actionBodyTemplate = (rowData:InformationItem) => {
+		return (
+			<React.Fragment>
+				<IconButton
+					aria-label={'delete'}
+					rounded={'full'}
+					m={{ base: '1', md: '4' }}
+					onClick={() => openDeleteModal(rowData)}
+					icon={<i className='pi pi-trash' style={{ fontSize: '1em', color: 'red' }}	></i>}
+				></IconButton>
+				<IconButton
+					aria-label={'edit'}
+					rounded={'full'}
+					onClick={() => openEditModal(rowData)}
+					icon={
+						<i className='pi pi-pencil'	style={{ fontSize: '1em', color: 'green' }}	></i>
+					}
+				></IconButton>
+			</React.Fragment>
+		);
+	};
+
+	const columns = [
+		{ field: 'name', header: 'name', id: 'id' },
+		{ field: 'value', header: 'value', id: 'id' },
+	];
+
+	const renderHeader = () => {
+		return (
+			<Center>
+			<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
+			{t( 'information')}
+				</Text>
+			</Center>
+		);
+	};
+
+	const dynamicColumns = columns.map((col, i) => {
+		return (
+			<Column
+				key={col.id}
+				field={col.field}
+				header={t(col.header)}
+				alignHeader={router.locale == 'ar' ? 'left' : 'right'}
+				align={router.locale == 'ar' ? 'right' : 'left'}
+			/>
+		);
+	});
 	return (
 		<Stack p={'10px'} margin={'2%'}>
 			{infoResponse.isLoading == true ? (
@@ -93,84 +131,6 @@ const InformationAdmin: NextPageWithLayout = () => {
 			) : (
 				<></>
 			)}
-			
-			<Center>
-			<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-			{t( 'information')}
-				</Text>
-			</Center>
-				
-				
-			
-			<TableContainer w={'full'}>
-				<Table
-					variant='striped'
-					border={'1px'}
-					colorScheme={'gray'}
-					size={{ base: 'xs', md: 'md', lg: 'lg' }}
-				>
-					<TableCaption>ADHD CENTER</TableCaption>
-					<Thead>
-						<Tr>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-							{t('name')} 
-							</Th>
-							<Th fontSize={['sm', 'md', 'xl', '2xl']} fontWeight={'bold'}>
-							{t('value')}
-							</Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						{infoResponse.data?.data.results.map((item: any, index: number) => (
-							<Tr key={item.id}>
-								<Tooltip label={item.name}>
-									<Td
-										fontSize={['sm', 'md', 'lg', 'xl']}
-										maxWidth={'100px'}
-										textOverflow={'ellipsis'}
-										overflow={'hidden'}
-										whiteSpace={'nowrap'}
-									>
-										{item.name}
-									</Td>
-								</Tooltip>
-
-								<Tooltip label={item.value}>
-									<Td
-										fontSize={['sm', 'md', 'lg', 'xl']}
-										maxWidth={'100px'}
-										textOverflow={'ellipsis'}
-										overflow={'hidden'}
-										whiteSpace={'nowrap'}
-									>
-										{item.value}
-									</Td>
-								</Tooltip>
-								<Td>
-									<IconButton
-										aria-label={'edit'}
-										onClick={() => openEditModal(index, item.id)}
-										icon={
-											<i
-												className='pi pi-pencil'
-												style={{ fontSize: '1em', color: 'green' }}
-											></i>
-										}
-									></IconButton>
-								</Td>
-								<Td>
-									
-									<IconButton
-										aria-label={'delete'}
-										onClick= { () => openDeleteModal(index, item.id) }
-										icon={
-											<i
-												className='pi pi-trash'
-												style={{ fontSize: '1em', color: 'red' }}
-											></i>
-										}
-									></IconButton>
-
 									<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 										<ModalOverlay />
 										<ModalContent>
@@ -195,15 +155,15 @@ const InformationAdmin: NextPageWithLayout = () => {
 											</ModalFooter>
 										</ModalContent>
 									</Modal>
-								</Td>
+								{/* </Td>
 							</Tr>
 						))}
 					</Tbody>
 				</Table>
-			</TableContainer>
+			</TableContainer> */}
 
 		
-				<Modal isOpen={isOpen} onClose={onClose}>
+				<Modal isOpen={isEditOpen} onClose={onEditClose}>
 					<ModalOverlay />
 					<ModalContent>
 						<ModalHeader>
@@ -212,16 +172,16 @@ const InformationAdmin: NextPageWithLayout = () => {
 						<Formik
 							initialValues={{
 								name: '',
-								value: infoResponse.data?.data.results[index].value,
+								value: rowData?.value,
 							}}
 							onSubmit={(values, { setSubmitting }) => {
 								setTimeout(() => {
 
 									const dataToRequestAPI = {
-										name: infoResponse.data?.data.results[index].name,
+										name: rowData?.name,
 										value:
 											values.value == ''
-												? infoResponse.data?.data.results[index].value
+												? rowData?.value
 												: values.value,
 									};
 									UpdateRequest(
@@ -246,7 +206,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									<ModalBody>
 										<Stack spacing={3}>
 											<FormLabel>
-												{infoResponse.data?.data.results[index].name}
+												{rowData?.name}
 											</FormLabel>
 
 											
@@ -264,7 +224,7 @@ const InformationAdmin: NextPageWithLayout = () => {
 									</ModalBody>
 
 									<ModalFooter>
-										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
+										<Button variant='outline' mr={3} ml={3} onClick={onEditClose}>
 										{t('close')} 
 										</Button>
 										<Button
@@ -280,14 +240,24 @@ const InformationAdmin: NextPageWithLayout = () => {
 						</Formik>
 					</ModalContent>
 				</Modal>
-			
-			{/* <Paginator
-				p-paginator-page
-				first={basicFirst}
-				rows={basicRows}
+				<DataTable
+				value={infoResponse.data?.data.results}
+				header={renderHeader}
+				paginator
+				lazy={true}
 				totalRecords={infoResponse.data?.data.count}
-				onPageChange={onBasicPageChange}
-			></Paginator> */}
+				first={basicFirst}
+				onPage={onBasicPageChange}
+				rows={10}
+				responsiveLayout='scroll'
+				rowHover={true}
+				showGridlines={true}
+				selectionMode="single" 
+			>
+				{dynamicColumns}
+				<Column body={actionBodyTemplate} exportable={false} />
+			</DataTable>
+			
 		</Stack>
 	);
 };

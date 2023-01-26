@@ -34,9 +34,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { DeleteRequest, photosList, PostRequest } from '../../src/services/api';
 import LayoutAdmin from '../../src/components/layout_admin';
 import { NextPageWithLayout } from '../_app';
-import { useRecoilState } from 'recoil';
 import router, { useRouter } from 'next/router';
-import { Paginator } from 'primereact/paginator';
 import { mutate } from 'swr';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -95,9 +93,9 @@ const PhotosAdmin: NextPageWithLayout = () => {
 			numVisible: 1,
 		},
 	];
-	const chooseOptions = {icon: 'pi pi-fw pi-plus p-8 m-8',className:'p-8 m-8'};
-	const uploadOptions = {icon: 'pi pi-upload p-8 m-8', className: 'p-button-success p-8 m-8'};
-	const cancelOptions = { icon: 'pi pi-times p-8 m-8', className: 'p-button-danger p-8 m-8'};
+	const chooseOptions = {icon: 'pi pi-fw pi-plus p-1 m-1',className:'p-1 m-1'};
+	const uploadOptions = {icon: 'pi pi-upload p-1 m-1', className: 'p-button-success p-1 m-1'};
+	const cancelOptions = { icon: 'pi pi-times p-1 m-1', className: 'p-button-danger p-1 m-1'};
 	return (
 		<Stack p={'10px'}  margin={'2%'}>
 			{photosResponse.isLoading == true ? (
@@ -223,6 +221,7 @@ const PhotosAdmin: NextPageWithLayout = () => {
 							accept='image/*'
 							maxFileSize={1000000}
 							chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}
+						
 							emptyTemplate={
 								<p className='m-0'>{t('drag_file')}</p>
 							}

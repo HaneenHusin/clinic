@@ -51,7 +51,7 @@ export function articlesclient(page:number, pageSize:number){
 }
 
 export function certificateList(page:number, pageSize:number){
-    const { data, error } = useSWR<CertificateList, Error>(`/admin/certificates/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<CertificateList, Error>(`/admin/certificates/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -68,7 +68,7 @@ export function certificateclient(page:number, pageSize:number){
 }
 
 export function slidersList(page:number, pageSize:number){
-    const { data, error } = useSWR<SlidersList, Error>(`/admin/sliders/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<SlidersList, Error>(`/admin/sliders/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -77,7 +77,7 @@ export function slidersList(page:number, pageSize:number){
 }
 
 export function informationList(page:number, pageSize:number){
-    const { data, error } = useSWR<InformationList, Error>(`/admin/information/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<InformationList, Error>(`/admin/information/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -111,7 +111,7 @@ export function feedbackList(page:number, pageSize:number){
     }
 }
 export function quizeList(page:number, pageSize:number){
-    const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<QuizeList, Error>(`/admin/quize/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -127,7 +127,7 @@ export function quizeclient(page:number, pageSize:number){
     }
 }
 export function questionsList(page:number, pageSize:number,idQuize:number){
-    const { data, error } = useSWR<QuestionList, Error>(`/admin/quize/${idQuize}/questions/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<QuestionList, Error>(`/admin/quize/${idQuize}/questions/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -135,7 +135,7 @@ export function questionsList(page:number, pageSize:number,idQuize:number){
     }
 }
 export function answerList(page:number, pageSize:number,idQuize:number,idQuestion:Number){
-    const { data, error } = useSWR<AnswerList, Error>(`/admin/quize/${idQuize}/questions/${idQuestion}/answers/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<AnswerList, Error>(`/admin/quize/${idQuize}/questions/${idQuestion}/answers/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,
@@ -143,7 +143,7 @@ export function answerList(page:number, pageSize:number,idQuize:number,idQuestio
     }
 }
 export function resultList(page:number, pageSize:number,idQuize:number){
-    const { data, error } = useSWR<ResultsListAdmin, Error>(`/admin/quize/${idQuize}/results/?page=${page}&pageSize=${pageSize}`, fetcher)
+    const { data, error } = useSWR<ResultsListAdmin, Error>(`/admin/quize/${idQuize}/results/?page=${page}&page_size=${pageSize}`, fetcher)
     return {
         data: data,
         isLoading: !error && !data,

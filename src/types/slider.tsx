@@ -31,3 +31,12 @@ export interface SlidersList {
     id: number
   }
   
+  export interface SlidersItem {
+    created: string
+    text: string
+    photo: number
+    photo_model: PhotoModel
+    active: boolean
+    id: number
+  }
+  

@@ -182,7 +182,6 @@ export function AppBar() {
 
 
 	const setLanguage = (locale:string)=>{
-		debugger
 		router.push(router.asPath, undefined, { locale: locale })
 		seti18Cookie(locale)
 	}

@@ -19,4 +19,11 @@ export interface InformationList {
     active: boolean
     id: number
   }
+  export interface InformationItem {
+    created: string
+    name: string
+    value: string
+    active: boolean
+    id: number
+  }
   

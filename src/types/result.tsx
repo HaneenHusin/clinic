@@ -20,3 +20,10 @@ export interface ResultsListAdmin {
     id: number
   }
   
+  export interface ResultItem {
+    created: string
+    text: string
+    min_point: number
+    max_point: number
+    id: number
+  }

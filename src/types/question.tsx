@@ -19,3 +19,10 @@ export interface QuestionList {
     active: boolean
     id: number
   }
+  export interface QuestionItem {
+    created: string
+    text: string
+    answers_list: any[]
+    active: boolean
+    id: number
+  }

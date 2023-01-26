@@ -20,6 +20,7 @@ import { Galleria } from 'primereact/galleria';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function Article() {
 	const responsiveOptions = [
@@ -47,7 +48,6 @@ export default function Article() {
 	useEffect(() => {
 		let dir = router.locale == "ar" ? "rtl" : "ltr";
 		let lang = router.locale == "ar" ? "ar" : "en";
-		debugger
 		document.querySelector("html")?.setAttribute("dir", dir);
 		document.querySelector("html")?.setAttribute("lang", lang);
 	  }, [router.locale]);
@@ -92,7 +92,7 @@ export default function Article() {
 						</BreadcrumbItem>
 
 						<BreadcrumbItem>
-							<Link href='../' shallow={true}>
+							<Link href={`/`}>
 								<Text
 									fontSize={['sm', 'sm', 'md', 'lg']}
 									fontWeight={'bold'}
@@ -164,7 +164,11 @@ export default function Article() {
 		</Box>
 	);
 }
-
+export const getServerSideProps = async ({ locale}:{ locale:string }) => ({
+	props: {
+	  ...(await serverSideTranslations(locale, ["common"])),
+	}
+  })
 const itemGalleryTemplate = (item) => {
 	return (
 		<Image

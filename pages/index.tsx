@@ -44,13 +44,6 @@ const Welcome: NextPageWithLayout = () => {
 	const { t } = useTranslation("")
 	const router = useRouter()
 	useEffect(() => {
-		debugger
-		// let temp = getCookie('language');
-		// if(temp!=undefined){
-		// 	router.locale=temp;
-			
-		// };
-		
 	  let dir = router.locale == "ar" ? "rtl" : "ltr";
 	  let lang = router.locale == "ar" ? "ar" : "en";
 	  document.querySelector("html")?.setAttribute("dir", dir);

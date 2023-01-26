@@ -16,6 +16,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import { ProgressBar } from 'primereact/progressbar';
 import { appWithTranslation } from 'next-i18next';
+import 'primeflex/primeflex.css';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page:  ReactElement) => ReactNode;

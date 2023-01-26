@@ -39,9 +39,12 @@ export function RelatedNewsClinic(item) {
     const router = useRouter()
     const { t } = useTranslation('');
     
-    async function goArticlePage(item:Number) {
-        router.push( `/home/${item}/article`,  undefined, { shallow: true})
-         
+    async function goArticlePage(item:any) {
+        // router.push( `/home/${item}/article`,  undefined, { shallow: true})
+        router.push({
+            pathname: `/home/${item.id}/article`,
+            query: { data: item?.photos_list[0]?.datafile} 
+          })
        
     }
      return (
@@ -58,7 +61,7 @@ export function RelatedNewsClinic(item) {
                     <Text>
                     {parse(`${item.title}`)}
                     </Text>
-                    <HStack onClick={() => goArticlePage(item.id)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
+                    <HStack onClick={() => goArticlePage(item)} cursor={"pointer"}    _hover={{transform: "scale(1.05, 1.05)",}}>
                         <Text fontSize={['sm', 'md', 'lg', 'xl']} fontWeight={'normal'}
                               color={'brand.white'}>
                             {t('read_article')}

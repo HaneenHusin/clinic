@@ -31,3 +31,12 @@ export interface CertificateList {
     id: number
   }
   
+  export interface CertificateItem {
+    created: string
+    title: string
+    text: string
+    photo: number
+    photo_model: PhotoModel
+    active: boolean
+    id: number
+  }

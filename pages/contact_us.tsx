@@ -43,7 +43,6 @@ export default function Contact() {
 	useEffect(() => {
 		let dir = router.locale == "ar" ? "rtl" : "ltr";
 		let lang = router.locale == "ar" ? "ar" : "en";
-		debugger
 		document.querySelector("html")?.setAttribute("dir", dir);
 		document.querySelector("html")?.setAttribute("lang", lang);
 	  }, [router.locale]);

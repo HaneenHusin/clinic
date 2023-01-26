@@ -46,7 +46,6 @@ import {
 	slidersList,
 	UpdateRequest,
 } from '../../src/services/api';
-import { Paginator } from 'primereact/paginator';
 import { Formik } from 'formik';
 import { useRecoilState } from 'recoil';
 import Gridphotot from '../../src/components/grid_photo';
@@ -54,6 +53,10 @@ import { myImagesState } from '../../Atoms/imagesAtom';
 import { mutate } from 'swr';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { SlidersItem } from '../../src/types/slider';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const SlidersAdmin: NextPageWithLayout = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,13 +68,26 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	const [basicFirst, setBasicFirst] = useState(0);
 	const [basicRows, setBasicRows] = useState(10);
 	const [pageNum, setPageNum] = useState(1);
-	const slidersResponse = slidersList(pageNum, -1);
+	const slidersResponse = slidersList(pageNum, basicRows);
+	const [rowData, setRowData] = useState<SlidersItem>();
 	const { t } = useTranslation("")
+	const {
+		isOpen: isEditOpen,
+		onOpen: onEditOpen,
+		onClose: onEditClose,
+	} = useDisclosure();
+	const {
+		isOpen: isAddOpen,
+		onOpen: onAddOpen,
+		onClose: onAddClose,
+	} = useDisclosure();
 	const {
 		isOpen: isDeleteOpen,
 		onOpen: onDeleteOpen,
 		onClose: onDeleteClose,
 	} = useDisclosure();
+	const router = useRouter();
+	
 
 	const onBasicPageChange = (event:any) => {
 		setBasicFirst(event.first);
@@ -80,39 +96,109 @@ const SlidersAdmin: NextPageWithLayout = () => {
 	};
 
 	 function refresh(response: any) {
-		onClose();
-		mutate(`/admin/sliders/?page=${pageNum}&pageSize=${-1}`);
+		onAddClose();
+		onDeleteClose();
+		onEditClose();
+		mutate(`/admin/sliders/?page=${pageNum}&page_size=${basicRows}`);
 		
 	}
 	function openModal() {
-		onOpen();
+		onAddOpen();
 		setIsEdit(true);
 	}
-	function openEditModal(indexValue: number, idValue: number) {
-		onOpen();
+	function openEditModal( rowData: SlidersItem) {
+		onEditOpen();
 		setIsEdit(false);
-		setIndex(indexValue);
-		setId(idValue);
+		setId(rowData.id);
+		setRowData(rowData);
+		setimageState("");
 	}
-	function openDeleteModal(indexValue: number, idValue: number) {
+	function openDeleteModal(rowData: SlidersItem) {
 		onDeleteOpen();
-		setIndex(indexValue);
-		setId(idValue);
+		setId(rowData.id);
 	  }
-	const responsiveOptions = [
-		{
-			breakpoint: '1024px',
-			numVisible: 5,
-		},
-		{
-			breakpoint: '768px',
-			numVisible: 3,
-		},
-		{
-			breakpoint: '560px',
-			numVisible: 1,
-		},
+	  const actionBodyTemplate = (rowData: SlidersItem) => {
+		return (
+			<React.Fragment>
+				<IconButton
+					aria-label={'delete'}
+					rounded={'full'}
+					m={{ base: '1', md: '4' }}
+					onClick={() => openDeleteModal(rowData)}
+					icon={
+						<i
+							className='pi pi-trash'
+							style={{ fontSize: '1em', color: 'red' }}
+						></i>
+					}
+				></IconButton>
+				<IconButton
+					aria-label={'edit'}
+					rounded={'full'}
+					onClick={() => openEditModal(rowData)}
+					icon={
+						<i
+							className='pi pi-pencil'
+							style={{ fontSize: '1em', color: 'green' }}
+						></i>
+					}
+				></IconButton>
+			</React.Fragment>
+		);
+	};
+
+	const columns = [
+		{ field: 'text', header: 'text', id: 'id' },
 	];
+
+	const renderHeader = () => {
+		return (
+			<HStack justify={'space-between'} m={'10px'}>
+				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
+					{t('slider')}
+				</Text>
+				<Button
+					variant='outline'
+					colorScheme='brand'
+					onClick={openModal}
+					fontSize={['sm', 'md', 'lg', 'xl']}
+				>
+					<i
+						className='pi pi-plus'
+						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
+					></i>
+					{t('import')}
+				</Button>
+			</HStack>
+		);
+	};
+
+	const dynamicColumns = columns.map((col, i) => {
+		return (
+			<Column
+				key={col.id}
+				field={col.field}
+				header={t(col.header)}
+				alignHeader={router.locale == 'ar' ? 'left' : 'right'}
+				align={router.locale == 'ar' ? 'right' : 'left'}
+			/>
+		);
+	});
+	const imageBodyTemplate = (rowData: SlidersItem) => {
+		return (
+			<Image
+				src={rowData.photo_model.datafile}
+				onError={(e) =>
+					(e.target.src =
+						'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png')
+				}
+				alt={''}
+				width={rowData.photo_model.width}
+				height={'20%'}
+				style={{ display: 'block' }}
+			/>
+		);
+	};
 	return (
 		<Stack p={'10px'} margin={'2%'}>
 		{slidersResponse.isLoading == true ? (
@@ -125,24 +211,36 @@ const SlidersAdmin: NextPageWithLayout = () => {
 		) : (
 			<></>
 		)}
-			<HStack justify={'space-between'} m={'10px'}>
-				<Text fontSize={['lg', 'xl', '2xl', '3xl']} fontWeight={'bold'}>
-				{t('slider')} 
-				</Text>
-				<Button
-					variant='outline'
-					colorScheme='brand'
-					onClick={openModal}
-					fontSize={['sm', 'md', 'lg', 'xl']}
-				>
-					<i
-						className='pi pi-plus'
-						style={{ fontSize: '1em', marginRight: '12px', marginLeft: '12px' }}
-					></i>
-					{t('import')} 
-				</Button>
-			</HStack>
-			<TableContainer w={'full'}>
+		<DataTable
+				value={slidersResponse.data?.data.results}
+				header={renderHeader}
+				paginator
+				lazy={true}
+				totalRecords={slidersResponse.data?.data.count}
+				first={basicFirst}
+				onPage={onBasicPageChange}
+				rows={10}
+				responsiveLayout='scroll'
+				rowHover={true}
+				showGridlines={true}
+				selectionMode='single'
+			>
+				<Column
+					header={t('images')}
+					style={{ width: '20%' }}
+					body={imageBodyTemplate}
+				></Column>
+
+				{dynamicColumns}
+
+				<Column
+					body={actionBodyTemplate}
+					style={{ width: '10%' }}
+					exportable={false}
+				/>
+			</DataTable>
+			
+			{/* <TableContainer w={'full'}>
 				<Table
 					variant='striped'
 					border={'1px'}
@@ -209,7 +307,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 													style={{ fontSize: '1em', color: 'red' }}
 												></i>
 											}
-										></IconButton>
+										></IconButton> */}
 
 										<Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
 											<ModalOverlay />
@@ -225,7 +323,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 													<Button
 														variant='ghost'
 														mr={3}
-														onClick={() => openDeleteModal(index,item.id)}
+														onClick={() => onDeleteClose()}
 													>
 														{t('cancel')}
 													</Button>
@@ -244,16 +342,16 @@ const SlidersAdmin: NextPageWithLayout = () => {
 												</ModalFooter>
 											</ModalContent>
 										</Modal>
-									</Td>
+									{/* </Td>
 								</Tr>
 							)
 						)}
 					</Tbody>
 				</Table>
-			</TableContainer>
+			</TableContainer> */}
 
-			{isEdit == true ? (
-				<Modal isOpen={isOpen} onClose={onClose}>
+			
+				<Modal isOpen={isAddOpen} onClose={onAddClose}>
 					<ModalOverlay />
 					<ModalContent >
 						<ModalHeader>
@@ -337,7 +435,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									</ModalBody>
 
 									<ModalFooter>
-										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
+										<Button variant='outline' mr={3} ml={3} onClick={onAddClose}>
 										{t('close')}
 										</Button>
 										<Button
@@ -355,8 +453,8 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						</Formik>
 					</ModalContent>
 				</Modal>
-			) : (
-				<Modal isOpen={isOpen} onClose={onClose}>
+		
+				<Modal isOpen={isEditOpen} onClose={onEditClose}>
 					<ModalOverlay />
 					<ModalContent>
 						<ModalHeader>
@@ -364,7 +462,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						</ModalHeader>
 						<Formik
 							initialValues={{
-								text: slidersResponse.data?.data?.results[index]?.text,
+								text: rowData?.text,
 								photo: '',
 							}}
 							onSubmit={(values, { setSubmitting }) => {
@@ -373,7 +471,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									const dataToRequestAPI = {
 										photo:
 											imageState == ''
-												? slidersResponse.data?.data?.results[index]?.photo
+												? rowData?.photo
 												: imageState,
 										text: values.text,
 									};
@@ -451,7 +549,7 @@ const SlidersAdmin: NextPageWithLayout = () => {
 									</ModalBody>
 
 									<ModalFooter>
-										<Button variant='outline' mr={3} ml={3} onClick={onClose}>
+										<Button variant='outline' mr={3} ml={3} onClick={onEditClose}>
 										{t('close')} 
 										</Button>
 										<Button
@@ -467,14 +565,8 @@ const SlidersAdmin: NextPageWithLayout = () => {
 						</Formik>
 					</ModalContent>
 				</Modal>
-			)}
-			{/* <Paginator
-				p-paginator-page
-				first={basicFirst}
-				rows={basicRows}
-				totalRecords={slidersResponse.data?.data.count}
-				onPageChange={onBasicPageChange}
-			></Paginator> */}
+			
+			
 		</Stack>
 	);
 };
